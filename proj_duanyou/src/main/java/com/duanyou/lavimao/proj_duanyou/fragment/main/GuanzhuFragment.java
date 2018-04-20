@@ -1,18 +1,22 @@
 package com.duanyou.lavimao.proj_duanyou.fragment.main;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.alibaba.fastjson.JSON;
 import com.duanyou.lavimao.proj_duanyou.MyApplication;
 import com.duanyou.lavimao.proj_duanyou.R;
+import com.duanyou.lavimao.proj_duanyou.activity.DuanziDetailsActivity;
 import com.duanyou.lavimao.proj_duanyou.adapter.MainContentAdapter;
 import com.duanyou.lavimao.proj_duanyou.base.BaseFragment;
 import com.duanyou.lavimao.proj_duanyou.net.GetContentResult;
 import com.duanyou.lavimao.proj_duanyou.net.response.GetContentResponse;
+import com.duanyou.lavimao.proj_duanyou.util.Constants;
 import com.xiben.ebs.esbsdk.util.LogUtil;
 
 import java.util.ArrayList;
@@ -56,8 +60,15 @@ public class GuanzhuFragment extends BaseFragment {
             mList = new ArrayList<>();
             mAdapter = new MainContentAdapter(MyApplication.getInstance(), mList, R.layout.item_duanyouxiu);
             listView.setAdapter(mAdapter);
-        } else {
-
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    Intent intent=new Intent(getActivity(), DuanziDetailsActivity.class);
+                    intent.putExtra(Constants.targetDyID,mList.get(position).getPublisherDyID());
+                    intent.putExtra(Constants.beginContentID,mList.get(position).getDyContextID());
+                    startActivity(intent);
+                }
+            });
         }
 
     }

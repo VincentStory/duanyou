@@ -16,7 +16,7 @@ public class GetContentResponse extends BaseResponse {
         this.dyContexts = dyContexts;
     }
 
-    public class DyContextsBean {
+    public static class DyContextsBean {
 
         /**
          * commentNum : 1

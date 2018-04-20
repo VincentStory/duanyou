@@ -1,7 +1,6 @@
 package com.duanyou.lavimao.proj_duanyou.base;
 
 import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -18,10 +17,10 @@ import com.duanyou.lavimao.proj_duanyou.net.Api;
 import com.duanyou.lavimao.proj_duanyou.net.BaseResponse;
 import com.duanyou.lavimao.proj_duanyou.net.GetContentResult;
 import com.duanyou.lavimao.proj_duanyou.net.NetUtil;
-import com.duanyou.lavimao.proj_duanyou.net.request.GetContentRequest;
-import com.xiben.ebs.esbsdk.callback.ResultCallback;
 
-import cn.jzvd.JZVideoPlayer;
+import com.duanyou.lavimao.proj_duanyou.net.request.GetContentRequest;
+
+import com.xiben.ebs.esbsdk.callback.ResultCallback;
 
 
 /**

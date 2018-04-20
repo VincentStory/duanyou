@@ -20,18 +20,14 @@
             android:id="@+id/nav_left"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_centerVertical="true"
-
-            >
+            android:layout_centerVertical="true">
 
             <ImageView
                 android:id="@+id/iv_left"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="15dp"
-
-                />
+                android:layout_marginLeft="15dp" />
 
 
         </RelativeLayout>
@@ -49,7 +45,6 @@
             android:textSize="18sp"
             tools:text="title" />
 
-
         <LinearLayout
             android:id="@+id/nav_right"
             android:layout_width="wrap_content"
@@ -61,8 +56,8 @@
 
             <ImageView
                 android:id="@+id/nav_right_iv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="5dp"
                 android:scaleType="center"
