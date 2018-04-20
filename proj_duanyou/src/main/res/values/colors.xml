@@ -7,5 +7,8 @@
     <color name="background">#F5F5F9</color>
     <color name="white">#ffffff</color>
     <color name="title">#ffb200</color>
+    <color name="bg_color">#aaffb200</color>
     <color name="black">#000000</color>
+    <color name="gray">#dcd9cf</color>
+    <color name="gray2">#e5e5e5</color>
 </resources>

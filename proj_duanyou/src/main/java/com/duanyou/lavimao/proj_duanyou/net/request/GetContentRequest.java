@@ -1,4 +1,4 @@
-package com.duanyou.lavimao.proj_duanyou.net.response;
+package com.duanyou.lavimao.proj_duanyou.net.request;
 
 import com.duanyou.lavimao.proj_duanyou.net.BaseRequest;
 

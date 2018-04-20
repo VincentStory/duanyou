@@ -1,21 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="230dp">
+
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="180dp"
-            android:background="@drawable/bg_splash"/>
+            android:scaleType="centerCrop"
+            android:src="@drawable/bg_splash" />
+
+        <ImageView
+            android:id="@+id/headimage_iv"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="25dp"
+            android:scaleType="centerCrop"
+
+            android:src="@drawable/icon_comments" />
+
+        <TextView
+            android:id="@+id/tv_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/headimage_iv"
+            android:layout_toRightOf="@+id/headimage_iv"
+            android:text="我的窝"
+            android:textColor="@color/white" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_below="@+id/tv_name"
+            android:layout_toRightOf="@+id/headimage_iv"
+            android:text="火星上"
+            android:layout_marginTop="10dp"
+            android:drawableLeft="@drawable/icon_logo"
+            android:textColor="@color/black" />
 
 
     </RelativeLayout>
-    
+
     <TextView
-        android:layout_width="wrap_content"
+        android:id="@+id/login_register_tv"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="mine"/>
+        android:text="登录/注册"
+        android:background="@color/white"
+        android:paddingTop="15dp"
+        android:paddingBottom="15dp"
+        android:paddingLeft="50dp"/>
+
+
 </LinearLayout>

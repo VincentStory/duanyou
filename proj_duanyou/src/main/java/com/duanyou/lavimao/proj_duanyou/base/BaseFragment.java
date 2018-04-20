@@ -18,7 +18,7 @@ import com.duanyou.lavimao.proj_duanyou.net.Api;
 import com.duanyou.lavimao.proj_duanyou.net.BaseResponse;
 import com.duanyou.lavimao.proj_duanyou.net.GetContentResult;
 import com.duanyou.lavimao.proj_duanyou.net.NetUtil;
-import com.duanyou.lavimao.proj_duanyou.net.response.GetContentRequest;
+import com.duanyou.lavimao.proj_duanyou.net.request.GetContentRequest;
 import com.xiben.ebs.esbsdk.callback.ResultCallback;
 
 import cn.jzvd.JZVideoPlayer;

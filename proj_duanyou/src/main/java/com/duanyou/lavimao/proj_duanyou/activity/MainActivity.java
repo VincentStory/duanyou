@@ -15,7 +15,7 @@ import com.duanyou.lavimao.proj_duanyou.fragment.MainFragment;
 import com.duanyou.lavimao.proj_duanyou.fragment.MineFragment;
 
 import com.duanyou.lavimao.proj_duanyou.net.NetUtil;
-import com.duanyou.lavimao.proj_duanyou.net.response.GetContentRequest;
+import com.duanyou.lavimao.proj_duanyou.net.request.GetContentRequest;
 import com.xiben.ebs.esbsdk.callback.ResultCallback;
 
 import java.util.ArrayList;
