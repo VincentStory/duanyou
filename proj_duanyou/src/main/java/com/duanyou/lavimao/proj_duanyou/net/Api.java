@@ -5,8 +5,10 @@ public class Api {
      * 获取段子列表
      */
     public static final String GETCONTENT="getContent";
-    
 
+    /**
+     * 获取段友发布的段子
+     */
     public static final String getUserUploadContent="getUserUploadContent";
 
     /**
@@ -21,5 +23,4 @@ public class Api {
      * 注册
      */
     public static final String REGISTER="register";
->>>>>>> .r7
 }
