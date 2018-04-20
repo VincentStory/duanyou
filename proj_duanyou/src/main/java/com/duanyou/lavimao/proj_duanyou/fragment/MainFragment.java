@@ -52,6 +52,7 @@ public class MainFragment extends BaseFragment {
         setRightIv(view,R.drawable.icon_camera);
         initTitles();
         initPagers();
+
     }
 
     @Override
