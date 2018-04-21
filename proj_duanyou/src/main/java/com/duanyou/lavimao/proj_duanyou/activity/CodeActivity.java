@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
+import com.blankj.utilcode.util.ToastUtils;
 import com.duanyou.lavimao.proj_duanyou.R;
 import com.duanyou.lavimao.proj_duanyou.base.BaseActivity;
 import com.duanyou.lavimao.proj_duanyou.net.Api;
@@ -114,7 +115,7 @@ public class CodeActivity extends BaseActivity {
 
 
                 } else {
-
+                    ToastUtils.showShort(response.getRespMessage());
                 }
 
             }
@@ -144,7 +145,7 @@ public class CodeActivity extends BaseActivity {
 
 
                 } else {
-
+                    ToastUtils.showShort(response.getRespMessage());
                 }
 
             }

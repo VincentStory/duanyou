@@ -91,6 +91,8 @@ public class SpUtil {
      */
     public final static String dyID = "dyID";
     public final static String mobilePhone = "mobilePhone";
+    public final static String nickName = "nickName";
+    public final static String currentLocation = "currentLocation";
     public final static String EMAIL = "email";
     public final static String TOKEN = "token";
     public final static String PHOTO_URL = "photourl";

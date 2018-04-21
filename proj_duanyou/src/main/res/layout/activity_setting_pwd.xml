@@ -33,6 +33,7 @@
         android:background="@drawable/rectangle"
         android:gravity="center"
         android:hint="密码必须是6位以上的数字，字母及符号"
+        android:inputType="textPassword"
         android:textColor="@color/bg_color"
         android:textColorHint="@color/bg_color"
         android:textSize="14sp" />
@@ -51,7 +52,6 @@
             android:layout_height="wrap_content"
             android:text="上一步？"
             android:textColor="@color/white" />
-
 
 
         <TextView

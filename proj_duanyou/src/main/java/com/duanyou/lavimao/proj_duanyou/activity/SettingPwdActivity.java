@@ -63,18 +63,18 @@ public class SettingPwdActivity extends BaseActivity {
 
                 if (type == 1) {//第一次输入密码
                     password = passwordEt.getText().toString().trim();
-                    passwordEt.setText("");
-                    passwordEt.setHint("请再次输入密码");
-                    type = 2;
-//                    if (password.length() == 6) {
 
+                    if (password.length() >= 6) {
 
-//                    } else {
-//                        ToastUtils.showShort("请输入6位密码");
-//                    }
+                        passwordEt.setText("");
+                        passwordEt.setHint("请再次输入密码");
+                        type = 2;
+                    } else {
+                        ToastUtils.showShort("请输入6位以上密码");
+                    }
                 } else {//确认密码
                     password2 = passwordEt.getText().toString().trim();
-//                    if (password2.length() == 6) {
+                    if (password2.length() >= 6) {
                         if (password.equals(password2)) {
 
 
@@ -97,9 +97,9 @@ public class SettingPwdActivity extends BaseActivity {
                             ToastUtils.showShort("请输入相同密码");
                         }
 
-//                    } else {
-//                        ToastUtils.showShort("请输入6位密码");
-//                    }
+                    } else {
+                        ToastUtils.showShort("请输入6位以上密码");
+                    }
                 }
 
 

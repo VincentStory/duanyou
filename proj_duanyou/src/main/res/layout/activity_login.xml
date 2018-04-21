@@ -53,6 +53,7 @@
         android:layout_marginTop="20dp"
         android:background="@drawable/rectangle"
         android:gravity="center"
+        android:inputType="textPassword"
         android:hint="密码在这里哈！~ ~"
         android:textSize="14sp" />
 

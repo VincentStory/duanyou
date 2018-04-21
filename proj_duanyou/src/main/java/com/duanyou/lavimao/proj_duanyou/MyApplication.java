@@ -7,6 +7,7 @@ import android.util.Log;
 
 
 import com.blankj.utilcode.util.Utils;
+import com.duanyou.lavimao.proj_duanyou.util.SpUtil;
 
 
 import java.util.List;
@@ -26,7 +27,7 @@ public class MyApplication extends MultiDexApplication {
         super.onCreate();
 
         String curProcess = getProcessName(this, android.os.Process.myPid());
-        Log.e(TAG, "curProcess:    "+curProcess);
+        Log.e(TAG, "curProcess:    " + curProcess);
         if (!getPackageName().equals(curProcess)) {
             return;
         }
@@ -43,6 +44,13 @@ public class MyApplication extends MultiDexApplication {
 
     public MyApplication() {
 
+    }
+
+    public static boolean isLogin() {
+        if (SpUtil.getStringSp(SpUtil.dyID).isEmpty()) {
+            return false;
+        }
+        return true;
     }
 
     public static MyApplication getInstance() {
@@ -65,8 +73,6 @@ public class MyApplication extends MultiDexApplication {
 
         return null;
     }
-
-
 
 
 }
