@@ -19,6 +19,7 @@ import com.duanyou.lavimao.proj_duanyou.fragment.main.GuanzhuFragment;
 import com.duanyou.lavimao.proj_duanyou.fragment.main.JingxuanFragment;
 import com.duanyou.lavimao.proj_duanyou.fragment.main.QutuFragment;
 import com.duanyou.lavimao.proj_duanyou.fragment.main.ShipinFragment;
+import com.duanyou.lavimao.proj_duanyou.fragment.main.TagFragment;
 import com.duanyou.lavimao.proj_duanyou.fragment.main.TuijianFragment;
 
 import java.util.ArrayList;
@@ -47,9 +48,9 @@ public class MainFragment extends BaseFragment {
 
     @Override
     public void initWidget(View view) {
-        setTitle(view,"首 页");
-        setLeftImg(view,R.drawable.icon_logo);
-        setRightIv(view,R.drawable.icon_camera);
+        setTitle(view, "首 页");
+        setLeftImg(view, R.drawable.icon_logo);
+        setRightIv(view, R.drawable.icon_camera);
         initTitles();
         initPagers();
 
@@ -73,13 +74,18 @@ public class MainFragment extends BaseFragment {
         mList.add("精选");
         mList.add("段友秀");
         mAdapter = new TitlesAdapter(mList, getActivity());
-        LinearLayoutManager manager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
-        recyclerview.setLayoutManager(manager);
+        final LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+        recyclerview.setLayoutManager(layoutManager);
         recyclerview.setAdapter(mAdapter);
         mAdapter.setOnItemClickListener(new TitlesAdapter.OnItemClickListener() {
             @Override
             public void click(int position) {
                 viewPager.setCurrentItem(position);
+                int firstPosition = layoutManager.findFirstVisibleItemPosition();
+                int lastPosition = layoutManager.findLastVisibleItemPosition();
+                int left = recyclerview.getChildAt(position - firstPosition).getLeft();
+                int right = recyclerview.getChildAt(lastPosition - position).getLeft();
+                recyclerview.smoothScrollBy((left - right) / 2, 0);
             }
         });
     }
@@ -89,16 +95,17 @@ public class MainFragment extends BaseFragment {
      */
     private void initPagers() {
         fragments = new ArrayList<>();
-        fragments.add(new GuanzhuFragment());
-        fragments.add(new TuijianFragment());
-        fragments.add(new ShipinFragment());
-        fragments.add(new QutuFragment());
-        fragments.add(new DuanziFragment());
-        fragments.add(new JingxuanFragment());
-        fragments.add(new DuanyouxiuFragment());
-        pagerAdapter = new MainPagerAdapter(getFragmentManager(), fragments,getActivity());
+        fragments.add(TagFragment.newInstance("4"));//关注
+        fragments.add(TagFragment.newInstance("1"));//推荐
+        fragments.add(TagFragment.newInstance("4"));//视频
+        fragments.add(TagFragment.newInstance("3"));//趣图
+        fragments.add(TagFragment.newInstance("2"));//段子
+        fragments.add(TagFragment.newInstance("4"));//精选
+        fragments.add(new DuanyouxiuFragment());//段友秀
+        pagerAdapter = new MainPagerAdapter(getFragmentManager(), fragments, getActivity());
         viewPager.setAdapter(pagerAdapter);
         viewPager.setOffscreenPageLimit(7);
+        viewPager.setCurrentItem(1);
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {

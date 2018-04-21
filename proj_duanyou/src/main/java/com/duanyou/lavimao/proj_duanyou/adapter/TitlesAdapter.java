@@ -21,7 +21,7 @@ public class TitlesAdapter extends RecyclerView.Adapter<TitlesAdapter.ViewHolder
     private List<String>  mList;
     private Context mContext;
     private OnItemClickListener onItemClickListener;
-    private int selectedPosition = 0;//默认第一项选中
+    private int selectedPosition = 1;//默认第2项选中
 
     public TitlesAdapter(List<String> list, Context context) {
         mList = list;
@@ -39,7 +39,7 @@ public class TitlesAdapter extends RecyclerView.Adapter<TitlesAdapter.ViewHolder
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
         if (position == selectedPosition){
-            holder.tvTitle.setTextColor(Color.parseColor("#fa7d00"));
+            holder.tvTitle.setTextColor(Color.parseColor("#FB3888"));
         }else {
             holder.tvTitle.setTextColor(Color.parseColor("#4d4d4d"));
         }

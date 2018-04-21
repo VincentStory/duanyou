@@ -23,8 +23,19 @@ public class Api {
      * 注册
      */
     public static final String REGISTER="register";
+
+    /**
+     * 用户操作
+     */
+    public static final String userOperation="userOperation";
+
     /**
      * 登录
      */
     public static final String LOGIN="login";
+    /**
+     * 获取评论\更多评论
+     */
+    public static final String getComment="getComment";
+
 }

@@ -4,6 +4,7 @@ package com.duanyou.lavimao.proj_duanyou.base;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -117,7 +118,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                     .position(SlidrPosition.LEFT)
                     .velocityThreshold(2400)
                     .edge(true)
-                    .edgeSize(0.18f) // The % of the screen that counts as the edge, default 18%
+                    .edgeSize(0.18f) // The % of the screen that counts as the edge, default_pic 18%
                     .build();
 
 
@@ -338,8 +339,6 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
 
-
-
     protected void setRightIv(int ResId) {
         ImageView navRightIv = (ImageView) findViewById(R.id.nav_right_iv);
         if (navRightIv != null) {
@@ -412,10 +411,16 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
         super.onBackPressed();
     }
+
     @Override
     public void onPause() {
         super.onPause();
         JZVideoPlayer.releaseAllVideos();
+    }
+
+    public void jumpTo(Class<?> clazz) {
+        Intent intent = new Intent(this, clazz);
+        startActivity(intent);
     }
 
 }

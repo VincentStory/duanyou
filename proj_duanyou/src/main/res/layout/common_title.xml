@@ -27,8 +27,8 @@
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="15dp" />
-
+                android:layout_marginLeft="15dp"
+                android:src="@drawable/black_back" />
 
         </RelativeLayout>
 
@@ -41,8 +41,8 @@
             android:layout_marginRight="60dp"
             android:ellipsize="end"
             android:singleLine="true"
-            android:textColor="@color/white"
-            android:textSize="18sp"
+            android:textColor="@color/black"
+            android:textSize="16sp"
             tools:text="title" />
 
         <LinearLayout
@@ -60,8 +60,7 @@
                 android:layout_height="20dp"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="5dp"
-                android:scaleType="center"
-                android:visibility="gone" />
+                android:scaleType="fitXY" />
         </LinearLayout>
 
     </RelativeLayout>

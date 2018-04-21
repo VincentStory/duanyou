@@ -1,22 +1,37 @@
 package com.duanyou.lavimao.proj_duanyou.activity;
 
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
+import com.blankj.utilcode.util.ToastUtils;
 import com.bumptech.glide.Glide;
+import com.duanyou.lavimao.proj_duanyou.GlideApp;
 import com.duanyou.lavimao.proj_duanyou.R;
+import com.duanyou.lavimao.proj_duanyou.adapter.CommentAdapter;
 import com.duanyou.lavimao.proj_duanyou.base.BaseActivity;
 import com.duanyou.lavimao.proj_duanyou.net.Api;
 import com.duanyou.lavimao.proj_duanyou.net.NetUtil;
-import com.duanyou.lavimao.proj_duanyou.net.request.GetUserUploadContentRequest;
-import com.duanyou.lavimao.proj_duanyou.net.response.GetUserUploadContentResponse;
+import com.duanyou.lavimao.proj_duanyou.net.request.GetCommentRequest;
+import com.duanyou.lavimao.proj_duanyou.net.request.UserOperationRequest;
+import com.duanyou.lavimao.proj_duanyou.net.response.GetCommentResponse;
+import com.duanyou.lavimao.proj_duanyou.net.response.GetContentResponse;
 import com.duanyou.lavimao.proj_duanyou.util.Constants;
+import com.duanyou.lavimao.proj_duanyou.util.KeyboardUtils;
+import com.duanyou.lavimao.proj_duanyou.util.UserInfo;
 import com.xiben.ebs.esbsdk.callback.ResultCallback;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import cn.jzvd.JZVideoPlayerStandard;
 
 /**
@@ -30,13 +45,36 @@ public class DuanziDetailsActivity extends BaseActivity {
     ImageView navRightIv;
     @BindView(R.id.videoplayer)
     JZVideoPlayerStandard videoplayer;
+    @BindView(R.id.content_tv)
+    TextView contentTv;
+    @BindView(R.id.content_iv)
+    ImageView contentIv;
     @BindView(R.id.head_iv)
     ImageView headIv;
     @BindView(R.id.name_tv)
     TextView nameTv;
+    @BindView(R.id.zan_iv)
+    ImageView zanIv;
+    @BindView(R.id.zan_tv)
+    TextView zanTv;
+    @BindView(R.id.cai_iv)
+    ImageView cai_tv;
+    @BindView(R.id.cai_tv)
+    TextView caiTv;
+    @BindView(R.id.comment_iv)
+    ImageView commentIv;
+    @BindView(R.id.comment_tv)
+    TextView commentTv;
+    @BindView(R.id.comment_et)
+    EditText commentEt;
+    @BindView(R.id.comment_rv)
+    RecyclerView commentRv;
+    @BindView(R.id.empty_iv)
+    ImageView emptyIv;
 
-    private String targetDyID;
-    private String beginContentID;
+    private CommentAdapter commentAdapter;
+    private List<GetCommentResponse.CommentsNewBean> mlist = new ArrayList<>();
+    private GetContentResponse.DyContextsBean bean;  //详情类
 
     @Override
     public void setView() {
@@ -48,36 +86,179 @@ public class DuanziDetailsActivity extends BaseActivity {
     private void initTitle() {
         leftIv.setImageResource(R.drawable.black_back);
         navRightIv.setImageResource(R.drawable.jubao);
-        navRightIv.setVisibility(View.VISIBLE);
-
     }
 
     @Override
     public void initData() {
         initParams();
-        getDuanziDetails();
+        //getDuanziDetails();
+        commentRv.setLayoutManager(new LinearLayoutManager(this));
+        commentAdapter = new CommentAdapter(this, R.layout.item_comment, mlist);
+        commentRv.setAdapter(commentAdapter);
+        loadComent(0);
 
-        videoplayer.setUp("http://www.dyouclub.com/resources/mp4/3333333320221711.mp4", JZVideoPlayerStandard.SCREEN_WINDOW_NORMAL, "");
-        Glide.with(this).load("http://p.qpic.cn/videoyun/0/2449_43b6f696980311e59ed467f22794e792_1/640").into(videoplayer.thumbImageView);
-
-        Glide.with(this).load("http://resource.dyouclub.com/headPortrait/164d2d5d35236fb5!400x400_big.jpg").into(headIv);
-        nameTv.setText("段友1314");
     }
 
     private void initParams() {
-        targetDyID = getIntent().getStringExtra(Constants.targetDyID);
-        beginContentID = getIntent().getStringExtra(Constants.beginContentID);
+        bean = (GetContentResponse.DyContextsBean) getIntent().getSerializableExtra(Constants.CLICK_BEAN);
+        if (null != bean) {
+            switch (bean.getContextType()) {
+                case "2":
+                    contentTv.setVisibility(View.VISIBLE);
+                    contentIv.setVisibility(View.GONE);
+                    videoplayer.setVisibility(View.GONE);
+                    contentTv.setText(bean.getContextText());
+                    break;
+                case "3":
+                    contentTv.setVisibility(View.VISIBLE);
+                    contentIv.setVisibility(View.GONE);
+                    videoplayer.setVisibility(View.GONE);
+                    Glide.with(this).load(bean.getContextUrl()).into(contentIv);
+                    break;
+                case "4":
+                    contentTv.setVisibility(View.GONE);
+                    contentIv.setVisibility(View.GONE);
+                    videoplayer.setVisibility(View.VISIBLE);
+                    videoplayer.setUp(bean.getContextUrl(), JZVideoPlayerStandard.SCREEN_WINDOW_NORMAL, "");
+                    GlideApp.with(DuanziDetailsActivity.this)
+                            .load(bean.getVideoDisplay())
+                            .placeholder(R.drawable.default_pic)
+                            .into(videoplayer.thumbImageView);
+
+
+                    break;
+            }
+            nameTv.setText(bean.getNickName());
+            GlideApp.with(DuanziDetailsActivity.this)
+                    .load(bean.getHeadPortraitUrl())
+                    .placeholder(R.drawable.default_pic)
+                    .into(headIv);
+            zanTv.setText(bean.getPraiseNum() + "");
+            caiTv.setText(bean.getTrampleNum() + "");
+            commentTv.setText(bean.getCommentNum() + "");
+        }
+
     }
 
-    private void getDuanziDetails() {
+   /* private void getDuanziDetails() {
         GetUserUploadContentRequest request = new GetUserUploadContentRequest();
-        request.setTargetDyID("");
-        request.setBeginContentID("");
+        request.setDyID(SpUtil.getStringSp(SpUtil.dyID));
+        request.setDeviceID(DeviceUtils.getAndroidID());
+        request.setToken(SpUtil.getStringSp(SpUtil.TOKEN));
+        request.setTargetDyID(targetDyID);
+        request.setBeginContentID(beginContentID + "");
         NetUtil.getData(Api.getUserUploadContent, this, request, new ResultCallback() {
             @Override
             public void onResult(String jsonResult) {
                 GetUserUploadContentResponse response = JSON.parseObject(jsonResult, GetUserUploadContentResponse.class);
-                if (null != response) {
+                if (null != response && "0".equals(response.getRespCode())) {
+
+                }
+            }
+
+            @Override
+            public void onError(Exception ex) {
+
+            }
+        });
+    }*/
+
+    @Override
+    public void startInvoke() {
+
+    }
+
+    @OnClick({R.id.iv_left, R.id.nav_right_iv, R.id.zan_iv, R.id.cai_iv, R.id.comment_iv, R.id.comment_tv, R.id.send_btn, R.id.empty_iv})
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.iv_left:
+                finish();
+                break;
+            case R.id.nav_right_iv:
+                jumpTo(ReportActivity.class);
+                break;
+            case R.id.zan_iv:
+                userOperation("1", "1", "");
+                break;
+            case R.id.cai_iv:
+                userOperation("1", "2", "");
+                break;
+            case R.id.comment_iv:
+                KeyboardUtils.showSoftInput(this);
+                break;
+            case R.id.send_btn:
+                String commentContent = commentEt.getText().toString().trim();
+                if (!TextUtils.isEmpty(commentContent)) {
+                    userOperation("2", "2", commentContent);
+                } else {
+                    ToastUtils.showShort("请输入内容");
+                }
+                break;
+            case R.id.empty_iv:
+                KeyboardUtils.showSoftInput(this);
+                break;
+
+            default:
+                break;
+
+        }
+    }
+
+    /**
+     * 用户操作
+     *
+     * @param type     1-段子 2-评论 3-回复 4-审核 5-用户
+     * @param operator 1-点赞 2-点踩 3-举报 4-视频播放 5-转发 6-收藏/关注 7-取消收藏/取消关注 8-删除（只能删除自己的） 9-用户反馈（type为9）
+     * @param remark
+     */
+    public void userOperation(String type, String operator, String remark) {
+        UserOperationRequest request = new UserOperationRequest();
+        request.setDyID(UserInfo.getDyId());
+        request.setDeviceID(UserInfo.getDeviceId());
+        request.setToken(UserInfo.getToken());
+        List<Integer> mList = new ArrayList<>();
+        mList.add(bean.getDyContextID());
+        request.setDyDataID(mList);
+        request.setType(type);
+        request.setOperator(operator);
+        request.setRemark(remark);
+        NetUtil.getData(Api.userOperation, this, request, new ResultCallback() {
+            @Override
+            public void onResult(String jsonResult) {
+
+            }
+
+            @Override
+            public void onError(Exception ex) {
+
+            }
+        });
+
+    }
+
+
+    /**
+     * 获取评论\更多评论
+     *
+     * @param benginCommentID 要获取的评论开始ID（一次获取最多20条评论，每条评论最多获取3条回复），倒序获取，若是第一次获取则传0，非0时不再发送热门评论
+     */
+    public void loadComent(int benginCommentID) {
+        GetCommentRequest request = new GetCommentRequest();
+        request.setDyID(UserInfo.getDyId());
+        request.setDyContextID(bean.getDyContextID() + "");
+        request.setBenginCommentID(benginCommentID + "");
+        NetUtil.getData(Api.getComment, this, request, new ResultCallback() {
+            @Override
+            public void onResult(String jsonResult) {
+                GetCommentResponse response = JSON.parseObject(jsonResult, GetCommentResponse.class);
+                if (null != response && "0".equals(response.getRespCode())) {
+                    if (response.getCommentsNew().size() > 0) {
+                        mlist.addAll(response.getCommentsNew());
+                        commentAdapter.notifyDataSetChanged();
+                        emptyIv.setVisibility(View.GONE);
+                    } else {
+                        emptyIv.setVisibility(View.VISIBLE);
+                    }
 
                 }
             }
@@ -88,11 +269,5 @@ public class DuanziDetailsActivity extends BaseActivity {
             }
         });
     }
-
-    @Override
-    public void startInvoke() {
-
-    }
-
 
 }

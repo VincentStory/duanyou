@@ -10,4 +10,8 @@ public class Constants {
 
     public static final String beginContentID="beginContentID";
 
+    public static final String type="type";
+
+    public static final String CLICK_BEAN="clickBean";
+
 }

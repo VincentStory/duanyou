@@ -11,6 +11,13 @@ import java.util.List;
 public class GetUserUploadContentResponse extends BaseResponse {
     private List<DetailsDyContextsBean> dyContexts;
 
+    public List<DetailsDyContextsBean> getDyContexts() {
+        return dyContexts;
+    }
+
+    public void setDyContexts(List<DetailsDyContextsBean> dyContexts) {
+        this.dyContexts = dyContexts;
+    }
 
     public static class DetailsDyContextsBean extends GetContentResponse.DyContextsBean{
         private String adopt;
