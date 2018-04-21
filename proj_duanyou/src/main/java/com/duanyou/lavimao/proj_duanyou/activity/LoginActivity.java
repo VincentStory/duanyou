@@ -67,6 +67,8 @@ public class LoginActivity extends BaseActivity {
                         LoginResponse response = JSON.parseObject(json, LoginResponse.class);
                         SpUtil.saveStringSP(SpUtil.dyID, response.getDyID());
                         SpUtil.saveStringSP(SpUtil.TOKEN, response.getToken());
+                        SpUtil.saveStringSP(SpUtil.nickName, response.getNickName());
+                        SpUtil.saveStringSP(SpUtil.currentLocation, response.getCurrentLocation());
 
                         finish();
 
