@@ -23,4 +23,8 @@ public class Api {
      * 注册
      */
     public static final String REGISTER="register";
+    /**
+     * 登录
+     */
+    public static final String LOGIN="login";
 }

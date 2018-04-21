@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
+import com.blankj.utilcode.util.ToastUtils;
 import com.duanyou.lavimao.proj_duanyou.R;
 import com.duanyou.lavimao.proj_duanyou.base.BaseActivity;
 import com.duanyou.lavimao.proj_duanyou.net.Api;
@@ -17,6 +18,7 @@ import com.duanyou.lavimao.proj_duanyou.net.request.GetContentRequest;
 import com.duanyou.lavimao.proj_duanyou.net.request.GetVerificationCodeRequest;
 import com.duanyou.lavimao.proj_duanyou.net.response.GetContentResponse;
 import com.duanyou.lavimao.proj_duanyou.util.Contents;
+import com.duanyou.lavimao.proj_duanyou.util.SpUtil;
 import com.xiben.ebs.esbsdk.callback.ResultCallback;
 
 import butterknife.BindView;
@@ -24,6 +26,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 /**
+ * 输入手机号注册
  * Created by vincent on 2018/4/20.
  */
 
@@ -57,13 +60,11 @@ public class RegisterActivity extends BaseActivity {
                     @Override
                     public void success(String json) {
                         BaseResponse response = JSON.parseObject(json, BaseResponse.class);
-
+                        SpUtil.saveStringSP(SpUtil.mobilePhone, phoneEt.getText().toString().trim());
                         Intent intent = new Intent(RegisterActivity.this, CodeActivity.class);
-                        intent.putExtra("phone",phoneEt.getText().toString());
+                        intent.putExtra("phone", phoneEt.getText().toString());
                         startActivity(intent);
-//                        mList.clear();
-//                        mList.addAll(response.getDyContexts());
-//                        mAdapter.notifyDataSetChanged();
+
                     }
 
                     @Override
@@ -93,7 +94,7 @@ public class RegisterActivity extends BaseActivity {
 
 
                 } else {
-
+                    ToastUtils.showShort(response.getRespMessage());
                 }
 
             }

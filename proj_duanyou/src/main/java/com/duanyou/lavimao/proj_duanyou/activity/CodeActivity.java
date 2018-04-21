@@ -18,6 +18,7 @@ import com.duanyou.lavimao.proj_duanyou.net.response.GetContentResponse;
 import com.duanyou.lavimao.proj_duanyou.net.response.VerifyCodeResponse;
 import com.duanyou.lavimao.proj_duanyou.util.Contents;
 import com.duanyou.lavimao.proj_duanyou.util.DeviceUtils;
+import com.duanyou.lavimao.proj_duanyou.util.SpUtil;
 import com.xiben.ebs.esbsdk.callback.ResultCallback;
 
 import butterknife.BindView;
@@ -25,6 +26,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 /**
+ * 效验验证码
  * Created by vincent on 2018/4/21.
  */
 
@@ -54,19 +56,24 @@ public class CodeActivity extends BaseActivity {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.next_tv:
-             VerifyCode(CodeActivity.this, codeEt.getText().toString(), new GetContentResult() {
-                 @Override
-                 public void success(String json) {
-                     VerifyCodeResponse response = JSON.parseObject(json, VerifyCodeResponse.class);
-                     String token=response.getToken();
+                VerifyCode(CodeActivity.this, codeEt.getText().toString(), new GetContentResult() {
+                    @Override
+                    public void success(String json) {
+                        VerifyCodeResponse response = JSON.parseObject(json, VerifyCodeResponse.class);
+                        String token = response.getToken();
 
-                 }
+                        SpUtil.saveStringSP(SpUtil.TOKEN, token);
 
-                 @Override
-                 public void error(Exception ex) {
+                        Intent intent = new Intent(CodeActivity.this, SettingPwdActivity.class);
 
-                 }
-             });
+                        startActivity(intent);
+                    }
+
+                    @Override
+                    public void error(Exception ex) {
+
+                    }
+                });
                 break;
             case R.id.back_tv:
                 finish();
@@ -95,7 +102,7 @@ public class CodeActivity extends BaseActivity {
     private void VerifyCode(final Activity context, String code, final GetContentResult result) {
         VerifyCodeRequest request = new VerifyCodeRequest();
         request.setMobilePhone(phone);
-        request.setDevideID(DeviceUtils.getAndroidID());
+        request.setDeviceID(DeviceUtils.getAndroidID());
         request.setErificationCode(code);
         NetUtil.getData(Api.verifyCode, context, request, new ResultCallback() {
             @Override

@@ -1,60 +1,115 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="230dp">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <ImageView
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="180dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/bg_splash" />
+            android:layout_height="230dp">
 
-        <ImageView
-            android:id="@+id/headimage_iv"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_alignParentBottom="true"
-            android:layout_margin="25dp"
-            android:scaleType="centerCrop"
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="180dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/background2x" />
 
-            android:src="@drawable/icon_comments" />
+            <ImageView
+                android:id="@+id/headimage_iv"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_alignParentBottom="true"
+                android:layout_margin="25dp"
+                android:scaleType="centerCrop"
+
+                android:src="@drawable/beforesignin2x" />
+
+            <TextView
+                android:id="@+id/tv_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/headimage_iv"
+                android:layout_toRightOf="@+id/headimage_iv"
+                android:text="我的窝"
+                android:textColor="@color/white" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_below="@+id/tv_name"
+                android:layout_marginTop="10dp"
+                android:layout_toRightOf="@+id/headimage_iv"
+                android:drawableLeft="@drawable/near2x"
+                android:gravity="center_vertical"
+                android:text="火星上"
+                android:textColor="@color/black" />
+
+
+        </RelativeLayout>
 
         <TextView
-            android:id="@+id/tv_name"
-            android:layout_width="wrap_content"
+            android:id="@+id/login_register_tv"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/headimage_iv"
-            android:layout_toRightOf="@+id/headimage_iv"
-            android:text="我的窝"
-            android:textColor="@color/white" />
+            android:background="@color/white"
+            android:paddingBottom="15dp"
+            android:paddingLeft="50dp"
+            android:paddingTop="15dp"
+            android:text="登录/注册" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:background="@color/white"
+            android:paddingBottom="5dp"
+            android:paddingEnd="30dp"
+            android:paddingLeft="30dp"
+            android:paddingTop="10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawablePadding="5dp"
+                android:drawableTop="@drawable/add2x"
+                android:text="附近段友" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:drawablePadding="5dp"
+                android:drawableTop="@drawable/friend2x"
+                android:text="段友圈" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:drawablePadding="5dp"
+                android:drawableTop="@drawable/follow2x"
+                android:text="关注" />
+
+        </RelativeLayout>
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="30dp"
-            android:layout_below="@+id/tv_name"
-            android:layout_toRightOf="@+id/headimage_iv"
-            android:text="火星上"
-            android:layout_marginTop="10dp"
-            android:drawableLeft="@drawable/icon_logo"
-            android:textColor="@color/black" />
+            android:gravity="center_vertical"
+            android:drawablePadding="10dp"
+            android:paddingLeft="5dp"
+            android:paddingEnd="10dp"
+            android:background="@color/white"
+            android:drawableLeft="@drawable/collection2x"
+            android:drawableRight="@drawable/jiatou2x"
+            android:text="收藏" />
 
 
-    </RelativeLayout>
+    </LinearLayout>
 
-    <TextView
-        android:id="@+id/login_register_tv"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="登录/注册"
-        android:background="@color/white"
-        android:paddingTop="15dp"
-        android:paddingBottom="15dp"
-        android:paddingLeft="50dp"/>
-
-
-</LinearLayout>
+</ScrollView>

@@ -5,7 +5,7 @@ import com.duanyou.lavimao.proj_duanyou.net.BaseRequest;
 public class VerifyCodeRequest extends BaseRequest {
 
     private String mobilePhone;
-    private String devideID;
+    private String deviceID;
     private String erificationCode;
 
 
@@ -17,12 +17,14 @@ public class VerifyCodeRequest extends BaseRequest {
         this.mobilePhone = mobilePhone;
     }
 
-    public String getDevideID() {
-        return devideID;
+    @Override
+    public String getDeviceID() {
+        return deviceID;
     }
 
-    public void setDevideID(String devideID) {
-        this.devideID = devideID;
+    @Override
+    public void setDeviceID(String deviceID) {
+        this.deviceID = deviceID;
     }
 
     public String getErificationCode() {

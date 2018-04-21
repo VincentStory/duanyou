@@ -10,11 +10,11 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="205dp">
+        android:layout_height="180dp">
 
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="180dp"
+            android:layout_height="160dp"
             android:background="@color/gray" />
 
         <ImageView
@@ -22,7 +22,7 @@
             android:layout_height="50dp"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:src="@drawable/ic_launcher" />
+            android:src="@drawable/beforesignin2x" />
     </RelativeLayout>
 
     <TextView
@@ -57,7 +57,7 @@
         android:textSize="14sp" />
 
     <Button
-        android:id="@+id/login_et"
+        android:id="@+id/login_btn"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_marginLeft="30dp"
@@ -74,17 +74,60 @@
         android:layout_marginRight="35dp"
         android:layout_marginTop="10dp"
         android:orientation="horizontal">
+
         <TextView
 
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="没有账号？" />
+
         <TextView
             android:id="@+id/no_account_tv"
-            android:layout_alignParentEnd="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
             android:text="没有账号？" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp"
+        android:layout_marginTop="20dp">
+
+        <ImageView
+            android:id="@+id/iv1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/qq2" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/iv1"
+            android:layout_alignRight="@+id/iv1"
+            android:gravity="center"
+            android:layout_below="@+id/iv1"
+            android:text="QQ登录" />
+        <ImageView
+            android:id="@+id/iv2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:background="@drawable/wechat2x" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/iv2"
+            android:layout_alignRight="@+id/iv2"
+            android:gravity="center"
+            android:layout_below="@+id/iv2"
+            android:text="微信登录" />
+
     </RelativeLayout>
 
 
