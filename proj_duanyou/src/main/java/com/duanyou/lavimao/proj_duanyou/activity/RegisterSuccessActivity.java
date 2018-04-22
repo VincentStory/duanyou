@@ -3,6 +3,7 @@ package com.duanyou.lavimao.proj_duanyou.activity;
 import android.content.Intent;
 import android.view.View;
 
+import com.duanyou.lavimao.proj_duanyou.MyApplication;
 import com.duanyou.lavimao.proj_duanyou.R;
 import com.duanyou.lavimao.proj_duanyou.base.BaseActivity;
 
@@ -24,7 +25,7 @@ public class RegisterSuccessActivity extends BaseActivity {
 
     @Override
     public void initData() {
-
+        MyApplication.getInstance().addActivity(this);
     }
 
     @Override
@@ -40,6 +41,7 @@ public class RegisterSuccessActivity extends BaseActivity {
                 Intent intent = new Intent(RegisterSuccessActivity.this, LoginActivity.class);
 
                 startActivity(intent);
+                MyApplication.getInstance().finishActivity();
                 break;
             default:
                 break;

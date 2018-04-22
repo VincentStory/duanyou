@@ -7,6 +7,7 @@ import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
 import com.blankj.utilcode.util.ToastUtils;
+import com.duanyou.lavimao.proj_duanyou.MyApplication;
 import com.duanyou.lavimao.proj_duanyou.R;
 import com.duanyou.lavimao.proj_duanyou.base.BaseActivity;
 import com.duanyou.lavimao.proj_duanyou.net.Api;
@@ -46,7 +47,7 @@ public class SettingPwdActivity extends BaseActivity {
 
     @Override
     public void initData() {
-
+        MyApplication.getInstance().addActivity(this);
     }
 
     @Override

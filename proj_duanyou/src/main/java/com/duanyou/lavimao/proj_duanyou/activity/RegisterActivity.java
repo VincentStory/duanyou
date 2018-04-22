@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
 import com.blankj.utilcode.util.ToastUtils;
+import com.duanyou.lavimao.proj_duanyou.MyApplication;
 import com.duanyou.lavimao.proj_duanyou.R;
 import com.duanyou.lavimao.proj_duanyou.base.BaseActivity;
 import com.duanyou.lavimao.proj_duanyou.net.Api;
@@ -43,7 +44,7 @@ public class RegisterActivity extends BaseActivity {
 
     @Override
     public void initData() {
-
+        MyApplication.getInstance().addActivity(this);
     }
 
     @Override
@@ -52,10 +53,18 @@ public class RegisterActivity extends BaseActivity {
     }
 
 
-    @OnClick(R.id.next_tv)
+    @OnClick({R.id.next_tv,R.id.back_tv})
     public void onClick(View view) {
         switch (view.getId()) {
+            case R.id.back_tv:
+                finish();
+                break;
             case R.id.next_tv:
+                if(phoneEt.getText().toString().trim().isEmpty()){
+                    ToastUtils.showShort("请输入正确的手机号");
+                    break;
+                }
+
                 getContent(RegisterActivity.this, phoneEt.getText().toString(), new GetContentResult() {
                     @Override
                     public void success(String json) {

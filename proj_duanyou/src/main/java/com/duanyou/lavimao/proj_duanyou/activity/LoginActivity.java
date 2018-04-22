@@ -7,6 +7,7 @@ import android.widget.EditText;
 
 import com.alibaba.fastjson.JSON;
 import com.blankj.utilcode.util.ToastUtils;
+import com.duanyou.lavimao.proj_duanyou.MyApplication;
 import com.duanyou.lavimao.proj_duanyou.R;
 import com.duanyou.lavimao.proj_duanyou.base.BaseActivity;
 import com.duanyou.lavimao.proj_duanyou.net.Api;
@@ -44,7 +45,7 @@ public class LoginActivity extends BaseActivity {
 
     @Override
     public void initData() {
-
+//        MyApplication.getInstance().addActivity(this);
     }
 
     @Override
@@ -53,7 +54,7 @@ public class LoginActivity extends BaseActivity {
     }
 
 
-    @OnClick({R.id.no_account_tv, R.id.login_btn})
+    @OnClick({R.id.no_account_tv, R.id.login_btn, R.id.qq_iv, R.id.weixin_iv})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.no_account_tv:
@@ -61,29 +62,51 @@ public class LoginActivity extends BaseActivity {
                 startActivity(intent);
                 break;
             case R.id.login_btn:
-                login(LoginActivity.this, accountEt.getText().toString().trim(), pwdEt.getText().toString().trim(), new GetContentResult() {
-                    @Override
-                    public void success(String json) {
-                        LoginResponse response = JSON.parseObject(json, LoginResponse.class);
-                        SpUtil.saveStringSP(SpUtil.dyID, response.getDyID());
-                        SpUtil.saveStringSP(SpUtil.TOKEN, response.getToken());
-                        SpUtil.saveStringSP(SpUtil.nickName, response.getNickName());
-                        SpUtil.saveStringSP(SpUtil.currentLocation, response.getCurrentLocation());
 
-                        finish();
+                if (checkContent(accountEt.getText().toString().trim(), pwdEt.getText().toString().trim())){
 
-                    }
+                    login(LoginActivity.this, accountEt.getText().toString().trim(), pwdEt.getText().toString().trim(), new GetContentResult() {
+                        @Override
+                        public void success(String json) {
+                            LoginResponse response = JSON.parseObject(json, LoginResponse.class);
+                            SpUtil.saveStringSP(SpUtil.dyID, response.getDyID());
+                            SpUtil.saveStringSP(SpUtil.TOKEN, response.getToken());
+                            SpUtil.saveStringSP(SpUtil.nickName, response.getNickName());
+                            SpUtil.saveStringSP(SpUtil.currentLocation, response.getCurrentLocation());
 
-                    @Override
-                    public void error(Exception ex) {
+                            finish();
 
-                    }
-                });
+                        }
 
+                        @Override
+                        public void error(Exception ex) {
+
+                        }
+                    });
+                }
+
+
+
+
+                break;
+            case R.id.qq_iv:
+                ToastUtils.showShort("正在维护");
+                break;
+            case R.id.weixin_iv:
+                ToastUtils.showShort("正在维护");
                 break;
         }
     }
 
+
+    private boolean checkContent(String name, String pwd) {
+        if (name.isEmpty() || pwd.isEmpty()) {
+
+            ToastUtils.showShort("账号或密码为空");
+            return false;
+        }
+        return true;
+    }
 
     /**
      * 登录

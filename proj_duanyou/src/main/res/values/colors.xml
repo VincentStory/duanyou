@@ -8,6 +8,8 @@
     <color name="white">#ffffff</color>
     <color name="title">#dcd9cf</color>
     <color name="bg_color">#aaffb200</color>
+    <color name="login_color1">#fda85a</color>
+    <color name="login_color2">#fee7b5</color>
     <color name="black">#000000</color>
     <color name="gray">#dcd9cf</color>
     <color name="gray2">#e5e5e5</color>

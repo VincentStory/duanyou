@@ -1,5 +1,6 @@
 package com.duanyou.lavimao.proj_duanyou;
 
+import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.support.multidex.MultiDexApplication;
@@ -10,6 +11,7 @@ import com.blankj.utilcode.util.Utils;
 import com.duanyou.lavimao.proj_duanyou.util.SpUtil;
 
 
+import java.util.LinkedList;
 import java.util.List;
 
 
@@ -21,7 +23,7 @@ import java.util.List;
 public class MyApplication extends MultiDexApplication {
     private static final String TAG = MyApplication.class.getSimpleName();
     private static MyApplication mInstance;
-
+    private List<Activity> activitys = null;
     @Override
     public void onCreate() {
         super.onCreate();
@@ -42,9 +44,11 @@ public class MyApplication extends MultiDexApplication {
 
     }
 
-    public MyApplication() {
 
+    public MyApplication() {
+        activitys = new LinkedList<Activity>();
     }
+
 
     public static boolean isLogin() {
         if (SpUtil.getStringSp(SpUtil.dyID).isEmpty()) {
@@ -72,6 +76,29 @@ public class MyApplication extends MultiDexApplication {
         }
 
         return null;
+    }
+
+
+
+    // 添加Activity到容器中
+    public void addActivity(Activity activity) {
+        if (activitys != null && activitys.size() > 0) {
+            if (!activitys.contains(activity)) {
+                activitys.add(activity);
+            }
+        } else {
+            activitys.add(activity);
+        }
+
+    }
+    // 遍历所有Activity并finish
+    public void finishActivity() {
+        if (activitys != null && activitys.size() > 0) {
+            for (Activity activity : activitys) {
+                activity.finish();
+            }
+        }
+
     }
 
 

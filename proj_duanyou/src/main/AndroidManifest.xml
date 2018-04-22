@@ -28,7 +28,8 @@
         <activity
             android:name=".activity.LoginActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:launchMode="singleTask"/>
         <activity
             android:name=".activity.RegisterActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"

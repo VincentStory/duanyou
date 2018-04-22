@@ -7,6 +7,7 @@ import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
 import com.blankj.utilcode.util.ToastUtils;
+import com.duanyou.lavimao.proj_duanyou.MyApplication;
 import com.duanyou.lavimao.proj_duanyou.R;
 import com.duanyou.lavimao.proj_duanyou.base.BaseActivity;
 import com.duanyou.lavimao.proj_duanyou.net.Api;
@@ -45,6 +46,7 @@ public class CodeActivity extends BaseActivity {
     @Override
     public void initData() {
         phone = getIntent().getStringExtra("phone");
+        MyApplication.getInstance().addActivity(this);
     }
 
     @Override
@@ -57,6 +59,10 @@ public class CodeActivity extends BaseActivity {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.next_tv:
+                if(codeEt.getText().toString().trim().isEmpty()){
+                    ToastUtils.showShort("请输入正确的验证码");
+                    break;
+                }
                 VerifyCode(CodeActivity.this, codeEt.getText().toString(), new GetContentResult() {
                     @Override
                     public void success(String json) {
