@@ -84,7 +84,7 @@ public class DuanziDetailsActivity extends BaseActivity {
     private CommentAdapter commentAdapter;
     private List<GetCommentResponse.CommentsNewBean> mlist = new ArrayList<>();
     private GetContentResponse.DyContextsBean bean;  //详情类
-    private boolean refreshTag = false;//下拉刷新  true  加载更多  false
+    private boolean refreshTag = true;//下拉刷新  true  加载更多  false
 
     @Override
     public void setView() {
@@ -376,7 +376,7 @@ public class DuanziDetailsActivity extends BaseActivity {
                         if (response.getCommentsNew().size() > 0) {
                             mlist.addAll(response.getCommentsNew());
                             commentAdapter.notifyDataSetChanged();
-                        } else {
+                        } else if (!refreshTag) {
                             ToastUtils.showShort(getResources().getString(R.string.no_more));
                         }
                         if (mlist.size() == 0) {

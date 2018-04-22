@@ -42,7 +42,7 @@ public class TagFragment extends BaseFragment {
     ListView listView;
 
     private String type; //内容类型。0-精选，1-热吧，2-段子，3-图片，4-视频
-    private boolean refreshTag = false;  //下拉刷新  true   加载更多  false
+    private boolean refreshTag = true;  //下拉刷新  true   加载更多  false
     private List<GetContentResponse.DyContextsBean> mList;
     private MainContentAdapter mAdapter;
 
