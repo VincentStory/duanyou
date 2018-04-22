@@ -17,6 +17,10 @@ import com.duanyou.lavimao.proj_duanyou.base.BaseFragment;
 import com.duanyou.lavimao.proj_duanyou.net.GetContentResult;
 import com.duanyou.lavimao.proj_duanyou.net.response.GetContentResponse;
 import com.duanyou.lavimao.proj_duanyou.util.Constants;
+import com.duanyou.lavimao.proj_duanyou.util.ToastUtils;
+import com.lcodecore.tkrefreshlayout.RefreshListenerAdapter;
+import com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout;
+import com.lcodecore.tkrefreshlayout.header.SinaRefreshView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,11 +36,13 @@ import cn.jzvd.JZVideoPlayer;
 
 public class TagFragment extends BaseFragment {
 
+    @BindView(R.id.refresh)
+    TwinklingRefreshLayout refreshLayout;
     @BindView(R.id.list)
     ListView listView;
 
     private String type; //内容类型。0-精选，1-热吧，2-段子，3-图片，4-视频
-
+    private boolean refreshTag = false;  //下拉刷新  true   加载更多  false
     private List<GetContentResponse.DyContextsBean> mList;
     private MainContentAdapter mAdapter;
 
@@ -63,8 +69,29 @@ public class TagFragment extends BaseFragment {
     @Override
     public void startInvoke(View view) {
         initParam();
+        initView();
         initList();
         getContent();
+    }
+
+    private void initView() {
+        refreshLayout.setHeaderView(new SinaRefreshView(getActivity()));
+        refreshLayout.setOnRefreshListener(new RefreshListenerAdapter() {
+            @Override
+            public void onRefresh(TwinklingRefreshLayout refreshLayout) {
+                super.onRefresh(refreshLayout);
+                refreshTag = true;
+                getContent();
+            }
+
+            @Override
+            public void onLoadMore(TwinklingRefreshLayout refreshLayout) {
+                super.onLoadMore(refreshLayout);
+                refreshTag = false;
+                getContent();
+            }
+        });
+
     }
 
     private void initParam() {
@@ -97,9 +124,26 @@ public class TagFragment extends BaseFragment {
                 @Override
                 public void success(String json) {
                     GetContentResponse response = JSON.parseObject(json, GetContentResponse.class);
-                    mList.clear();
-                    mList.addAll(response.getDyContexts());
-                    mAdapter.notifyDataSetChanged();
+                    if (refreshTag) {
+                        mList.clear();
+                        refreshLayout.finishRefreshing();
+                    } else {
+                        refreshLayout.finishLoadmore();
+                    }
+
+                    if (null != response) {
+                        if ("0".equals(response.getRespCode())) {
+                            if (response.getDyContexts().size() > 0) {
+                                mList.clear();
+                                mList.addAll(response.getDyContexts());
+                                mAdapter.notifyDataSetChanged();
+                            } else {
+                                ToastUtils.showShort(getActivity().getResources().getString(R.string.no_more));
+                            }
+                        } else {
+                            ToastUtils.showShort(response.getRespMessage());
+                        }
+                    }
                 }
 
                 @Override
@@ -115,4 +159,5 @@ public class TagFragment extends BaseFragment {
         super.onPause();
         JZVideoPlayer.releaseAllVideos();
     }
+
 }

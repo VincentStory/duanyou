@@ -68,6 +68,8 @@ dependencies {
     api 'cn.jzvd:jiaozivideoplayer:6.2.9'
     //圆角图片
     implementation 'com.makeramen:roundedimageview:2.3.0'
+    //刷新控件
+    implementation 'com.lcodecorex:tkrefreshlayout:1.0.7'
 
 
 }

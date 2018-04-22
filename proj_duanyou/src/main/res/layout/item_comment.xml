@@ -11,7 +11,7 @@
         android:id="@+id/head_iv"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:layout_gravity="center_vertical"
+
         android:src="@drawable/default_pic"
         app:riv_corner_radius="6dp" />
 
@@ -33,18 +33,21 @@
             android:id="@+id/time_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="12sp"
+            android:layout_marginTop="5dp"
+            android:textSize="10sp"
             tools:text="time" />
 
         <TextView
             android:id="@+id/comment_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
             android:textSize="14sp"
             tools:text="comment" />
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/zan_ll"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
@@ -52,8 +55,8 @@
 
         <ImageView
             android:id="@+id/zan_iv"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
             android:src="@drawable/icon_liked" />
 
         <TextView

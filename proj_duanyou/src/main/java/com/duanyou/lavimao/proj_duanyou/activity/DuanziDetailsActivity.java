@@ -28,6 +28,9 @@ import com.duanyou.lavimao.proj_duanyou.util.Constants;
 import com.duanyou.lavimao.proj_duanyou.util.ImageUtils;
 import com.duanyou.lavimao.proj_duanyou.util.KeyboardUtils;
 import com.duanyou.lavimao.proj_duanyou.util.UserInfo;
+import com.lcodecore.tkrefreshlayout.RefreshListenerAdapter;
+import com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout;
+import com.lcodecore.tkrefreshlayout.header.SinaRefreshView;
 import com.xiben.ebs.esbsdk.callback.ResultCallback;
 
 import java.util.ArrayList;
@@ -43,6 +46,8 @@ import cn.jzvd.JZVideoPlayerStandard;
  */
 public class DuanziDetailsActivity extends BaseActivity {
 
+    @BindView(R.id.refresh)
+    TwinklingRefreshLayout refreshLayout;
     @BindView(R.id.iv_left)
     ImageView leftIv;
     @BindView(R.id.nav_right_iv)
@@ -79,6 +84,7 @@ public class DuanziDetailsActivity extends BaseActivity {
     private CommentAdapter commentAdapter;
     private List<GetCommentResponse.CommentsNewBean> mlist = new ArrayList<>();
     private GetContentResponse.DyContextsBean bean;  //详情类
+    private boolean refreshTag = false;//下拉刷新  true  加载更多  false
 
     @Override
     public void setView() {
@@ -95,12 +101,37 @@ public class DuanziDetailsActivity extends BaseActivity {
     @Override
     public void initData() {
         initParams();
+        initViews();
         //getDuanziDetails();
         commentRv.setLayoutManager(new LinearLayoutManager(this));
         commentAdapter = new CommentAdapter(this, R.layout.item_comment, mlist);
         commentRv.setAdapter(commentAdapter);
         loadComent(0);
 
+    }
+
+    private void initViews() {
+        refreshLayout.setHeaderView(new SinaRefreshView(this));
+        refreshLayout.setOnRefreshListener(new RefreshListenerAdapter() {
+            @Override
+            public void onRefresh(TwinklingRefreshLayout refreshLayout) {
+                super.onRefresh(refreshLayout);
+                refreshTag = true;
+                initParams();
+                loadComent(0);
+            }
+
+            @Override
+            public void onLoadMore(TwinklingRefreshLayout refreshLayout) {
+                super.onLoadMore(refreshLayout);
+                refreshTag = false;
+                if (mlist.size() > 0) {
+                    loadComent(mlist.get(mlist.size() - 1).getCommentID());
+                } else {
+                    refreshLayout.finishLoadmore();
+                }
+            }
+        });
     }
 
     private void initParams() {
@@ -334,15 +365,28 @@ public class DuanziDetailsActivity extends BaseActivity {
             @Override
             public void onResult(String jsonResult) {
                 GetCommentResponse response = JSON.parseObject(jsonResult, GetCommentResponse.class);
-                if (null != response && "0".equals(response.getRespCode())) {
-                    if (response.getCommentsNew().size() > 0) {
-                        mlist.addAll(response.getCommentsNew());
-                        commentAdapter.notifyDataSetChanged();
-                        emptyIv.setVisibility(View.GONE);
+                if (null != response) {
+                    if ("0".equals(response.getRespCode())) {
+                        if (refreshTag) {
+                            mlist.clear();
+                            refreshLayout.finishRefreshing();
+                        } else {
+                            refreshLayout.finishLoadmore();
+                        }
+                        if (response.getCommentsNew().size() > 0) {
+                            mlist.addAll(response.getCommentsNew());
+                            commentAdapter.notifyDataSetChanged();
+                        } else {
+                            ToastUtils.showShort(getResources().getString(R.string.no_more));
+                        }
+                        if (mlist.size() == 0) {
+                            emptyIv.setVisibility(View.VISIBLE);
+                        } else {
+                            emptyIv.setVisibility(View.GONE);
+                        }
                     } else {
-                        emptyIv.setVisibility(View.VISIBLE);
+                        ToastUtils.showShort(response.getRespMessage());
                     }
-
                 }
             }
 

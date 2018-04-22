@@ -171,12 +171,12 @@ public class MainContentAdapter extends CommonAdapter<GetContentResponse.DyConte
             }
         });
         //评论
-       /* helper.setOnClickListener(R.id.comment_ll, new View.OnClickListener() {
+        helper.setOnClickListener(R.id.comment_ll, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
             }
-        });*/
+        });
     }
 
     /**

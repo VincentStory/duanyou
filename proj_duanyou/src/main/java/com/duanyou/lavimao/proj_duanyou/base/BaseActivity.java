@@ -105,15 +105,15 @@ public abstract class BaseActivity extends AppCompatActivity {
             }
 
 
-            final TextView toolbar = findViewById(R.id.tv_fill_status_bar);
-            if (toolbar != null) {
-                //1.先设置toolbar的高度
-                ViewGroup.LayoutParams params = toolbar.getLayoutParams();
-                int statusBarHeight = getStatusBarHeight(this);
-                params.height += statusBarHeight;
-                toolbar.setLayoutParams(params);
-
-            }
+//            final TextView toolbar = findViewById(R.id.tv_fill_status_bar);
+//            if (toolbar != null) {
+//                //1.先设置toolbar的高度
+//                ViewGroup.LayoutParams params = toolbar.getLayoutParams();
+//                int statusBarHeight = getStatusBarHeight(this);
+//                params.height += statusBarHeight;
+//                toolbar.setLayoutParams(params);
+//
+//            }
 
         }
 

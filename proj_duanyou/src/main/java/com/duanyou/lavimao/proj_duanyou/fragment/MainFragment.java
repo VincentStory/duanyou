@@ -101,7 +101,7 @@ public class MainFragment extends BaseFragment {
         fragments.add(TagFragment.newInstance("3"));//趣图
         fragments.add(TagFragment.newInstance("2"));//段子
         fragments.add(TagFragment.newInstance("4"));//精选
-        fragments.add(new DuanyouxiuFragment());//段友秀
+        fragments.add(TagFragment.newInstance("4"));//段友秀
         pagerAdapter = new MainPagerAdapter(getFragmentManager(), fragments, getActivity());
         viewPager.setAdapter(pagerAdapter);
         viewPager.setOffscreenPageLimit(7);
