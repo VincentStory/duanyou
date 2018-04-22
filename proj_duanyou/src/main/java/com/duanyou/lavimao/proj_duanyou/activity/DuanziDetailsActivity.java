@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
+import com.blankj.utilcode.util.ScreenUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.bumptech.glide.Glide;
 import com.duanyou.lavimao.proj_duanyou.GlideApp;
@@ -16,12 +17,15 @@ import com.duanyou.lavimao.proj_duanyou.R;
 import com.duanyou.lavimao.proj_duanyou.adapter.CommentAdapter;
 import com.duanyou.lavimao.proj_duanyou.base.BaseActivity;
 import com.duanyou.lavimao.proj_duanyou.net.Api;
+import com.duanyou.lavimao.proj_duanyou.net.BaseResponse;
+import com.duanyou.lavimao.proj_duanyou.net.GetContentResult;
 import com.duanyou.lavimao.proj_duanyou.net.NetUtil;
 import com.duanyou.lavimao.proj_duanyou.net.request.GetCommentRequest;
 import com.duanyou.lavimao.proj_duanyou.net.request.UserOperationRequest;
 import com.duanyou.lavimao.proj_duanyou.net.response.GetCommentResponse;
 import com.duanyou.lavimao.proj_duanyou.net.response.GetContentResponse;
 import com.duanyou.lavimao.proj_duanyou.util.Constants;
+import com.duanyou.lavimao.proj_duanyou.util.ImageUtils;
 import com.duanyou.lavimao.proj_duanyou.util.KeyboardUtils;
 import com.duanyou.lavimao.proj_duanyou.util.UserInfo;
 import com.xiben.ebs.esbsdk.callback.ResultCallback;
@@ -110,15 +114,26 @@ public class DuanziDetailsActivity extends BaseActivity {
                     contentTv.setText(bean.getContextText());
                     break;
                 case "3":
-                    contentTv.setVisibility(View.VISIBLE);
-                    contentIv.setVisibility(View.GONE);
+                    contentTv.setVisibility(View.GONE);
+                    contentIv.setVisibility(View.VISIBLE);
                     videoplayer.setVisibility(View.GONE);
-                    Glide.with(this).load(bean.getContextUrl()).into(contentIv);
+                    ImageUtils.reCalculateImage(contentIv,
+                            bean.getPixelWidth(),
+                            bean.getPixelHeight(),
+                            ScreenUtils.getScreenWidth());
+                    GlideApp.with(this)
+                            .load(bean.getContextUrl())
+                            .placeholder(R.drawable.default_pic)
+                            .into(contentIv);
                     break;
                 case "4":
                     contentTv.setVisibility(View.GONE);
                     contentIv.setVisibility(View.GONE);
                     videoplayer.setVisibility(View.VISIBLE);
+                    ImageUtils.reCalculateJzVideo(videoplayer,
+                            bean.getPixelWidth(),
+                            bean.getPixelHeight(),
+                            ScreenUtils.getScreenWidth());
                     videoplayer.setUp(bean.getContextUrl(), JZVideoPlayerStandard.SCREEN_WINDOW_NORMAL, "");
                     GlideApp.with(DuanziDetailsActivity.this)
                             .load(bean.getVideoDisplay())
@@ -178,10 +193,53 @@ public class DuanziDetailsActivity extends BaseActivity {
                 jumpTo(ReportActivity.class);
                 break;
             case R.id.zan_iv:
-                userOperation("1", "1", "");
+                userOperation("1", "1", "", new GetContentResult() {
+                    @Override
+                    public void success(String json) {
+                        BaseResponse response = JSON.parseObject(json, BaseResponse.class);
+                        if (null != response) {
+                            if ("0".equals(response.getRespCode())) {
+                                try {
+                                    int zanNum = Integer.parseInt(zanTv.getText().toString().trim());
+                                    zanTv.setText((++zanNum) + "");
+                                } catch (Exception e) {
+                                }
+                            } else {
+                                ToastUtils.showShort(response.getRespMessage());
+                            }
+                        }
+
+                    }
+
+                    @Override
+                    public void error(Exception ex) {
+
+                    }
+                });
                 break;
             case R.id.cai_iv:
-                userOperation("1", "2", "");
+                userOperation("1", "2", "", new GetContentResult() {
+                    @Override
+                    public void success(String json) {
+                        BaseResponse response = JSON.parseObject(json, BaseResponse.class);
+                        if (null != response) {
+                            if ("0".equals(response.getRespCode())) {
+                                try {
+                                    int caiNum = Integer.parseInt(caiTv.getText().toString().trim());
+                                    caiTv.setText((++caiNum) + "");
+                                } catch (Exception e) {
+                                }
+                            } else {
+                                ToastUtils.showShort(response.getRespMessage());
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void error(Exception ex) {
+
+                    }
+                });
                 break;
             case R.id.comment_iv:
                 KeyboardUtils.showSoftInput(this);
@@ -189,7 +247,29 @@ public class DuanziDetailsActivity extends BaseActivity {
             case R.id.send_btn:
                 String commentContent = commentEt.getText().toString().trim();
                 if (!TextUtils.isEmpty(commentContent)) {
-                    userOperation("2", "2", commentContent);
+                    userOperation("2", "2", commentContent, new GetContentResult() {
+                        @Override
+                        public void success(String json) {
+                            BaseResponse response = JSON.parseObject(json, BaseResponse.class);
+                            if (null != response) {
+                                if ("0".equals(response.getRespCode())) {
+                                    try {
+                                        int commentNum = Integer.parseInt(commentTv.getText().toString().trim());
+                                        commentTv.setText((++commentNum) + "");
+                                    } catch (Exception e) {
+
+                                    }
+                                } else {
+                                    ToastUtils.showShort(response.getRespMessage());
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void error(Exception ex) {
+
+                        }
+                    });
                 } else {
                     ToastUtils.showShort("请输入内容");
                 }
@@ -211,29 +291,32 @@ public class DuanziDetailsActivity extends BaseActivity {
      * @param operator 1-点赞 2-点踩 3-举报 4-视频播放 5-转发 6-收藏/关注 7-取消收藏/取消关注 8-删除（只能删除自己的） 9-用户反馈（type为9）
      * @param remark
      */
-    public void userOperation(String type, String operator, String remark) {
-        UserOperationRequest request = new UserOperationRequest();
-        request.setDyID(UserInfo.getDyId());
-        request.setDeviceID(UserInfo.getDeviceId());
-        request.setToken(UserInfo.getToken());
-        List<Integer> mList = new ArrayList<>();
-        mList.add(bean.getDyContextID());
-        request.setDyDataID(mList);
-        request.setType(type);
-        request.setOperator(operator);
-        request.setRemark(remark);
-        NetUtil.getData(Api.userOperation, this, request, new ResultCallback() {
-            @Override
-            public void onResult(String jsonResult) {
+    public void userOperation(String type, String operator, String remark, final GetContentResult result) {
+        if (UserInfo.getLoginState()) {
+            UserOperationRequest request = new UserOperationRequest();
+            request.setDyID(UserInfo.getDyId());
+            request.setDeviceID(UserInfo.getDeviceId());
+            request.setToken(UserInfo.getToken());
+            List<Integer> mList = new ArrayList<>();
+            mList.add(bean.getDyContextID());
+            request.setDyDataID(mList);
+            request.setType(type);
+            request.setOperator(operator);
+            request.setRemark(remark);
+            NetUtil.getData(Api.userOperation, this, request, new ResultCallback() {
+                @Override
+                public void onResult(String jsonResult) {
+                    result.success(jsonResult);
+                }
 
-            }
-
-            @Override
-            public void onError(Exception ex) {
-
-            }
-        });
-
+                @Override
+                public void onError(Exception ex) {
+                    result.error(ex);
+                }
+            });
+        } else {
+            jumpTo(LoginActivity.class);
+        }
     }
 
 

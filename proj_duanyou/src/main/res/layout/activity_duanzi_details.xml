@@ -13,6 +13,7 @@
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_above="@+id/bottom_ll"
         android:layout_below="@+id/title">
 
         <!--头像姓名-->
@@ -63,6 +64,7 @@
                     android:id="@+id/content_iv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
+
             </FrameLayout>
             <!--操作栏-->
             <LinearLayout
@@ -186,6 +188,7 @@
 
     <!--底部输入框-->
     <LinearLayout
+        android:id="@+id/bottom_ll"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"

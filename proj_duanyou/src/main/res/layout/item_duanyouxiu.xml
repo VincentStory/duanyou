@@ -63,7 +63,7 @@
             android:id="@+id/content_iv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:minHeight="200dp" />
+            android:scaleType="fitXY" />
 
     </FrameLayout>
     <!--底部-->
@@ -77,6 +77,7 @@
         android:orientation="horizontal">
         <!--赞-->
         <LinearLayout
+            android:id="@+id/zan_ll"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="4dp"
@@ -89,7 +90,7 @@
                 android:src="@drawable/icon_liked" />
 
             <TextView
-                android:id="@+id/tv_liked"
+                android:id="@+id/zan_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
@@ -99,6 +100,7 @@
         </LinearLayout>
         <!--踩-->
         <LinearLayout
+            android:id="@+id/cai_ll"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="25dp"
@@ -121,6 +123,7 @@
         </LinearLayout>
         <!--评论-->
         <LinearLayout
+            android:id="@+id/comment_ll"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="25dp"

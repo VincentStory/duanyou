@@ -23,6 +23,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import cn.jzvd.JZVideoPlayer;
 
 /**
  * 标签feagment
@@ -107,5 +108,11 @@ public class TagFragment extends BaseFragment {
                 }
             });
         }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        JZVideoPlayer.releaseAllVideos();
     }
 }

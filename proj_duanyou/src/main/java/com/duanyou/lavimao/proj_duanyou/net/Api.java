@@ -27,7 +27,7 @@ public class Api {
     /**
      * 用户操作
      */
-    public static final String userOperation="userOperation";
+    public static final String userOperation="userOperator";
 
     /**
      * 登录

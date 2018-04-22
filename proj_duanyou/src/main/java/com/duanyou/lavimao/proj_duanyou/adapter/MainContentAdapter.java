@@ -1,18 +1,33 @@
 package com.duanyou.lavimao.proj_duanyou.adapter;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.alibaba.fastjson.JSON;
+import com.blankj.utilcode.util.ScreenUtils;
+import com.blankj.utilcode.util.ToastUtils;
 import com.bumptech.glide.Glide;
 import com.duanyou.lavimao.proj_duanyou.GlideApp;
 import com.duanyou.lavimao.proj_duanyou.R;
+import com.duanyou.lavimao.proj_duanyou.activity.LoginActivity;
+import com.duanyou.lavimao.proj_duanyou.net.Api;
+import com.duanyou.lavimao.proj_duanyou.net.BaseResponse;
+import com.duanyou.lavimao.proj_duanyou.net.GetContentResult;
+import com.duanyou.lavimao.proj_duanyou.net.NetUtil;
+import com.duanyou.lavimao.proj_duanyou.net.request.UserOperationRequest;
 import com.duanyou.lavimao.proj_duanyou.net.response.GetContentResponse;
 import com.duanyou.lavimao.proj_duanyou.util.CommonAdapter;
+import com.duanyou.lavimao.proj_duanyou.util.ImageUtils;
+import com.duanyou.lavimao.proj_duanyou.util.UserInfo;
 import com.makeramen.roundedimageview.RoundedImageView;
+import com.xiben.ebs.esbsdk.callback.ResultCallback;
 import com.zhy.adapter.abslistview.ViewHolder;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import cn.jzvd.JZVideoPlayerStandard;
@@ -27,16 +42,16 @@ public class MainContentAdapter extends CommonAdapter<GetContentResponse.DyConte
     }
 
     @Override
-    public void convert(ViewHolder helper, GetContentResponse.DyContextsBean item) {
+    public void convert(ViewHolder helper, final GetContentResponse.DyContextsBean item) {
 
         RoundedImageView iv_avatar = helper.getView(R.id.iv_avatar);
         TextView tv_name = helper.getView(R.id.tv_name);
         TextView tv_content = helper.getView(R.id.tv_content);
         ImageView contentIv = helper.getView(R.id.content_iv);
         ImageView iv_sex = helper.getView(R.id.iv_sex);
-        TextView tv_liked = helper.getView(R.id.tv_liked);
-        TextView tv_unliked = helper.getView(R.id.tv_unliked);
-        TextView tv_comments = helper.getView(R.id.tv_comments);
+        final TextView zanTv = helper.getView(R.id.zan_tv);
+        final TextView caiTv = helper.getView(R.id.tv_unliked);
+        final TextView commentTv = helper.getView(R.id.tv_comments);
         JZVideoPlayerStandard jz = helper.getView(R.id.jz_video);
 
         String type = item.getContextType();
@@ -46,18 +61,31 @@ public class MainContentAdapter extends CommonAdapter<GetContentResponse.DyConte
                 contentIv.setVisibility(View.GONE);
                 jz.setVisibility(View.GONE);
                 tv_content.setText(item.getContextText());
-
                 break;
             case "3"://图片
                 tv_content.setVisibility(View.GONE);
                 contentIv.setVisibility(View.VISIBLE);
                 jz.setVisibility(View.GONE);
-                Glide.with(mContext).load(item.getContextUrl()).into(contentIv);
+
+                ImageUtils.reCalculateImage(helper.getView(R.id.content_iv),
+                        item.getPixelWidth(),
+                        item.getPixelHeight(),
+                        ScreenUtils.getScreenWidth());
+
+                GlideApp.with(mContext)
+                        .load(item.getContextUrl())
+                        .placeholder(R.drawable.default_pic)
+                        .into(contentIv);
                 break;
             case "4"://视频
                 tv_content.setVisibility(View.GONE);
                 contentIv.setVisibility(View.GONE);
                 jz.setVisibility(View.VISIBLE);
+
+                ImageUtils.reCalculateJzVideo(jz,
+                        item.getPixelWidth(),
+                        item.getPixelHeight(),
+                        ScreenUtils.getScreenWidth());
 
                 jz.setUp(item.getContextUrl(), JZVideoPlayerStandard.SCREEN_WINDOW_NORMAL, "");
                 GlideApp.with(mContext)
@@ -82,10 +110,110 @@ public class MainContentAdapter extends CommonAdapter<GetContentResponse.DyConte
         } else {
             Glide.with(mContext).load(R.drawable.icon_male).into(iv_sex);
         }
-        tv_liked.setText(item.getPraiseNum() + "");
-        tv_unliked.setText(item.getTrampleNum() + "");
-        tv_comments.setText(item.getCommentNum() + "");
+        zanTv.setText(item.getPraiseNum() + "");
+        caiTv.setText(item.getTrampleNum() + "");
+        commentTv.setText(item.getCommentNum() + "");
+        //赞
+        helper.setOnClickListener(R.id.zan_ll, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                userOperation("1", "1", "", item, new GetContentResult() {
+                    @Override
+                    public void success(String json) {
+                        BaseResponse response = JSON.parseObject(json, BaseResponse.class);
+                        if (null != response) {
+                            if ("0".equals(response.getRespCode())) {
+                                try {
+                                    int zanNum = Integer.parseInt(zanTv.getText().toString().trim());
+                                    zanTv.setText((++zanNum) + "");
+                                } catch (Exception e) {
+                                }
+                            } else {
+                                ToastUtils.showShort(response.getRespMessage());
+                            }
+                        }
 
+                    }
+
+                    @Override
+                    public void error(Exception ex) {
+
+                    }
+                });
+            }
+        });
+        //踩
+        helper.setOnClickListener(R.id.cai_ll, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                userOperation("1", "2", "",item, new GetContentResult() {
+                    @Override
+                    public void success(String json) {
+                        BaseResponse response = JSON.parseObject(json, BaseResponse.class);
+                        if (null != response) {
+                            if ("0".equals(response.getRespCode())) {
+                                try {
+                                    int caiNum = Integer.parseInt(caiTv.getText().toString().trim());
+                                    caiTv.setText((++caiNum) + "");
+                                } catch (Exception e) {
+                                }
+                            } else {
+                                ToastUtils.showShort(response.getRespMessage());
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void error(Exception ex) {
+
+                    }
+                });
+            }
+        });
+        //评论
+       /* helper.setOnClickListener(R.id.comment_ll, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });*/
     }
+
+    /**
+     * 用户操作
+     *
+     * @param type     1-段子 2-评论 3-回复 4-审核 5-用户
+     * @param operator 1-点赞 2-点踩 3-举报 4-视频播放 5-转发 6-收藏/关注 7-取消收藏/取消关注 8-删除（只能删除自己的） 9-用户反馈（type为9）
+     * @param remark
+     */
+    public void userOperation(String type, String operator, String remark, GetContentResponse.DyContextsBean item, final GetContentResult result) {
+        if (UserInfo.getLoginState()) {
+            UserOperationRequest request = new UserOperationRequest();
+            request.setDyID(UserInfo.getDyId());
+            request.setDeviceID(UserInfo.getDeviceId());
+            request.setToken(UserInfo.getToken());
+            List<Integer> mList = new ArrayList<>();
+            mList.add(item.getDyContextID());
+            request.setDyDataID(mList);
+            request.setType(type);
+            request.setOperator(operator);
+            request.setRemark(remark);
+            NetUtil.getData(Api.userOperation, (Activity) mContext, request, new ResultCallback() {
+                @Override
+                public void onResult(String jsonResult) {
+                    result.success(jsonResult);
+                }
+
+                @Override
+                public void onError(Exception ex) {
+                    result.error(ex);
+                }
+            });
+        } else {
+            Intent intent = new Intent(mContext, LoginActivity.class);
+            mContext.startActivity(intent);
+        }
+    }
+
 
 }
