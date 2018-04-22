@@ -6,6 +6,7 @@
 
     <color name="background">#F5F5F9</color>
     <color name="white">#ffffff</color>
+    <color name="rectangle_et">#55ffffff</color>
     <color name="title">#dcd9cf</color>
     <color name="bg_color">#aaffb200</color>
     <color name="login_color1">#fda85a</color>
@@ -15,5 +16,8 @@
     <color name="gray2">#e5e5e5</color>
     <color name="gray3">#F0F0F0</color>
     <color name="green">#1cd789</color>
+    <color name="bg_co">#F5F5F5</color>
+
+
 
 </resources>

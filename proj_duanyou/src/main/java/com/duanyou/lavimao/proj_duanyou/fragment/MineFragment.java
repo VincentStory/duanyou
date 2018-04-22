@@ -12,8 +12,10 @@ import android.widget.TextView;
 import com.duanyou.lavimao.proj_duanyou.MyApplication;
 import com.duanyou.lavimao.proj_duanyou.R;
 import com.duanyou.lavimao.proj_duanyou.activity.LoginActivity;
+import com.duanyou.lavimao.proj_duanyou.activity.PersonInfoAcitvity;
 import com.duanyou.lavimao.proj_duanyou.base.BaseFragment;
 import com.duanyou.lavimao.proj_duanyou.util.SpUtil;
+import com.duanyou.lavimao.proj_duanyou.util.UserInfo;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -57,12 +59,19 @@ public class MineFragment extends BaseFragment {
         }
     }
 
-    @OnClick(R.id.login_register_tv)
+    @OnClick({R.id.login_register_tv,R.id.edit_tv})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.login_register_tv:
-                Intent intent = new Intent(getContext(), LoginActivity.class);
-                startActivity(intent);
+                gotoActivity(LoginActivity.class);
+                break;
+            case R.id.edit_tv:
+                if(UserInfo.getLoginState()){
+                    gotoActivity(PersonInfoAcitvity.class);
+
+                }else {
+                   gotoActivity(LoginActivity.class);
+                }
                 break;
         }
     }

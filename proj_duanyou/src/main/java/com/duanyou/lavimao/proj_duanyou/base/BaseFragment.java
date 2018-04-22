@@ -1,6 +1,7 @@
 package com.duanyou.lavimao.proj_duanyou.base;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
 import com.duanyou.lavimao.proj_duanyou.R;
+import com.duanyou.lavimao.proj_duanyou.activity.LoginActivity;
 import com.duanyou.lavimao.proj_duanyou.net.Api;
 import com.duanyou.lavimao.proj_duanyou.net.BaseResponse;
 import com.duanyou.lavimao.proj_duanyou.net.GetContentResult;
@@ -123,6 +125,12 @@ public abstract class BaseFragment extends Fragment {
                 result.error(ex);
             }
         });
+    }
+
+
+    protected void gotoActivity(Class activity){
+        Intent intent = new Intent(getContext(), activity);
+        startActivity(intent);
     }
 
 

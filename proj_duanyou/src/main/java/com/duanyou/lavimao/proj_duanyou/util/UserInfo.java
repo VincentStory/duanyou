@@ -28,4 +28,8 @@ public class UserInfo {
         }
     }
 
+    public static void clearUserInfo(){
+
+    }
+
 }

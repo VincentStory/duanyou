@@ -35,6 +35,7 @@
         android:hint="请输入验证码"
         android:textColor="@color/bg_color"
         android:textColorHint="@color/bg_color"
+
         android:textSize="14sp" />
 
 
