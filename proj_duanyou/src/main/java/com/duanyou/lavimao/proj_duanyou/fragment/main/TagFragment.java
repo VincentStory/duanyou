@@ -134,7 +134,6 @@ public class TagFragment extends BaseFragment {
                     if (null != response) {
                         if ("0".equals(response.getRespCode())) {
                             if (response.getDyContexts().size() > 0) {
-                                mList.clear();
                                 mList.addAll(response.getDyContexts());
                                 mAdapter.notifyDataSetChanged();
                             } else {

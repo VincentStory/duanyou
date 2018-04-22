@@ -74,7 +74,8 @@ public class MainContentAdapter extends CommonAdapter<GetContentResponse.DyConte
 
                 GlideApp.with(mContext)
                         .load(item.getContextUrl())
-                        .placeholder(R.drawable.default_pic)
+                        .error(R.drawable.default_load)
+                        .placeholder(R.drawable.default_load)
                         .into(contentIv);
                 break;
             case "4"://视频
@@ -90,8 +91,8 @@ public class MainContentAdapter extends CommonAdapter<GetContentResponse.DyConte
                 jz.setUp(item.getContextUrl(), JZVideoPlayerStandard.SCREEN_WINDOW_NORMAL, "");
                 GlideApp.with(mContext)
                         .load(item.getVideoDisplay())
-                        .error(R.drawable.default_pic)
-                        .placeholder(R.drawable.default_pic)
+                        .error(R.drawable.default_load)
+                        .placeholder(R.drawable.default_load)
                         .into(jz.thumbImageView);
                 break;
         }
@@ -146,7 +147,7 @@ public class MainContentAdapter extends CommonAdapter<GetContentResponse.DyConte
         helper.setOnClickListener(R.id.cai_ll, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                userOperation("1", "2", "",item, new GetContentResult() {
+                userOperation("1", "2", "", item, new GetContentResult() {
                     @Override
                     public void success(String json) {
                         BaseResponse response = JSON.parseObject(json, BaseResponse.class);
