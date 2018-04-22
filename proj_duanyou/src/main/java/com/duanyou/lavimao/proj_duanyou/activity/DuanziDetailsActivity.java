@@ -168,7 +168,8 @@ public class DuanziDetailsActivity extends BaseActivity {
                     videoplayer.setUp(bean.getContextUrl(), JZVideoPlayerStandard.SCREEN_WINDOW_NORMAL, "");
                     GlideApp.with(DuanziDetailsActivity.this)
                             .load(bean.getVideoDisplay())
-                            .placeholder(R.drawable.default_pic)
+                            .error(R.drawable.default_load)
+                            .placeholder(R.drawable.default_load)
                             .into(videoplayer.thumbImageView);
 
 
@@ -287,6 +288,9 @@ public class DuanziDetailsActivity extends BaseActivity {
                                     try {
                                         int commentNum = Integer.parseInt(commentTv.getText().toString().trim());
                                         commentTv.setText((++commentNum) + "");
+                                        loadComent(0);
+                                        commentEt.setText("");
+                                        ToastUtils.showShort("发送成功");
                                     } catch (Exception e) {
 
                                     }
