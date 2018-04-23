@@ -34,10 +34,10 @@ public class ReportAdapter extends CommonAdapter<String> {
             public void onClick(View v) {
                 if (selectList.get(position)) {
                     selectList.set(position, false);
-                    helper.setImageResource(R.id.select_iv, R.drawable.jubao);
+                    helper.setImageResource(R.id.select_iv, R.drawable.unselect);
                 } else {
                     selectList.set(position, true);
-                    helper.setImageResource(R.id.select_iv, R.drawable.ic_launcher);
+                    helper.setImageResource(R.id.select_iv, R.drawable.select);
                 }
             }
         });
