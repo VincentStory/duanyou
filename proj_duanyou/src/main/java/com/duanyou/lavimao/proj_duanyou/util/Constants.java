@@ -14,4 +14,6 @@ public class Constants {
 
     public static final String CLICK_BEAN="clickBean";
 
+    public static final String dyContextID="dyContextID";
+
 }

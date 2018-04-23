@@ -11,62 +11,100 @@
         android:id="@+id/head_iv"
         android:layout_width="40dp"
         android:layout_height="40dp"
-
         android:src="@drawable/default_pic"
         app:riv_corner_radius="6dp" />
 
     <LinearLayout
-        android:layout_width="0dp"
+        android:id="@+id/comment_ll"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_weight="1"
         android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/name_tv"
-            android:layout_width="wrap_content"
+        <!--一级评论-->
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="14sp"
-            tools:text="name" />
+            android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/time_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:textSize="10sp"
-            tools:text="time" />
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/comment_tv"
-            android:layout_width="wrap_content"
+                <TextView
+                    android:id="@+id/name_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp"
+                    tools:text="name" />
+
+                <TextView
+                    android:id="@+id/time_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:textSize="10sp"
+                    tools:text="time" />
+
+                <TextView
+                    android:id="@+id/comment_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:textSize="14sp"
+                    tools:text="comment" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/zan_ll"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/zan_iv"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:src="@drawable/icon_liked" />
+
+                <TextView
+                    android:id="@+id/zan_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="5dp"
+                    android:text="11"
+                    android:textSize="12sp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/gray2" />
+
+        <!--二级回复-->
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/reply_rv"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:textSize="14sp"
-            tools:text="comment" />
+            android:background="@drawable/yellow_5dp_bg"
+            android:padding="5dp" />
+
+        <View
+            android:id="@+id/reply_view"
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/gray2" />
+
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/zan_ll"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:orientation="horizontal">
-
-        <ImageView
-            android:id="@+id/zan_iv"
-            android:layout_width="15dp"
-            android:layout_height="15dp"
-            android:src="@drawable/icon_liked" />
-
-        <TextView
-            android:id="@+id/zan_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="5dp"
-            android:text="11"
-            android:textSize="12sp" />
-    </LinearLayout>
 
 </LinearLayout>
