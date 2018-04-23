@@ -53,16 +53,21 @@ public class PersonInfoAcitvity extends BaseActivity {
     }
 
 
-
-    @OnClick({R.id.iv_left})
+    @OnClick({R.id.iv_left, R.id.headimage_rl})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.iv_left:
-               finish();
+                finish();
+                break;
+            case R.id.headimage_rl:
+
+
+
                 break;
 
-          default:
-              break;
+
+            default:
+                break;
         }
     }
 }

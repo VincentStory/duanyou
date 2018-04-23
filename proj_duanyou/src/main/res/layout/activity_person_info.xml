@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -9,11 +10,12 @@
     <include
         android:id="@+id/title"
         layout="@layout/common_title"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="259dp" />
+
+
+        />
 
     <RelativeLayout
+        android:id="@+id/headimage_rl"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingLeft="10dp"
@@ -21,18 +23,19 @@
 
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="50dp"
+            android:layout_height="60dp"
             android:gravity="center"
             android:text="头像" />
 
         <com.makeramen.roundedimageview.RoundedImageView
             android:id="@+id/head_iv"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             android:layout_alignParentRight="true"
-            android:layout_marginBottom="3dp"
-            android:layout_marginTop="3dp"
-            android:background="@drawable/head42x" />
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/head42x"
+            app:riv_corner_radius="6dp" />
 
         <TextView
             android:layout_width="match_parent"
@@ -49,14 +52,14 @@
 
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="40dp"
+            android:layout_height="44dp"
             android:gravity="center"
             android:text="段友号" />
 
         <TextView
             android:id="@+id/duanyouid_tv"
             android:layout_width="wrap_content"
-            android:layout_height="40dp"
+            android:layout_height="44dp"
             android:layout_alignParentRight="true"
             android:gravity="center"
             tools:text="6465465" />
@@ -76,14 +79,14 @@
 
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="40dp"
+            android:layout_height="44dp"
             android:gravity="center"
             android:text="昵称" />
 
         <TextView
             android:id="@+id/nickname_tv"
             android:layout_width="wrap_content"
-            android:layout_height="40dp"
+            android:layout_height="44dp"
             android:layout_alignParentRight="true"
 
             android:gravity="center"
@@ -104,14 +107,14 @@
 
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="40dp"
+            android:layout_height="44dp"
             android:gravity="center"
             android:text="婚姻状态" />
 
         <TextView
             android:id="@+id/hunyin_tv"
             android:layout_width="wrap_content"
-            android:layout_height="40dp"
+            android:layout_height="44dp"
             android:layout_alignParentRight="true"
 
             android:gravity="center" />
@@ -131,14 +134,14 @@
 
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="40dp"
+            android:layout_height="44dp"
             android:gravity="center"
             android:text="性别" />
 
         <TextView
             android:id="@+id/sex_tv"
             android:layout_width="wrap_content"
-            android:layout_height="40dp"
+            android:layout_height="44dp"
             android:layout_alignParentRight="true"
 
             android:gravity="center"
@@ -159,14 +162,14 @@
 
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="40dp"
+            android:layout_height="44dp"
             android:gravity="center"
             android:text="出生日期" />
 
         <TextView
             android:id="@+id/birthy_tv"
             android:layout_width="wrap_content"
-            android:layout_height="40dp"
+            android:layout_height="44dp"
             android:layout_alignParentRight="true"
 
             android:gravity="center"
@@ -188,14 +191,14 @@
 
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="40dp"
+            android:layout_height="44dp"
             android:gravity="center"
             android:text="工作" />
 
         <EditText
             android:id="@+id/work_tv"
             android:layout_width="200dp"
-            android:layout_height="40dp"
+            android:layout_height="44dp"
             android:layout_alignParentRight="true"
             android:background="@color/transparent"
             android:gravity="right|center_vertical"
@@ -220,14 +223,14 @@
 
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="40dp"
+            android:layout_height="44dp"
             android:gravity="center"
             android:text="地区" />
 
         <TextView
             android:id="@+id/area_tv"
             android:layout_width="wrap_content"
-            android:layout_height="40dp"
+            android:layout_height="44dp"
             android:layout_alignParentRight="true"
             android:gravity="center"
             tools:text="上海" />
@@ -248,7 +251,7 @@
         <TextView
             android:id="@+id/signature"
             android:layout_width="wrap_content"
-            android:layout_height="40dp"
+            android:layout_height="44dp"
             android:gravity="center"
             android:text="个性签名" />
 
