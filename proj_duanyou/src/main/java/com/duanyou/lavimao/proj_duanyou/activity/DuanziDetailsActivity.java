@@ -1,5 +1,9 @@
 package com.duanyou.lavimao.proj_duanyou.activity;
 
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
+import android.app.Activity;
+import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -21,11 +25,14 @@ import com.duanyou.lavimao.proj_duanyou.net.BaseResponse;
 import com.duanyou.lavimao.proj_duanyou.net.GetContentResult;
 import com.duanyou.lavimao.proj_duanyou.net.NetUtil;
 import com.duanyou.lavimao.proj_duanyou.net.request.GetCommentRequest;
+import com.duanyou.lavimao.proj_duanyou.net.request.UserCommentRequest;
 import com.duanyou.lavimao.proj_duanyou.net.request.UserOperationRequest;
+import com.duanyou.lavimao.proj_duanyou.net.request.UserReplyRequest;
 import com.duanyou.lavimao.proj_duanyou.net.response.GetCommentResponse;
 import com.duanyou.lavimao.proj_duanyou.net.response.GetContentResponse;
 import com.duanyou.lavimao.proj_duanyou.util.Constants;
 import com.duanyou.lavimao.proj_duanyou.util.ImageUtils;
+import com.duanyou.lavimao.proj_duanyou.util.KeyboardControlMnanager;
 import com.duanyou.lavimao.proj_duanyou.util.KeyboardUtils;
 import com.duanyou.lavimao.proj_duanyou.util.UserInfo;
 import com.lcodecore.tkrefreshlayout.RefreshListenerAdapter;
@@ -81,16 +88,18 @@ public class DuanziDetailsActivity extends BaseActivity {
     @BindView(R.id.empty_iv)
     ImageView emptyIv;
 
-    private CommentAdapter commentAdapter;
+    private CommentAdapter commentAdapter;    //评论列表适配器
     private List<GetCommentResponse.CommentsNewBean> mlist = new ArrayList<>();
     private GetContentResponse.DyContextsBean bean;  //详情类
     private boolean refreshTag = true;//下拉刷新  true  加载更多  false
+    private GetCommentResponse.CommentsNewBean clickItem;  //点击的回复item类
 
     @Override
     public void setView() {
         setContentView(R.layout.activity_duanzi_details);
         ButterKnife.bind(this);
         initTitle();
+        initKeyboardHeightObserver();
     }
 
     private void initTitle() {
@@ -107,6 +116,14 @@ public class DuanziDetailsActivity extends BaseActivity {
         commentAdapter = new CommentAdapter(this, R.layout.item_comment, mlist);
         commentRv.setAdapter(commentAdapter);
         loadComent(0);
+        //回复点击监听
+        commentAdapter.setReplyClickListener(new CommentAdapter.ReplyClickListener() {
+            @Override
+            public void replyClick(GetCommentResponse.CommentsNewBean item) {
+                clickItem = item;
+            }
+        });
+
 
     }
 
@@ -222,7 +239,9 @@ public class DuanziDetailsActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.nav_right_iv:
-                jumpTo(ReportActivity.class);
+                Intent intent=new Intent(this,ReportActivity.class);
+                intent.putExtra(Constants.dyContextID,bean.getDyContextID());
+                startActivity(intent);
                 break;
             case R.id.zan_iv:
                 userOperation("1", "1", "", new GetContentResult() {
@@ -279,35 +298,16 @@ public class DuanziDetailsActivity extends BaseActivity {
             case R.id.send_btn:
                 String commentContent = commentEt.getText().toString().trim();
                 if (!TextUtils.isEmpty(commentContent)) {
-                    userOperation("2", "2", commentContent, new GetContentResult() {
-                        @Override
-                        public void success(String json) {
-                            BaseResponse response = JSON.parseObject(json, BaseResponse.class);
-                            if (null != response) {
-                                if ("0".equals(response.getRespCode())) {
-                                    try {
-                                        int commentNum = Integer.parseInt(commentTv.getText().toString().trim());
-                                        commentTv.setText((++commentNum) + "");
-                                        loadComent(0);
-                                        commentEt.setText("");
-                                        ToastUtils.showShort("发送成功");
-                                    } catch (Exception e) {
-
-                                    }
-                                } else {
-                                    ToastUtils.showShort(response.getRespMessage());
-                                }
-                            }
-                        }
-
-                        @Override
-                        public void error(Exception ex) {
-
-                        }
-                    });
+                    if (null == clickItem) {
+                        userComment(bean.getDyContextID(), commentContent, bean.getPublisherDyID());
+                    } else {
+                        userReply(clickItem.getCommentID(), clickItem.getCommentDyID(), commentContent, bean.getDyContextID() + "");
+                    }
                 } else {
                     ToastUtils.showShort("请输入内容");
                 }
+                commentEt.setText("");
+                KeyboardUtils.hideSoftInput(this);
                 break;
             case R.id.empty_iv:
                 KeyboardUtils.showSoftInput(this);
@@ -401,4 +401,95 @@ public class DuanziDetailsActivity extends BaseActivity {
         });
     }
 
+    /**
+     * 评论段子
+     *
+     * @param contextID   段子ID
+     * @param commentText 内容
+     * @param replyToDyID 段子的发表人ID
+     */
+    public void userComment(int contextID, String commentText, String replyToDyID) {
+        UserCommentRequest request = new UserCommentRequest();
+        request.setDyID(UserInfo.getDyId());
+        request.setDeviceID(UserInfo.getDeviceId());
+        request.setToken(UserInfo.getToken());
+        request.setContextID(contextID);
+        request.setCommentText(commentText);
+        request.setReplyToDyID(replyToDyID);
+        NetUtil.getData(Api.userComment, this, request, new ResultCallback() {
+            @Override
+            public void onResult(String jsonResult) {
+                BaseResponse response = JSON.parseObject(jsonResult, BaseResponse.class);
+                if (null != response) {
+                    if ("0".equals(response.getRespCode())) {
+                        loadComent(0);
+                        ToastUtils.showShort("发送成功");
+                    } else {
+                        ToastUtils.showShort(response.getRespMessage());
+                    }
+                }
+            }
+
+            @Override
+            public void onError(Exception ex) {
+
+            }
+        });
+    }
+
+    /**
+     * 回复评论
+     *
+     * @param commentID   评论ID
+     * @param replyToDyID 回复给哪个段友的ID
+     * @param replyText   回复内容
+     * @param contentID   回复到的段子ID
+     */
+    public void userReply(int commentID, String replyToDyID, String replyText, String contentID) {
+        UserReplyRequest request = new UserReplyRequest();
+        request.setDyID(UserInfo.getDyId());
+        request.setDeviceID(UserInfo.getDeviceId());
+        request.setToken(UserInfo.getToken());
+        request.setCommentID(commentID);
+        request.setReplyToDyID(replyToDyID);
+        request.setReplyText(replyText);
+        request.setContentID(contentID);
+
+        NetUtil.getData(Api.userReply, this, request, new ResultCallback() {
+            @Override
+            public void onResult(String jsonResult) {
+                BaseResponse response = JSON.parseObject(jsonResult, BaseResponse.class);
+                if (null != response) {
+                    if ("0".equals(response.getRespCode())) {
+                        loadComent(0);
+                        ToastUtils.showShort("发送成功");
+                    } else {
+                        ToastUtils.showShort(response.getRespMessage());
+                    }
+                }
+            }
+
+            @Override
+            public void onError(Exception ex) {
+
+            }
+        });
+
+    }
+
+    /**
+     * 监听键盘状态 动态改变登录控件位置
+     */
+    private void initKeyboardHeightObserver() {
+        //观察键盘弹出与消退
+        KeyboardControlMnanager.observerKeyboardVisibleChange(this, new KeyboardControlMnanager.OnKeyboardStateChangeListener() {
+
+            @Override
+            public void onKeyboardChange(int keyboardHeight, boolean isVisible) {
+                if (!isVisible) {
+                    clickItem = null;
+                }
+            }
+        });
+    }
 }
