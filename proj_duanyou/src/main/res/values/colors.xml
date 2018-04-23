@@ -6,12 +6,14 @@
 
     <color name="background">#F5F5F9</color>
     <color name="white">#ffffff</color>
+    <color name="transparent">#00ffffff</color>
     <color name="rectangle_et">#55ffffff</color>
     <color name="title">#dcd9cf</color>
     <color name="bg_color">#aaffb200</color>
     <color name="login_color1">#fda85a</color>
     <color name="login_color2">#fee7b5</color>
     <color name="black">#000000</color>
+    <color name="black2">#99000000</color>
     <color name="gray">#dcd9cf</color>
     <color name="gray2">#e5e5e5</color>
     <color name="gray3">#F0F0F0</color>
