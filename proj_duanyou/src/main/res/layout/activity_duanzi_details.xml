@@ -206,18 +206,31 @@
         <EditText
             android:id="@+id/comment_et"
             android:layout_width="0dp"
-            android:layout_height="30dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
             android:layout_weight="1"
-            android:background="@drawable/gray_5dp_bg" />
+            android:background="@drawable/gray_5dp_bg"
+            android:gravity="center_vertical"
+            android:maxLength="1"
 
-        <Button
+            android:padding="5dp"
+            android:textSize="14sp" />
+
+        <TextView
             android:id="@+id/send_btn"
-            android:layout_width="70dp"
-            android:layout_height="30dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
             android:background="@drawable/green_5dp_bg"
+            android:gravity="center"
+            android:paddingBottom="6dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="6dp"
             android:text="发送"
-            android:textColor="@color/white" />
+            android:textColor="@color/white"
+            android:textSize="14sp" />
 
     </LinearLayout>
 </RelativeLayout>

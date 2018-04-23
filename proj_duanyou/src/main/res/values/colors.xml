@@ -19,7 +19,8 @@
     <color name="gray3">#F0F0F0</color>
     <color name="green">#1cd789</color>
     <color name="bg_co">#F5F5F5</color>
-
+    <color name="blue">#1E90FF</color>
+    <color name="yellow">#FFE7BA</color>
 
 
 </resources>

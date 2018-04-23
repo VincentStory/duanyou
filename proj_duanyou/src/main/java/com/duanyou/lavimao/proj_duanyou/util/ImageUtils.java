@@ -1914,7 +1914,7 @@ public final class ImageUtils {
         float ratio = (float) imgWidth / videoWidth;
         int rWidth = imgWidth;
         int rHeight = (int) (videoHeight * ratio);
-        if (ratio < ((float) 10 / 17)) {
+        if (ratio < ((float) 10 / 13)) {
             rHeight = ScreenUtils.getScreenWidth();
         }
         ViewGroup.LayoutParams ps = video.getLayoutParams();

@@ -3,6 +3,8 @@ package com.duanyou.lavimao.proj_duanyou.adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -12,11 +14,14 @@ import com.duanyou.lavimao.proj_duanyou.GlideApp;
 import com.duanyou.lavimao.proj_duanyou.R;
 import com.duanyou.lavimao.proj_duanyou.activity.LoginActivity;
 import com.duanyou.lavimao.proj_duanyou.net.Api;
+import com.duanyou.lavimao.proj_duanyou.net.BaseRequest;
 import com.duanyou.lavimao.proj_duanyou.net.BaseResponse;
 import com.duanyou.lavimao.proj_duanyou.net.GetContentResult;
 import com.duanyou.lavimao.proj_duanyou.net.NetUtil;
+import com.duanyou.lavimao.proj_duanyou.net.request.UserCommentRequest;
 import com.duanyou.lavimao.proj_duanyou.net.request.UserOperationRequest;
 import com.duanyou.lavimao.proj_duanyou.net.response.GetCommentResponse;
+import com.duanyou.lavimao.proj_duanyou.util.KeyboardUtils;
 import com.duanyou.lavimao.proj_duanyou.util.ToastUtils;
 import com.duanyou.lavimao.proj_duanyou.util.UserInfo;
 import com.xiben.ebs.esbsdk.callback.ResultCallback;
@@ -30,7 +35,6 @@ import java.util.List;
  */
 
 public class CommentAdapter extends CommonAdapter<GetCommentResponse.CommentsNewBean> {
-
 
     public CommentAdapter(Context context, int layoutId, List<GetCommentResponse.CommentsNewBean> datas) {
         super(context, layoutId, datas);
@@ -75,6 +79,28 @@ public class CommentAdapter extends CommonAdapter<GetCommentResponse.CommentsNew
                 });
             }
         });
+
+        helper.setOnClickListener(R.id.comment_ll, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                KeyboardUtils.showSoftInput((Activity) mContext);
+                if (null != replyClickListener) {
+                    replyClickListener.replyClick(item);
+                }
+            }
+        });
+
+        if (item.getReply().size() > 0) {
+            RecyclerView replyRv = helper.getView(R.id.reply_rv);
+            replyRv.setLayoutManager(new LinearLayoutManager(mContext));
+            ReplyAdapter replyAdapter = new ReplyAdapter(mContext, R.layout.item_reply, item.getReply());
+            replyRv.setAdapter(replyAdapter);
+            helper.setVisible(R.id.reply_view, true);
+        } else {
+            helper.setVisible(R.id.reply_view, false);
+        }
+
+
     }
 
     /**
@@ -113,4 +139,18 @@ public class CommentAdapter extends CommonAdapter<GetCommentResponse.CommentsNew
         }
     }
 
+
+    public interface ReplyClickListener {
+        void replyClick(GetCommentResponse.CommentsNewBean item);
+    }
+
+    public ReplyClickListener replyClickListener;
+
+    public ReplyClickListener getReplyClickListener() {
+        return replyClickListener;
+    }
+
+    public void setReplyClickListener(ReplyClickListener replyClickListener) {
+        this.replyClickListener = replyClickListener;
+    }
 }
