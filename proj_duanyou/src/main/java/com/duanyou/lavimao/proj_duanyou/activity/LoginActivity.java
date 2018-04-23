@@ -20,6 +20,7 @@ import com.duanyou.lavimao.proj_duanyou.net.response.LoginResponse;
 import com.duanyou.lavimao.proj_duanyou.util.Contents;
 import com.duanyou.lavimao.proj_duanyou.util.DeviceUtils;
 import com.duanyou.lavimao.proj_duanyou.util.SpUtil;
+import com.duanyou.lavimao.proj_duanyou.util.StringUtil;
 import com.xiben.ebs.esbsdk.callback.ResultCallback;
 
 import butterknife.BindView;
@@ -115,7 +116,7 @@ public class LoginActivity extends BaseActivity {
         LoginRequest request = new LoginRequest();
         request.setMobilePhone(phone);
         request.setDeviceID(DeviceUtils.getAndroidID());
-        request.setPassword(password);
+        request.setPassword(StringUtil.md5(password));
 
 
         NetUtil.getData(Api.LOGIN, context, request, new ResultCallback() {

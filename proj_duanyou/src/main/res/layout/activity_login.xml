@@ -43,6 +43,7 @@
         android:layout_marginTop="20dp"
         android:background="@drawable/rectangle"
         android:gravity="center"
+        android:inputType="numberDecimal"
         android:textColorHint="@color/login_color2"
         android:hint="这里输入段友号或手机号噢！~ ~"
         android:textSize="14sp" />

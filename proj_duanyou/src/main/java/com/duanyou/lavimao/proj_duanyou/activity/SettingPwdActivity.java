@@ -21,6 +21,7 @@ import com.duanyou.lavimao.proj_duanyou.net.response.VerifyCodeResponse;
 import com.duanyou.lavimao.proj_duanyou.util.Contents;
 import com.duanyou.lavimao.proj_duanyou.util.DeviceUtils;
 import com.duanyou.lavimao.proj_duanyou.util.SpUtil;
+import com.duanyou.lavimao.proj_duanyou.util.StringUtil;
 import com.xiben.ebs.esbsdk.callback.ResultCallback;
 
 import butterknife.BindView;
@@ -134,16 +135,13 @@ public class SettingPwdActivity extends BaseActivity {
         request.setMobilePhone(phone);
         request.setDeviceID(DeviceUtils.getAndroidID());
         request.setToken(token);
-        request.setPassword(password);
+        request.setPassword(StringUtil.md5(password));
         NetUtil.getData(Api.REGISTER, context, request, new ResultCallback() {
             @Override
             public void onResult(final String jsonResult) {
                 BaseResponse response = JSON.parseObject(jsonResult, BaseResponse.class);
                 if (response.getRespCode().equals("0")) {
-
                     result.success(jsonResult);
-
-
                 } else {
                     ToastUtils.showShort(response.getRespMessage());
                 }
