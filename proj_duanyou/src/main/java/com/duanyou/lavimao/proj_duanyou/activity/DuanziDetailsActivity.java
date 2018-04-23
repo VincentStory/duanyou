@@ -239,8 +239,8 @@ public class DuanziDetailsActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.nav_right_iv:
-                Intent intent=new Intent(this,ReportActivity.class);
-                intent.putExtra(Constants.dyContextID,bean.getDyContextID());
+                Intent intent = new Intent(this, ReportActivity.class);
+                intent.putExtra(Constants.dyContextID, bean.getDyContextID());
                 startActivity(intent);
                 break;
             case R.id.zan_iv:
@@ -360,7 +360,7 @@ public class DuanziDetailsActivity extends BaseActivity {
      *
      * @param benginCommentID 要获取的评论开始ID（一次获取最多20条评论，每条评论最多获取3条回复），倒序获取，若是第一次获取则传0，非0时不再发送热门评论
      */
-    public void loadComent(int benginCommentID) {
+    public void loadComent(final int benginCommentID) {
         GetCommentRequest request = new GetCommentRequest();
         request.setDyID(UserInfo.getDyId());
         request.setDyContextID(bean.getDyContextID() + "");
@@ -371,7 +371,7 @@ public class DuanziDetailsActivity extends BaseActivity {
                 GetCommentResponse response = JSON.parseObject(jsonResult, GetCommentResponse.class);
                 if (null != response) {
                     if ("0".equals(response.getRespCode())) {
-                        if (refreshTag) {
+                        if (refreshTag || 0 == benginCommentID) {
                             mlist.clear();
                             refreshLayout.finishRefreshing();
                         } else {

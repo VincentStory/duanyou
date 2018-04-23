@@ -211,7 +211,7 @@
             android:layout_weight="1"
             android:background="@drawable/gray_5dp_bg"
             android:gravity="center_vertical"
-            android:maxLength="1"
+            android:maxLines="1"
 
             android:padding="5dp"
             android:textSize="14sp" />

@@ -95,8 +95,10 @@ public class CommentAdapter extends CommonAdapter<GetCommentResponse.CommentsNew
             replyRv.setLayoutManager(new LinearLayoutManager(mContext));
             ReplyAdapter replyAdapter = new ReplyAdapter(mContext, R.layout.item_reply, item.getReply());
             replyRv.setAdapter(replyAdapter);
+            helper.setVisible(R.id.reply_rv, true);
             helper.setVisible(R.id.reply_view, true);
         } else {
+            helper.setVisible(R.id.reply_rv, false);
             helper.setVisible(R.id.reply_view, false);
         }
 
