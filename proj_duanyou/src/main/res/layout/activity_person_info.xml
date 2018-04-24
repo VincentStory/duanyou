@@ -34,7 +34,8 @@
             android:layout_alignParentRight="true"
             android:layout_marginBottom="5dp"
             android:layout_marginTop="5dp"
-            android:background="@drawable/head42x"
+            android:src="@drawable/head42x"
+            android:scaleType="centerCrop"
             app:riv_corner_radius="6dp" />
 
         <TextView
@@ -257,6 +258,7 @@
 
 
         <EditText
+            android:id="@+id/signature_et"
             android:layout_width="match_parent"
             android:layout_height="80dp"
             android:layout_below="@+id/signature"

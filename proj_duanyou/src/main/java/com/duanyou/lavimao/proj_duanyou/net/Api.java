@@ -41,4 +41,12 @@ public class Api {
      *回复评论
      */
     public static final String userReply="userReply";
+    /**
+     *修改个人头像
+     */
+    public static final String modifyHeadPortrait="modifyHeadPortrait";
+    /**
+     *1.4.15	获取个人或他人基本信息
+     */
+    public static final String getUserInfo="getUserInfo";
 }

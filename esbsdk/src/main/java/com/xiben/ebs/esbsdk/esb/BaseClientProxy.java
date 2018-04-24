@@ -1,11 +1,14 @@
 package com.xiben.ebs.esbsdk.esb;
 
 import android.annotation.SuppressLint;
+import android.util.Log;
+import android.widget.Toast;
 
 
 import com.xiben.ebs.esbsdk.callback.InvokeCallback;
 import com.xiben.ebs.esbsdk.util.LogUtil;
 
+import java.io.File;
 import java.io.IOException;
 import java.security.SecureRandom;
 import java.security.cert.CertificateException;
@@ -23,6 +26,7 @@ import javax.net.ssl.X509TrustManager;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.MediaType;
+import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -32,8 +36,6 @@ import okhttp3.Response;
 public class BaseClientProxy {
     private OkHttpClient client;
     private Call call;
-
-
 
 
     public BaseClientProxy() {
@@ -54,7 +56,7 @@ public class BaseClientProxy {
 
     }
 
-    public void invoke( String serviceAddr, String serviceId, String jsonRequest,
+    public void invoke(String serviceAddr, String serviceId, String jsonRequest,
                        final InvokeCallback<String> callback) {
         try {
             LogUtil.log(
@@ -92,6 +94,50 @@ public class BaseClientProxy {
             });
 
 
+        } catch (Exception e) {
+            LogUtil.log("Exception:" + e.toString());
+            callback.onError(e);
+        }
+    }
+
+    public void upImage(String serviceAddr, String serviceId, String path, String jsonRequest, final InvokeCallback<String> callback) {
+        try {
+            LogUtil.log(
+                    "\n" + "url:" + serviceAddr + serviceId
+                            + "\n" + "jsonRequest:" + jsonRequest);
+
+            File file = new File(path);
+            MultipartBody.Builder builder = new MultipartBody.Builder()
+                    .setType(MultipartBody.FORM)
+                    .addFormDataPart("file1", file.getName(),
+                            RequestBody.create(MediaType.parse("image/png"), file))
+                    .addFormDataPart("parameter", jsonRequest);
+
+            RequestBody requestBody = builder.build();
+
+            Request request = new Request.Builder()
+                    .url(serviceAddr + serviceId)
+                    .post(requestBody)
+                    .build();
+            Call call = client.newCall(request);
+            call.enqueue(new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    LogUtil.log("onFailure Exception:" + e.toString());
+                    callback.onError(e);
+                }
+
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    try {
+                        String result = response.body().string();
+                        LogUtil.log("" + response + "==>" + result);
+                        callback.onComplete("", result);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
         } catch (Exception e) {
             LogUtil.log("Exception:" + e.toString());
             callback.onError(e);
@@ -140,6 +186,7 @@ public class BaseClientProxy {
     /**
      * 取消网络请求
      */
+
     public void cancel() {
         if (call.isExecuted()) {
             call.cancel();

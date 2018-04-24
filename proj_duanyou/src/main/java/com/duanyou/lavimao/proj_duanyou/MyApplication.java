@@ -3,6 +3,7 @@ package com.duanyou.lavimao.proj_duanyou;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
+import android.os.StrictMode;
 import android.support.multidex.MultiDexApplication;
 import android.util.Log;
 
@@ -24,6 +25,7 @@ public class MyApplication extends MultiDexApplication {
     private static final String TAG = MyApplication.class.getSimpleName();
     private static MyApplication mInstance;
     private List<Activity> activitys = null;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -40,6 +42,13 @@ public class MyApplication extends MultiDexApplication {
 
         // 初始化utils
         Utils.init(this);
+
+        /*
+        拍照权限
+         */
+        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+        StrictMode.setVmPolicy(builder.build());
+        builder.detectFileUriExposure();
 
 
     }
@@ -79,7 +88,6 @@ public class MyApplication extends MultiDexApplication {
     }
 
 
-
     // 添加Activity到容器中
     public void addActivity(Activity activity) {
         if (activitys != null && activitys.size() > 0) {
@@ -91,6 +99,7 @@ public class MyApplication extends MultiDexApplication {
         }
 
     }
+
     // 遍历所有Activity并finish
     public void finishActivity() {
         if (activitys != null && activitys.size() > 0) {
