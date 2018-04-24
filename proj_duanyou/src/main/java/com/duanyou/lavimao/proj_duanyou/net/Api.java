@@ -49,4 +49,8 @@ public class Api {
      *1.4.15	获取个人或他人基本信息
      */
     public static final String getUserInfo="getUserInfo";
+    /**
+     *1.4.1	修改个人信息
+     */
+    public static final String setUserInfo="setUserInfo";
 }

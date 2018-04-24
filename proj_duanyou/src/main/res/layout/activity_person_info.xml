@@ -34,8 +34,8 @@
             android:layout_alignParentRight="true"
             android:layout_marginBottom="5dp"
             android:layout_marginTop="5dp"
-            android:src="@drawable/head42x"
             android:scaleType="centerCrop"
+            android:src="@drawable/head42x"
             app:riv_corner_radius="6dp" />
 
         <TextView
@@ -63,6 +63,7 @@
             android:layout_height="44dp"
             android:layout_alignParentRight="true"
             android:gravity="center"
+            android:textColor="@color/black2"
             tools:text="6465465" />
 
         <TextView
@@ -84,23 +85,25 @@
             android:gravity="center"
             android:text="昵称" />
 
-        <TextView
-            android:id="@+id/nickname_tv"
+        <EditText
+            android:id="@+id/nickname_et"
             android:layout_width="wrap_content"
             android:layout_height="44dp"
             android:layout_alignParentRight="true"
-
+            android:background="@color/white"
+            android:textColor="@color/black2"
             android:gravity="center"
             tools:text="nicheng" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
-            android:layout_below="@+id/nickname_tv"
+            android:layout_below="@+id/nickname_et"
             android:background="@color/gray" />
     </RelativeLayout>
 
     <RelativeLayout
+        android:id="@+id/hunyin_rl"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingLeft="10dp"
@@ -117,7 +120,8 @@
             android:layout_width="wrap_content"
             android:layout_height="44dp"
             android:layout_alignParentRight="true"
-
+            android:textColor="@color/black2"
+            tools:text="单身"
             android:gravity="center" />
 
         <TextView
@@ -128,6 +132,7 @@
     </RelativeLayout>
 
     <RelativeLayout
+        android:id="@+id/sex_rl"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingLeft="10dp"
@@ -144,7 +149,7 @@
             android:layout_width="wrap_content"
             android:layout_height="44dp"
             android:layout_alignParentRight="true"
-
+            android:textColor="@color/black2"
             android:gravity="center"
             tools:text="男" />
 
@@ -156,6 +161,7 @@
     </RelativeLayout>
 
     <RelativeLayout
+        android:id="@+id/birthy_rl"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingLeft="10dp"
@@ -172,7 +178,7 @@
             android:layout_width="wrap_content"
             android:layout_height="44dp"
             android:layout_alignParentRight="true"
-
+            android:textColor="@color/black2"
             android:gravity="center"
             tools:text="20180901" />
 
@@ -184,6 +190,7 @@
     </RelativeLayout>
 
     <RelativeLayout
+
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
@@ -217,6 +224,7 @@
     </RelativeLayout>
 
     <RelativeLayout
+        android:id="@+id/area_rl"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingLeft="10dp"
@@ -234,6 +242,7 @@
             android:layout_height="44dp"
             android:layout_alignParentRight="true"
             android:gravity="center"
+            android:textColor="@color/black2"
             tools:text="上海" />
 
         <TextView
@@ -262,8 +271,10 @@
             android:layout_width="match_parent"
             android:layout_height="80dp"
             android:layout_below="@+id/signature"
+            android:textColor="@color/black2"
             android:background="@drawable/rectangle_signature"
             android:gravity="left|top"
+            tools:text="aaaa"
             android:padding="5dp" />
     </RelativeLayout>
 

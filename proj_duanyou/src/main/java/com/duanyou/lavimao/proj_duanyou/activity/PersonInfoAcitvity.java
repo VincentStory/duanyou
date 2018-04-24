@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -28,9 +29,11 @@ import com.duanyou.lavimao.proj_duanyou.net.GetContentResult;
 import com.duanyou.lavimao.proj_duanyou.net.NetUtil;
 import com.duanyou.lavimao.proj_duanyou.net.request.LoginRequest;
 import com.duanyou.lavimao.proj_duanyou.net.request.ModifyHeadImageRequest;
+import com.duanyou.lavimao.proj_duanyou.net.request.SetUserInfoRequest;
 import com.duanyou.lavimao.proj_duanyou.net.request.UserInfoRequest;
 import com.duanyou.lavimao.proj_duanyou.net.response.LoginResponse;
 import com.duanyou.lavimao.proj_duanyou.net.response.UserInfoResponse;
+import com.duanyou.lavimao.proj_duanyou.util.AddressPickTask;
 import com.duanyou.lavimao.proj_duanyou.util.DeviceUtils;
 import com.duanyou.lavimao.proj_duanyou.util.FileSizeUtil;
 import com.duanyou.lavimao.proj_duanyou.util.SpUtil;
@@ -45,10 +48,19 @@ import net.bither.util.CompressTools;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.addapp.pickers.common.LineConfig;
+import cn.addapp.pickers.entity.City;
+import cn.addapp.pickers.entity.County;
+import cn.addapp.pickers.entity.Province;
+import cn.addapp.pickers.listeners.OnItemPickListener;
+import cn.addapp.pickers.picker.DatePicker;
+import cn.addapp.pickers.picker.DateTimePicker;
+import cn.addapp.pickers.picker.SinglePicker;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.MediaType;
@@ -73,8 +85,8 @@ public class PersonInfoAcitvity extends BaseActivity {
     RoundedImageView headIv;
     @BindView(R.id.duanyouid_tv)
     TextView duanyouidTv;
-    @BindView(R.id.nickname_tv)
-    TextView nicknameTv;
+    @BindView(R.id.nickname_et)
+    EditText nicknameEt;
     @BindView(R.id.hunyin_tv)
     TextView hunyinTv;
     @BindView(R.id.sex_tv)
@@ -116,17 +128,17 @@ public class PersonInfoAcitvity extends BaseActivity {
             @Override
             public void success(String json) {
                 UserInfoResponse response = JSON.parseObject(json, UserInfoResponse.class);
-                if(response.getUserInfo().size()>0){
-                    UserInfoResponse.UserInfo userInfo=response.getUserInfo().get(0);
-                    String picurl =userInfo.getHeadPortraitUrl();
+                if (response.getUserInfo().size() > 0) {
+                    UserInfoResponse.UserInfo userInfo = response.getUserInfo().get(0);
+                    String picurl = userInfo.getHeadPortraitUrl();
                     Glide.with(PersonInfoAcitvity.this).load(picurl).into(headIv);
                     duanyouidTv.setText(userInfo.getDyID());
-                    nicknameTv.setText(userInfo.getNickName());
+                    nicknameEt.setText(userInfo.getNickName());
                     hunyinTv.setText(userInfo.getMaritalStatus());
                     sexTv.setText(userInfo.getGender());
                     birthyTv.setText(userInfo.getBirthday());
                     workTv.setText(userInfo.getOccupation());
-                    areaTv.setText(userInfo.getCurrentLocation());
+                    areaTv.setText(userInfo.getRegion());
                     signatureEt.setText(userInfo.getSignature());
                 }
             }
@@ -145,7 +157,7 @@ public class PersonInfoAcitvity extends BaseActivity {
     }
 
 
-    @OnClick({R.id.iv_left, R.id.headimage_rl})
+    @OnClick({R.id.iv_left, R.id.headimage_rl, R.id.hunyin_rl, R.id.sex_rl, R.id.birthy_rl, R.id.area_rl})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.iv_left:
@@ -194,11 +206,231 @@ public class PersonInfoAcitvity extends BaseActivity {
 
 
                 break;
+            case R.id.hunyin_rl:
+                onHunyinPicker();
+                break;
+
+            case R.id.sex_rl:
+                onConstellationPicker();
+                break;
+            case R.id.birthy_rl:
+                onYearMonthDayPicker();
+                break;
+            case R.id.area_rl:
+                onAddressPicker();
+                break;
 
 
             default:
                 break;
         }
+    }
+
+
+    /**
+     * 性别
+     */
+    public void onConstellationPicker() {
+        boolean isChinese = Locale.getDefault().getDisplayLanguage().contains("中文");
+        SinglePicker<String> picker = new SinglePicker<>(this,
+                isChinese ? new String[]{
+                        "男", "女"
+                } : new String[]{
+                        "boy", "girle"
+                });
+        picker.setCanLoop(false);//不禁用循环
+        picker.setTopBackgroundColor(0xFFEEEEEE);
+        picker.setTopHeight(50);
+        picker.setTopLineColor(0xFF33B5E5);
+        picker.setTopLineHeight(1);
+        picker.setTitleText(isChinese ? "请选择" : "Please pick");
+        picker.setTitleTextColor(0xFF999999);
+        picker.setTitleTextSize(12);
+        picker.setCancelTextColor(0xFF33B5E5);
+        picker.setCancelTextSize(13);
+        picker.setSubmitTextColor(0xFF33B5E5);
+        picker.setSubmitTextSize(13);
+        picker.setSelectedTextColor(0xFFEE0000);
+        picker.setUnSelectedTextColor(0xFF999999);
+        picker.setWheelModeEnable(false);
+        LineConfig config = new LineConfig();
+        config.setColor(Color.BLUE);//线颜色
+        config.setAlpha(120);//线透明度
+//        config.setRatio(1);//线比率
+        picker.setLineConfig(config);
+        picker.setItemWidth(200);
+        picker.setBackgroundColor(0xFFE1E1E1);
+        //picker.setSelectedItem(isChinese ? "处女座" : "Virgo");
+        picker.setSelectedIndex(0);
+        picker.setOnItemPickListener(new OnItemPickListener<String>() {
+            @Override
+            public void onItemPicked(int index, String item) {
+//                ToastUtils.showShort("index=" + index + ", item=" + item);
+                sexTv.setText(item);
+                setUserInfo(PersonInfoAcitvity.this, birthyTv.getText().toString(), areaTv.getText().toString(),
+                        sexTv.getText().toString(), hunyinTv.getText().toString(), workTv.getText().toString(), new GetContentResult() {
+                            @Override
+                            public void success(String json) {
+
+                            }
+
+                            @Override
+                            public void error(Exception ex) {
+
+                            }
+                        });
+            }
+        });
+        picker.show();
+    }
+
+    /**
+     * 性别
+     */
+    public void onHunyinPicker() {
+        boolean isChinese = Locale.getDefault().getDisplayLanguage().contains("中文");
+        SinglePicker<String> picker = new SinglePicker<>(this,
+                isChinese ? new String[]{
+                        "单身", "已婚", "未婚", "保密"
+                } : new String[]{
+                        "boy", "girle", "boy", "girle"
+                });
+        picker.setCanLoop(false);//不禁用循环
+        picker.setTopBackgroundColor(0xFFEEEEEE);
+        picker.setTopHeight(50);
+        picker.setTopLineColor(0xFF33B5E5);
+        picker.setTopLineHeight(1);
+        picker.setTitleText(isChinese ? "请选择" : "Please pick");
+        picker.setTitleTextColor(0xFF999999);
+        picker.setTitleTextSize(12);
+        picker.setCancelTextColor(0xFF33B5E5);
+        picker.setCancelTextSize(13);
+        picker.setSubmitTextColor(0xFF33B5E5);
+        picker.setSubmitTextSize(13);
+        picker.setSelectedTextColor(0xFFEE0000);
+        picker.setUnSelectedTextColor(0xFF999999);
+        picker.setWheelModeEnable(false);
+        LineConfig config = new LineConfig();
+        config.setColor(Color.BLUE);//线颜色
+        config.setAlpha(120);//线透明度
+//        config.setRatio(1);//线比率
+        picker.setLineConfig(config);
+        picker.setItemWidth(200);
+        picker.setBackgroundColor(0xFFE1E1E1);
+        //picker.setSelectedItem(isChinese ? "处女座" : "Virgo");
+        picker.setSelectedIndex(0);
+        picker.setOnItemPickListener(new OnItemPickListener<String>() {
+            @Override
+            public void onItemPicked(int index, String item) {
+//                ToastUtils.showShort("index=" + index + ", item=" + item);
+                hunyinTv.setText(item);
+                setUserInfo(PersonInfoAcitvity.this, birthyTv.getText().toString(), areaTv.getText().toString(),
+                        sexTv.getText().toString(), hunyinTv.getText().toString(), workTv.getText().toString(), new GetContentResult() {
+                            @Override
+                            public void success(String json) {
+
+                            }
+
+                            @Override
+                            public void error(Exception ex) {
+
+                            }
+                        });
+            }
+        });
+        picker.show();
+    }
+
+    /**
+     * 时间选择
+     */
+    public void onYearMonthDayPicker() {
+        final DatePicker picker = new DatePicker(this);
+        picker.setCanLoop(true);
+        picker.setWheelModeEnable(true);
+        picker.setTopPadding(15);
+        picker.setRangeStart(1900, 1, 1);
+        picker.setRangeEnd(2111, 1, 1);
+        picker.setSelectedItem(2000, 1, 1);
+        picker.setWeightEnable(true);
+        picker.setLineColor(Color.BLACK);
+        picker.setOnDatePickListener(new DatePicker.OnYearMonthDayPickListener() {
+            @Override
+            public void onDatePicked(String year, String month, String day) {
+                ToastUtils.showShort(year + "-" + month + "-" + day);
+                birthyTv.setText(year + "-" + month + "-" + day);
+                setUserInfo(PersonInfoAcitvity.this, birthyTv.getText().toString(), areaTv.getText().toString(),
+                        sexTv.getText().toString(), hunyinTv.getText().toString(), workTv.getText().toString(), new GetContentResult() {
+                            @Override
+                            public void success(String json) {
+
+                            }
+
+                            @Override
+                            public void error(Exception ex) {
+
+                            }
+                        });
+
+            }
+        });
+        picker.setOnWheelListener(new DatePicker.OnWheelListener() {
+            @Override
+            public void onYearWheeled(int index, String year) {
+                picker.setTitleText(year + "-" + picker.getSelectedMonth() + "-" + picker.getSelectedDay());
+            }
+
+            @Override
+            public void onMonthWheeled(int index, String month) {
+                picker.setTitleText(picker.getSelectedYear() + "-" + month + "-" + picker.getSelectedDay());
+            }
+
+            @Override
+            public void onDayWheeled(int index, String day) {
+
+                picker.setTitleText(picker.getSelectedYear() + "-" + picker.getSelectedMonth() + "-" + day);
+            }
+        });
+        picker.show();
+    }
+
+    /**
+     * 选择地区
+     */
+    public void onAddressPicker() {
+        AddressPickTask task = new AddressPickTask(this);
+        task.setHideProvince(false);
+        task.setHideCounty(false);
+        task.setCallback(new AddressPickTask.Callback() {
+            @Override
+            public void onAddressInitFailed() {
+                ToastUtils.showShort("数据初始化失败");
+            }
+
+            @Override
+            public void onAddressPicked(Province province, City city, County county) {
+                if (county == null) {
+                    ToastUtils.showShort(province.getAreaName() + city.getAreaName());
+                } else {
+                    ToastUtils.showShort(province.getAreaName() + city.getAreaName() + county.getAreaName());
+                }
+
+                areaTv.setText(province.getAreaName() + city.getAreaName() + county.getAreaName());
+                setUserInfo(PersonInfoAcitvity.this, birthyTv.getText().toString(), areaTv.getText().toString(),
+                        sexTv.getText().toString(), hunyinTv.getText().toString(), workTv.getText().toString(), new GetContentResult() {
+                            @Override
+                            public void success(String json) {
+
+                            }
+
+                            @Override
+                            public void error(Exception ex) {
+
+                            }
+                        });
+            }
+        });
+        task.execute("上海", "上海", "长宁");
     }
 
 
@@ -468,5 +700,43 @@ public class PersonInfoAcitvity extends BaseActivity {
         });
     }
 
+    /**
+     * 修改个人信息
+     */
+    protected void setUserInfo(final Activity context, String birthday, String area, String sex, String hunyin, String work,
+                               final GetContentResult result) {
+        SetUserInfoRequest request = new SetUserInfoRequest();
+        request.setDyID(UserInfo.getDyId());
+        request.setDeviceID(UserInfo.getDeviceId());
+        request.setToken(UserInfo.getToken());
+        request.setBirthday(birthday);
 
-}
+        request.setGender(sex);
+        request.setMaritalStatus(hunyin);
+        request.setOccupation(work);
+        request.setRegion(area);
+
+
+        NetUtil.getData(Api.setUserInfo, context, request, new ResultCallback() {
+            @Override
+            public void onResult(final String jsonResult) {
+                BaseResponse response = JSON.parseObject(jsonResult, BaseResponse.class);
+                if (response.getRespCode().equals("0")) {
+
+                    result.success(jsonResult);
+
+
+                } else {
+                    ToastUtils.showShort(response.getRespMessage());
+                }
+
+            }
+
+            @Override
+            public void onError(Exception ex) {
+
+                result.error(ex);
+            }
+        });
+
+    }}
