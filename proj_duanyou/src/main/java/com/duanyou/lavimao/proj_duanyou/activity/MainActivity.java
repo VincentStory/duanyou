@@ -56,10 +56,8 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public void initData() {
-
         initEnableSlide(false);
         initFragments();
-
     }
 
     @Override
@@ -86,7 +84,8 @@ public class MainActivity extends BaseActivity {
     @OnClick({R.id.id_activity_dymain_lay_home,
             R.id.id_activity_dymain_lay_dyou,
             R.id.id_activity_dymain_lay_examain,
-            R.id.id_activity_dymain_lay_mine})
+            R.id.id_activity_dymain_lay_mine,
+            R.id.more_ll})
     void click(View view) {
         switch (view.getId()) {
             case R.id.id_activity_dymain_lay_home:
@@ -100,6 +99,9 @@ public class MainActivity extends BaseActivity {
                 break;
             case R.id.id_activity_dymain_lay_mine:
                 showMine();
+                break;
+            case R.id.more_ll:
+                jumpTo(MoreActivity.class);
                 break;
 
             default:
@@ -135,6 +137,10 @@ public class MainActivity extends BaseActivity {
         tv_examin.setTextColor(Color.parseColor("#4d4d4d"));
         addFragmentStack(fragments, R.id.layFrame, 2);
 
+    }
+
+    private void showMore() {
+        recoverDefaultState();
     }
 
     //显示段友界面

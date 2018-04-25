@@ -21,10 +21,11 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="48dp"
+        android:layout_height="45dp"
         android:background="#fff"
         android:orientation="horizontal">
 
+        <!--首页-->
         <LinearLayout
             android:id="@+id/id_activity_dymain_lay_home"
             android:layout_width="0dp"
@@ -49,10 +50,9 @@
                 android:textSize="12sp" />
         </LinearLayout>
 
-
+        <!--段友-->
         <LinearLayout
             android:id="@+id/id_activity_dymain_lay_dyou"
-            android:visibility="gone"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -63,8 +63,7 @@
                 android:id="@+id/id_activity_main_img_btn_dyou"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/icon_main_friend_normal"
-                />
+                android:src="@drawable/icon_main_friend_normal" />
 
             <TextView
                 android:id="@+id/id_activity_main_tv_dyou"
@@ -77,10 +76,23 @@
                 android:textSize="12sp" />
         </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/more_ll"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
 
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/more" />
+
+        </LinearLayout>
+
+        <!--审核-->
         <LinearLayout
             android:id="@+id/id_activity_dymain_lay_examain"
-            android:visibility="gone"
+
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -89,14 +101,12 @@
 
             <ImageView
                 android:id="@+id/id_activity_main_img_btn_examain"
-
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/icon_main_examine_normal" />
 
             <TextView
                 android:id="@+id/id_activity_main_tv_examin"
-
                 android:layout_width="wrap_content"
                 android:layout_height="14dp"
                 android:layout_marginTop="2dp"
@@ -105,7 +115,7 @@
                 android:textSize="12sp" />
         </LinearLayout>
 
-
+        <!--我的-->
         <LinearLayout
             android:id="@+id/id_activity_dymain_lay_mine"
 
@@ -117,7 +127,6 @@
 
             <ImageView
                 android:id="@+id/id_activity_main_img_btn_mine"
-
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/icon_main_mine_normal" />

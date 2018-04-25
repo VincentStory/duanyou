@@ -14,19 +14,15 @@ import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
 import com.duanyou.lavimao.proj_duanyou.R;
-import com.duanyou.lavimao.proj_duanyou.activity.LoginActivity;
 import com.duanyou.lavimao.proj_duanyou.net.Api;
 import com.duanyou.lavimao.proj_duanyou.net.BaseResponse;
 import com.duanyou.lavimao.proj_duanyou.net.GetContentResult;
 import com.duanyou.lavimao.proj_duanyou.net.NetUtil;
-
 import com.duanyou.lavimao.proj_duanyou.net.request.GetContentRequest;
-
 import com.xiben.ebs.esbsdk.callback.ResultCallback;
 
 
 /**
- *
  * @author Lavimao
  * @date 2017/10/24
  */
@@ -70,7 +66,8 @@ public abstract class BaseFragment extends Fragment {
         activity = getActivity();
         startInvoke(this.getView());
     }
-    protected void setRightIv(View view,int ResId) {
+
+    protected void setRightIv(View view, int ResId) {
         ImageView navRightIv = (ImageView) view.findViewById(R.id.nav_right_iv);
         if (navRightIv != null) {
             navRightIv.setVisibility(View.VISIBLE);
@@ -81,14 +78,14 @@ public abstract class BaseFragment extends Fragment {
     /**
      * 设置标题栏抬头文字
      */
-    public void setTitle(View view,String title) {
+    public void setTitle(View view, String title) {
         TextView tv = view.findViewById(R.id.nav_title);
         if (tv != null) {
             tv.setText(title);
         }
     }
 
-    protected void setLeftImg(View view,int ResId) {
+    protected void setLeftImg(View view, int ResId) {
         RelativeLayout backLayout = view.findViewById(R.id.nav_left);
         if (backLayout != null) {
             backLayout.setVisibility(View.VISIBLE);
@@ -107,13 +104,13 @@ public abstract class BaseFragment extends Fragment {
         NetUtil.getData(Api.GETCONTENT, context, request, new ResultCallback() {
             @Override
             public void onResult(final String jsonResult) {
-                BaseResponse response = JSON.parseObject(jsonResult,BaseResponse.class);
-                if (response.getRespCode().equals("0")){
+                BaseResponse response = JSON.parseObject(jsonResult, BaseResponse.class);
+                if (response.getRespCode().equals("0")) {
 
-                            result.success(jsonResult);
+                    result.success(jsonResult);
 
 
-                }else {
+                } else {
 
                 }
 
@@ -128,11 +125,10 @@ public abstract class BaseFragment extends Fragment {
     }
 
 
-    protected void gotoActivity(Class activity){
+    protected void gotoActivity(Class activity) {
         Intent intent = new Intent(getContext(), activity);
         startActivity(intent);
     }
-
 
 
 }

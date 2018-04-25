@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.duanyou.lavimao.proj_duanyou">
-    <uses-sdk android:minSdkVersion="8"></uses-sdk>
+
+    <uses-sdk android:minSdkVersion="8" />
     <!-- 读写外部存储器 -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <!-- 允许程序设置内置sd卡的写权限 -->
@@ -24,6 +25,7 @@
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
     <uses-permission android:name="android.permission.READ_LOGS" />
+
     <application
         android:name=".MyApplication"
         android:allowBackup="true"
@@ -59,7 +61,6 @@
             android:name=".activity.CodeActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".activity.ReportActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
@@ -80,6 +81,11 @@
             android:name=".activity.SettingActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.MoreActivity"
+            android:theme="@style/Transparent"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

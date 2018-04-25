@@ -10,6 +10,12 @@
         <item name="android:windowActionBar">false</item>
     </style>
 
+    <style name="Transparent" parent="AppTheme">
+        <item name="android:windowBackground">@color/transparent</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation.Translucent</item>
+    </style>
+
     <!-- 自定义仿IOS的ActionSheet底部Dialog的样式 ，有模糊效果 -->
     <style name="ActionGeneralDialog" parent="@android:style/Theme.Dialog">
         <!-- 背景透明 -->

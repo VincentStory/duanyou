@@ -50,27 +50,36 @@
 
                 </LinearLayout>
 
-                <FrameLayout
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <cn.jzvd.JZVideoPlayerStandard
-                        android:id="@+id/videoplayer"
-                        android:layout_width="match_parent"
-                        android:layout_height="280dp" />
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/content_tv"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:padding="10dp" />
+                        android:paddingBottom="10dp"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
+                        android:paddingTop="5dp" />
 
-                    <ImageView
-                        android:id="@+id/content_iv"
+                    <FrameLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content">
 
-                </FrameLayout>
+                        <cn.jzvd.JZVideoPlayerStandard
+                            android:id="@+id/videoplayer"
+                            android:layout_width="match_parent"
+                            android:layout_height="280dp" />
+
+                        <ImageView
+                            android:id="@+id/content_iv"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
+
+                    </FrameLayout>
+                </LinearLayout>
                 <!--操作栏-->
                 <LinearLayout
                     android:layout_width="match_parent"

@@ -21,7 +21,7 @@
     <color name="bg_co">#F5F5F5</color>
     <color name="blue">#1E90FF</color>
     <color name="yellow">#FFE7BA</color>
-
+    <color name="color_66000000">#66000000</color>
 
     <color name="alert_dialog_line">#c6c6c6</color>
     <color name="action_sheet_blue">#037BFF</color>

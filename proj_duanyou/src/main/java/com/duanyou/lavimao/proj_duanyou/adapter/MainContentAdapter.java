@@ -3,7 +3,9 @@ package com.duanyou.lavimao.proj_duanyou.adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.text.TextUtils;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -53,20 +55,20 @@ public class MainContentAdapter extends CommonAdapter<GetContentResponse.DyConte
         final TextView caiTv = helper.getView(R.id.tv_unliked);
         final TextView commentTv = helper.getView(R.id.tv_comments);
         JZVideoPlayerStandard jz = helper.getView(R.id.jz_video);
+        FrameLayout fl = helper.getView(R.id.fl);
 
         String type = item.getContextType();
         switch (type) {
             case "2"://段子
-                tv_content.setVisibility(View.VISIBLE);
                 contentIv.setVisibility(View.GONE);
                 jz.setVisibility(View.GONE);
                 tv_content.setText(item.getContextText());
                 break;
             case "3"://图片
-                tv_content.setVisibility(View.GONE);
                 contentIv.setVisibility(View.VISIBLE);
                 jz.setVisibility(View.GONE);
 
+                tv_content.setText(item.getContextText());
                 ImageUtils.reCalculateImage(helper.getView(R.id.content_iv),
                         item.getPixelWidth(),
                         item.getPixelHeight(),
@@ -79,10 +81,10 @@ public class MainContentAdapter extends CommonAdapter<GetContentResponse.DyConte
                         .into(contentIv);
                 break;
             case "4"://视频
-                tv_content.setVisibility(View.GONE);
                 contentIv.setVisibility(View.GONE);
                 jz.setVisibility(View.VISIBLE);
 
+                tv_content.setText(item.getContextText());
                 ImageUtils.reCalculateJzVideo(jz,
                         item.getPixelWidth(),
                         item.getPixelHeight(),
@@ -97,14 +99,18 @@ public class MainContentAdapter extends CommonAdapter<GetContentResponse.DyConte
                 break;
         }
 
-
         tv_name.setText(item.getNickName());
         GlideApp.with(mContext)
                 .load(item.getHeadPortraitUrl())
                 .error(R.drawable.default_pic)
                 .placeholder(R.drawable.default_pic)
                 .into(iv_avatar);
-        tv_content.setText(item.getContextText());
+        if(TextUtils.isEmpty(item.getContextText())){
+            tv_content.setVisibility(View.GONE);
+        }else{
+            tv_content.setVisibility(View.VISIBLE);
+            tv_content.setText(item.getContextText());
+        }
         //0-女 1-男
         if (item.getSex().equals("0")) {
             Glide.with(mContext).load(R.drawable.icon_female).into(iv_sex);
@@ -133,7 +139,6 @@ public class MainContentAdapter extends CommonAdapter<GetContentResponse.DyConte
                                 ToastUtils.showShort(response.getRespMessage());
                             }
                         }
-
                     }
 
                     @Override

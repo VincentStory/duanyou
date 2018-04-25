@@ -48,7 +48,7 @@ public class MainFragment extends BaseFragment {
 
     @Override
     public void initWidget(View view) {
-        setTitle(view, "首 页");
+        setTitle(view, "首页");
         setLeftImg(view, R.drawable.icon_logo);
         setRightIv(view, R.drawable.icon_camera);
         initTitles();

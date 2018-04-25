@@ -156,15 +156,13 @@ public class DuanziDetailsActivity extends BaseActivity {
         if (null != bean) {
             switch (bean.getContextType()) {
                 case "2":
-                    contentTv.setVisibility(View.VISIBLE);
                     contentIv.setVisibility(View.GONE);
                     videoplayer.setVisibility(View.GONE);
-                    contentTv.setText(bean.getContextText());
                     break;
                 case "3":
-                    contentTv.setVisibility(View.GONE);
                     contentIv.setVisibility(View.VISIBLE);
                     videoplayer.setVisibility(View.GONE);
+
                     ImageUtils.reCalculateImage(contentIv,
                             bean.getPixelWidth(),
                             bean.getPixelHeight(),
@@ -175,9 +173,9 @@ public class DuanziDetailsActivity extends BaseActivity {
                             .into(contentIv);
                     break;
                 case "4":
-                    contentTv.setVisibility(View.GONE);
                     contentIv.setVisibility(View.GONE);
                     videoplayer.setVisibility(View.VISIBLE);
+
                     ImageUtils.reCalculateJzVideo(videoplayer,
                             bean.getPixelWidth(),
                             bean.getPixelHeight(),
@@ -200,6 +198,12 @@ public class DuanziDetailsActivity extends BaseActivity {
             zanTv.setText(bean.getPraiseNum() + "");
             caiTv.setText(bean.getTrampleNum() + "");
             commentTv.setText(bean.getCommentNum() + "");
+            if (TextUtils.isEmpty(bean.getContextText())) {
+                contentTv.setVisibility(View.GONE);
+            } else {
+                contentTv.setVisibility(View.VISIBLE);
+                contentTv.setText(bean.getContextText());
+            }
         }
 
     }

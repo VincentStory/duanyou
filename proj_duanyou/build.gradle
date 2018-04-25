@@ -72,6 +72,8 @@ dependencies {
     implementation 'com.makeramen:roundedimageview:2.3.0'
     //刷新控件
     implementation 'com.lcodecorex:tkrefreshlayout:1.0.7'
+    //竖向viewpager
+    implementation 'com.github.castorflex.verticalviewpager:library:19.0.1'
     //压缩图片框架
     compile 'com.jaywei:compresstool:1.2.0'
     //图片加载框架
