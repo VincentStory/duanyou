@@ -46,6 +46,10 @@ public class Api {
      */
     public static final String modifyHeadPortrait="modifyHeadPortrait";
     /**
+     *1.4.26	修改个人背景图
+     */
+    public static final String modifyBackgroundWall="modifyBackgroundWall";
+    /**
      *1.4.15	获取个人或他人基本信息
      */
     public static final String getUserInfo="getUserInfo";

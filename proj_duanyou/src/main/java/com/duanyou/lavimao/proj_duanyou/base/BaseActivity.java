@@ -35,6 +35,7 @@ import com.duanyou.lavimao.proj_duanyou.util.PermissionRequest;
 import com.r0adkll.slidr.Slidr;
 import com.r0adkll.slidr.model.SlidrConfig;
 import com.r0adkll.slidr.model.SlidrPosition;
+import com.umeng.analytics.MobclickAgent;
 import com.yanzhenjie.permission.AndPermission;
 
 import java.util.List;
@@ -129,6 +130,7 @@ public abstract class BaseActivity extends AppCompatActivity {
             // Attach the Slidr Mechanism to this activity
             Slidr.attach(this, mConfig);
         }
+
 
 
     }
@@ -427,15 +429,25 @@ public abstract class BaseActivity extends AppCompatActivity {
         super.onBackPressed();
     }
 
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
     @Override
     public void onPause() {
         super.onPause();
         JZVideoPlayer.releaseAllVideos();
+        MobclickAgent.onPause(this);
     }
 
     public void jumpTo(Class<?> clazz) {
         Intent intent = new Intent(this, clazz);
         startActivity(intent);
     }
+
+
 
 }

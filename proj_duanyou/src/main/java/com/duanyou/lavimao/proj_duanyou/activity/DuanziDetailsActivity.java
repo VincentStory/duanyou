@@ -298,11 +298,17 @@ public class DuanziDetailsActivity extends BaseActivity {
             case R.id.send_btn:
                 String commentContent = commentEt.getText().toString().trim();
                 if (!TextUtils.isEmpty(commentContent)) {
-                    if (null == clickItem) {
-                        userComment(bean.getDyContextID(), commentContent, bean.getPublisherDyID());
-                    } else {
-                        userReply(clickItem.getCommentID(), clickItem.getCommentDyID(), commentContent, bean.getDyContextID() + "");
+                    if(UserInfo.getLoginState()){
+                        if (null == clickItem) {
+                            userComment(bean.getDyContextID(), commentContent, bean.getPublisherDyID());
+                        } else {
+                            userReply(clickItem.getCommentID(), clickItem.getCommentDyID(), commentContent, bean.getDyContextID() + "");
+                        }
+                    }else {
+                        // TODO: 2018/4/25
+                        jumpTo(LoginActivity.class);
                     }
+
                 } else {
                     ToastUtils.showShort("请输入内容");
                 }

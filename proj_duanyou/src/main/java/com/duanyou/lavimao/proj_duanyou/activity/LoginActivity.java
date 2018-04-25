@@ -21,6 +21,7 @@ import com.duanyou.lavimao.proj_duanyou.util.Contents;
 import com.duanyou.lavimao.proj_duanyou.util.DeviceUtils;
 import com.duanyou.lavimao.proj_duanyou.util.SpUtil;
 import com.duanyou.lavimao.proj_duanyou.util.StringUtil;
+import com.duanyou.lavimao.proj_duanyou.util.UserInfo;
 import com.xiben.ebs.esbsdk.callback.ResultCallback;
 
 import butterknife.BindView;
@@ -74,7 +75,8 @@ public class LoginActivity extends BaseActivity {
                             SpUtil.saveStringSP(SpUtil.TOKEN, response.getToken());
                             SpUtil.saveStringSP(SpUtil.nickName, response.getNickName());
                             SpUtil.saveStringSP(SpUtil.currentLocation, response.getCurrentLocation());
-
+                            UserInfo.setBgUrl(response.getBackgroundWall());
+                            UserInfo.setHeadUrl(response.getHeadPortraitUrl());
                             finish();
 
                         }
@@ -85,9 +87,6 @@ public class LoginActivity extends BaseActivity {
                         }
                     });
                 }
-
-
-
 
                 break;
             case R.id.qq_iv:
@@ -117,17 +116,12 @@ public class LoginActivity extends BaseActivity {
         request.setMobilePhone(phone);
         request.setDeviceID(DeviceUtils.getAndroidID());
         request.setPassword(StringUtil.md5(password));
-
-
         NetUtil.getData(Api.LOGIN, context, request, new ResultCallback() {
             @Override
             public void onResult(final String jsonResult) {
                 BaseResponse response = JSON.parseObject(jsonResult, BaseResponse.class);
                 if (response.getRespCode().equals("0")) {
-
                     result.success(jsonResult);
-
-
                 } else {
                     ToastUtils.showShort(response.getRespMessage());
                 }
@@ -136,7 +130,6 @@ public class LoginActivity extends BaseActivity {
 
             @Override
             public void onError(Exception ex) {
-
                 result.error(ex);
             }
         });

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.duanyou.lavimao.proj_duanyou">
-
+    <uses-sdk android:minSdkVersion="8"></uses-sdk>
     <!-- 读写外部存储器 -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <!-- 允许程序设置内置sd卡的写权限 -->
@@ -74,6 +74,10 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.PersonInfoAcitvity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.SettingActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait" />
     </application>

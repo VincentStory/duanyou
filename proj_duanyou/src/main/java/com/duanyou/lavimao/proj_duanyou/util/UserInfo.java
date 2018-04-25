@@ -20,6 +20,24 @@ public class UserInfo {
         return DeviceUtils.getAndroidID();
     }
 
+    public static String getNickName() {
+        return SpUtil.getStringSp(SpUtil.nickName);
+    }
+
+    public static String getBgUrl() {
+        return SpUtil.getStringSp(SpUtil.backgroundUrl);
+    }
+
+    public static String getHeadUrl() {
+        return SpUtil.getStringSp(SpUtil.headUrl);
+    }
+    public static void setHeadUrl(String url){
+        SpUtil.saveStringSP(SpUtil.headUrl,url);
+    }
+    public static void setBgUrl(String url){
+        SpUtil.saveStringSP(SpUtil.backgroundUrl,url);
+    }
+
     public static boolean getLoginState() {
         if (!TextUtils.isEmpty(getToken())) {
             return true;
@@ -28,8 +46,8 @@ public class UserInfo {
         }
     }
 
-    public static void clearUserInfo(){
-
+    public static void clearUserInfo() {
+        SpUtil.saveStringSP(SpUtil.TOKEN,"");
     }
 
 }

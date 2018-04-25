@@ -35,7 +35,7 @@
                 app:riv_corner_radius="6dp" />
 
             <TextView
-                android:id="@+id/tv_name"
+                android:id="@+id/nickname_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignBottom="@+id/bg_iv"
@@ -49,7 +49,7 @@
                 android:id="@+id/location_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="30dp"
-                android:layout_below="@+id/tv_name"
+                android:layout_below="@+id/nickname_tv"
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="5dp"
                 android:layout_toRightOf="@+id/headimage_iv"
@@ -60,8 +60,8 @@
 
             <TextView
                 android:id="@+id/edit_tv"
-                android:layout_width="40dp"
-                android:layout_height="20dp"
+                android:layout_width="50dp"
+                android:layout_height="25dp"
                 android:layout_alignParentRight="true"
                 android:text="编辑"
                 android:textSize="13sp"
@@ -88,6 +88,7 @@
             android:layout_marginTop="20dp"
             android:background="@color/white"
             android:paddingBottom="5dp"
+            android:visibility="gone"
             android:paddingEnd="30dp"
             android:paddingLeft="30dp"
             android:paddingTop="10dp">
@@ -118,6 +119,7 @@
         </RelativeLayout>
 
         <TextView
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:layout_marginTop="20dp"
@@ -133,7 +135,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="40dp"
-
+            android:visibility="gone"
             android:background="@color/white"
             android:drawableLeft="@drawable/write2x"
             android:drawablePadding="10dp"
@@ -146,7 +148,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="40dp"
-
+            android:visibility="gone"
             android:background="@color/white"
             android:drawableLeft="@drawable/hudong2x"
             android:drawablePadding="10dp"
@@ -157,6 +159,7 @@
             android:text="互动" />
 
         <TextView
+            android:id="@+id/setting_tv"
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:layout_marginTop="20dp"

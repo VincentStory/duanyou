@@ -34,6 +34,7 @@ import com.duanyou.lavimao.proj_duanyou.net.request.UserInfoRequest;
 import com.duanyou.lavimao.proj_duanyou.net.response.LoginResponse;
 import com.duanyou.lavimao.proj_duanyou.net.response.UserInfoResponse;
 import com.duanyou.lavimao.proj_duanyou.util.AddressPickTask;
+import com.duanyou.lavimao.proj_duanyou.util.Contents;
 import com.duanyou.lavimao.proj_duanyou.util.DeviceUtils;
 import com.duanyou.lavimao.proj_duanyou.util.FileSizeUtil;
 import com.duanyou.lavimao.proj_duanyou.util.SpUtil;
@@ -93,8 +94,8 @@ public class PersonInfoAcitvity extends BaseActivity {
     TextView sexTv;
     @BindView(R.id.birthy_tv)
     TextView birthyTv;
-    @BindView(R.id.work_tv)
-    TextView workTv;
+    @BindView(R.id.work_et)
+    EditText workEt;
     @BindView(R.id.area_tv)
     TextView areaTv;
     @BindView(R.id.signature_et)
@@ -120,6 +121,76 @@ public class PersonInfoAcitvity extends BaseActivity {
     @Override
     public void initData() {
         initTitle();
+
+
+        nicknameEt.setOnFocusChangeListener(new android.view.View.
+                OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    // 此处为得到焦点时的处理内容
+
+                } else {
+                    // 此处为失去焦点时的处理内容
+                    setUserInfo(PersonInfoAcitvity.this,nicknameEt.getText().toString(), birthyTv.getText().toString(), areaTv.getText().toString(),
+                            sexTv.getText().toString(), hunyinTv.getText().toString(), workEt.getText().toString(), new GetContentResult() {
+                                @Override
+                                public void success(String json) {
+                                }
+
+                                @Override
+                                public void error(Exception ex) {
+                                }
+                            });
+                }
+            }
+        });
+        workEt.setOnFocusChangeListener(new android.view.View.
+                OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    // 此处为得到焦点时的处理内容
+
+                } else {
+                    // 此处为失去焦点时的处理内容
+                    setUserInfo(PersonInfoAcitvity.this,nicknameEt.getText().toString(), birthyTv.getText().toString(), areaTv.getText().toString(),
+                            sexTv.getText().toString(), hunyinTv.getText().toString(), workEt.getText().toString(), new GetContentResult() {
+                                @Override
+                                public void success(String json) {
+                                }
+
+                                @Override
+                                public void error(Exception ex) {
+                                }
+                            });
+                }
+            }
+        });
+        signatureEt.setOnFocusChangeListener(new android.view.View.
+                OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    // 此处为得到焦点时的处理内容
+
+                } else {
+                    // 此处为失去焦点时的处理内容
+                    setUserInfo(PersonInfoAcitvity.this,nicknameEt.getText().toString(), birthyTv.getText().toString(), areaTv.getText().toString(),
+                            sexTv.getText().toString(), hunyinTv.getText().toString(), workEt.getText().toString(), new GetContentResult() {
+                                @Override
+                                public void success(String json) {
+                                }
+
+                                @Override
+                                public void error(Exception ex) {
+                                }
+                            });
+                }
+            }
+        });
+
+
     }
 
     @Override
@@ -131,13 +202,14 @@ public class PersonInfoAcitvity extends BaseActivity {
                 if (response.getUserInfo().size() > 0) {
                     UserInfoResponse.UserInfo userInfo = response.getUserInfo().get(0);
                     String picurl = userInfo.getHeadPortraitUrl();
-                    Glide.with(PersonInfoAcitvity.this).load(picurl).into(headIv);
+                    if (picurl != null)
+                        Glide.with(PersonInfoAcitvity.this).load(picurl).into(headIv);
                     duanyouidTv.setText(userInfo.getDyID());
                     nicknameEt.setText(userInfo.getNickName());
                     hunyinTv.setText(userInfo.getMaritalStatus());
                     sexTv.setText(userInfo.getGender());
                     birthyTv.setText(userInfo.getBirthday());
-                    workTv.setText(userInfo.getOccupation());
+                    workEt.setText(userInfo.getOccupation());
                     areaTv.setText(userInfo.getRegion());
                     signatureEt.setText(userInfo.getSignature());
                 }
@@ -267,16 +339,14 @@ public class PersonInfoAcitvity extends BaseActivity {
             public void onItemPicked(int index, String item) {
 //                ToastUtils.showShort("index=" + index + ", item=" + item);
                 sexTv.setText(item);
-                setUserInfo(PersonInfoAcitvity.this, birthyTv.getText().toString(), areaTv.getText().toString(),
-                        sexTv.getText().toString(), hunyinTv.getText().toString(), workTv.getText().toString(), new GetContentResult() {
+                setUserInfo(PersonInfoAcitvity.this,nicknameEt.getText().toString(), birthyTv.getText().toString(), areaTv.getText().toString(),
+                        sexTv.getText().toString(), hunyinTv.getText().toString(), workEt.getText().toString(), new GetContentResult() {
                             @Override
                             public void success(String json) {
-
                             }
 
                             @Override
                             public void error(Exception ex) {
-
                             }
                         });
             }
@@ -324,16 +394,14 @@ public class PersonInfoAcitvity extends BaseActivity {
             public void onItemPicked(int index, String item) {
 //                ToastUtils.showShort("index=" + index + ", item=" + item);
                 hunyinTv.setText(item);
-                setUserInfo(PersonInfoAcitvity.this, birthyTv.getText().toString(), areaTv.getText().toString(),
-                        sexTv.getText().toString(), hunyinTv.getText().toString(), workTv.getText().toString(), new GetContentResult() {
+                setUserInfo(PersonInfoAcitvity.this,nicknameEt.getText().toString(), birthyTv.getText().toString(), areaTv.getText().toString(),
+                        sexTv.getText().toString(), hunyinTv.getText().toString(), workEt.getText().toString(), new GetContentResult() {
                             @Override
                             public void success(String json) {
-
                             }
 
                             @Override
                             public void error(Exception ex) {
-
                             }
                         });
             }
@@ -359,16 +427,14 @@ public class PersonInfoAcitvity extends BaseActivity {
             public void onDatePicked(String year, String month, String day) {
                 ToastUtils.showShort(year + "-" + month + "-" + day);
                 birthyTv.setText(year + "-" + month + "-" + day);
-                setUserInfo(PersonInfoAcitvity.this, birthyTv.getText().toString(), areaTv.getText().toString(),
-                        sexTv.getText().toString(), hunyinTv.getText().toString(), workTv.getText().toString(), new GetContentResult() {
+                setUserInfo(PersonInfoAcitvity.this,nicknameEt.getText().toString(), birthyTv.getText().toString(), areaTv.getText().toString(),
+                        sexTv.getText().toString(), hunyinTv.getText().toString(), workEt.getText().toString(), new GetContentResult() {
                             @Override
                             public void success(String json) {
-
                             }
 
                             @Override
                             public void error(Exception ex) {
-
                             }
                         });
 
@@ -415,17 +481,15 @@ public class PersonInfoAcitvity extends BaseActivity {
                     ToastUtils.showShort(province.getAreaName() + city.getAreaName() + county.getAreaName());
                 }
 
-                areaTv.setText(province.getAreaName() + city.getAreaName() + county.getAreaName());
-                setUserInfo(PersonInfoAcitvity.this, birthyTv.getText().toString(), areaTv.getText().toString(),
-                        sexTv.getText().toString(), hunyinTv.getText().toString(), workTv.getText().toString(), new GetContentResult() {
+                areaTv.setText(province.getAreaName() +"-"+ city.getAreaName() +"-"+ county.getAreaName());
+                setUserInfo(PersonInfoAcitvity.this,nicknameEt.getText().toString(), birthyTv.getText().toString(), areaTv.getText().toString(),
+                        sexTv.getText().toString(), hunyinTv.getText().toString(), workEt.getText().toString(), new GetContentResult() {
                             @Override
                             public void success(String json) {
-
                             }
 
                             @Override
                             public void error(Exception ex) {
-
                             }
                         });
             }
@@ -528,6 +592,7 @@ public class PersonInfoAcitvity extends BaseActivity {
                             public void success(String json) {
                                 Log.i(TAG, "success: " + json);
                                 Glide.with(PersonInfoAcitvity.this).load(imageUri.getPath()).into(headIv);
+                                Contents.IS_REFRESH=true;
                             }
 
                             @Override
@@ -560,6 +625,7 @@ public class PersonInfoAcitvity extends BaseActivity {
                             public void success(String json) {
                                 Log.i(TAG, "success: " + json);
                                 Glide.with(PersonInfoAcitvity.this).load(picturePath).into(headIv);
+                                Contents.IS_REFRESH=true;
                             }
 
                             @Override
@@ -703,14 +769,14 @@ public class PersonInfoAcitvity extends BaseActivity {
     /**
      * 修改个人信息
      */
-    protected void setUserInfo(final Activity context, String birthday, String area, String sex, String hunyin, String work,
+    protected void setUserInfo(final Activity context, String nickname,String birthday, String area, String sex, String hunyin, String work,
                                final GetContentResult result) {
         SetUserInfoRequest request = new SetUserInfoRequest();
         request.setDyID(UserInfo.getDyId());
         request.setDeviceID(UserInfo.getDeviceId());
+        request.setNickName(nickname);
         request.setToken(UserInfo.getToken());
         request.setBirthday(birthday);
-
         request.setGender(sex);
         request.setMaritalStatus(hunyin);
         request.setOccupation(work);
@@ -739,4 +805,5 @@ public class PersonInfoAcitvity extends BaseActivity {
             }
         });
 
-    }}
+    }
+}

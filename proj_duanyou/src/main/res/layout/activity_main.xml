@@ -8,7 +8,6 @@
     tools:context=".activity.MainActivity">
 
 
-
     <FrameLayout
         android:id="@+id/layFrame"
         android:layout_width="match_parent"
@@ -53,7 +52,7 @@
 
         <LinearLayout
             android:id="@+id/id_activity_dymain_lay_dyou"
-
+            android:visibility="gone"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -62,10 +61,10 @@
 
             <ImageView
                 android:id="@+id/id_activity_main_img_btn_dyou"
-
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/icon_main_friend_normal" />
+                android:src="@drawable/icon_main_friend_normal"
+                />
 
             <TextView
                 android:id="@+id/id_activity_main_tv_dyou"
@@ -81,7 +80,7 @@
 
         <LinearLayout
             android:id="@+id/id_activity_dymain_lay_examain"
-
+            android:visibility="gone"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -125,7 +124,6 @@
 
             <TextView
                 android:id="@+id/id_activity_main_tv_mine"
-
                 android:layout_width="wrap_content"
                 android:layout_height="14dp"
                 android:layout_marginTop="2dp"
@@ -133,8 +131,6 @@
                 android:textColor="#b3b3b3"
                 android:textSize="12sp" />
         </LinearLayout>
-
-
     </LinearLayout>
 
 </LinearLayout>
