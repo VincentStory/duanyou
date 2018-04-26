@@ -186,8 +186,6 @@ public class DuanziDetailsActivity extends BaseActivity {
                             .error(R.drawable.default_load)
                             .placeholder(R.drawable.default_load)
                             .into(videoplayer.thumbImageView);
-
-
                     break;
             }
             nameTv.setText(bean.getNickName());

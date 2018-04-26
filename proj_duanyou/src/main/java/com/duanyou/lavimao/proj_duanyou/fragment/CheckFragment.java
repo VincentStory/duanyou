@@ -1,10 +1,10 @@
 package com.duanyou.lavimao.proj_duanyou.fragment;
 
 import android.os.Bundle;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.duanyou.lavimao.proj_duanyou.R;
@@ -16,6 +16,7 @@ import com.duanyou.lavimao.proj_duanyou.net.request.GetContentUnreviewedRequest;
 import com.duanyou.lavimao.proj_duanyou.net.response.GetContentUnreviewedResponse;
 import com.duanyou.lavimao.proj_duanyou.util.ToastUtils;
 import com.duanyou.lavimao.proj_duanyou.util.UserInfo;
+import com.duanyou.lavimao.proj_duanyou.widgets.MyTwinklingRefreshLayout;
 import com.lcodecore.tkrefreshlayout.RefreshListenerAdapter;
 import com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout;
 import com.lcodecore.tkrefreshlayout.header.SinaRefreshView;
@@ -34,10 +35,10 @@ import fr.castorflex.android.verticalviewpager.VerticalViewPager;
  */
 public class CheckFragment extends BaseFragment {
 
-    @BindView(R.id.refreshlayout)
-    TwinklingRefreshLayout refreshlayout;
-    @BindView(R.id.verticalviewpager)
-    VerticalViewPager verticalViewPager;
+    //@BindView(R.id.refreshlayout)
+    //MyTwinklingRefreshLayout refreshlayout;
+    @BindView(R.id.vertical_vp)
+    VerticalViewPager verticalVp;
 
     private VerticalVpAdapter adapter;
     private List<GetContentUnreviewedResponse.DyContextsBean> mList = new ArrayList<>();
@@ -63,6 +64,7 @@ public class CheckFragment extends BaseFragment {
     }
 
     private void initView() {
+        /*refreshlayout.setLoadEnable(false);
         refreshlayout.setHeaderView(new SinaRefreshView(getActivity()));
         refreshlayout.setOnRefreshListener(new RefreshListenerAdapter() {
             @Override
@@ -78,9 +80,26 @@ public class CheckFragment extends BaseFragment {
                 refreshTag = false;
                 getContentUnreviewed();
             }
-        });
+        });*/
         adapter = new VerticalVpAdapter(getChildFragmentManager(), mList);
-        verticalViewPager.setAdapter(adapter);
+        verticalVp.setAdapter(adapter);
+        verticalVp.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+
     }
 
     private void initTitle(View view) {
@@ -102,14 +121,19 @@ public class CheckFragment extends BaseFragment {
                     if ("0".equals(response.getRespCode())) {
                         if (refreshTag) {
                             mList.clear();
-                            refreshlayout.finishRefreshing();
+                           // refreshlayout.finishRefreshing();
                         } else {
-                            refreshlayout.finishLoadmore();
+                          //  refreshlayout.finishLoadmore();
                         }
                         mList.addAll(response.getDyContexts());
                         adapter.notifyDataSetChanged();
                         if (mList.size() == 0 && !refreshTag) {
                             ToastUtils.showShort(getResources().getString(R.string.no_more));
+                        }
+
+                        if (mList.size() == 1) {
+                           // refreshlayout.setEnableRefresh(true);
+                           // refreshlayout.setEnableLoadmore(true);
                         }
                     } else {
                         ToastUtils.showShort(response.getRespMessage());
