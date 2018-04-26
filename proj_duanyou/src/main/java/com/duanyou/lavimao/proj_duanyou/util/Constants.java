@@ -16,4 +16,6 @@ public class Constants {
 
     public static final String dyContextID="dyContextID";
 
+    public static final String DyContextsBean="DyContextsBean";
+
 }

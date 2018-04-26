@@ -11,7 +11,7 @@ import java.util.List;
 
 public class GetContentUnreviewedResponse extends BaseResponse {
 
-    List<DyContextsBean> dyContexts;
+    public List<DyContextsBean> dyContexts;
 
     public List<DyContextsBean> getDyContexts() {
         return dyContexts;
@@ -21,7 +21,7 @@ public class GetContentUnreviewedResponse extends BaseResponse {
         this.dyContexts = dyContexts;
     }
 
-    public class DyContextsBean implements Serializable{
+    public static class DyContextsBean implements Serializable{
         private int dyContextID;
         private String publisherDyID;
         private String uploadDate;

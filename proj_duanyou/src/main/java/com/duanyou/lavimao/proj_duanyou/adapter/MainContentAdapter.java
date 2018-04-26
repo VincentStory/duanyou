@@ -48,27 +48,24 @@ public class MainContentAdapter extends CommonAdapter<GetContentResponse.DyConte
 
         RoundedImageView iv_avatar = helper.getView(R.id.iv_avatar);
         TextView tv_name = helper.getView(R.id.tv_name);
-        TextView tv_content = helper.getView(R.id.tv_content);
+        TextView contentTv = helper.getView(R.id.tv_content);
         ImageView contentIv = helper.getView(R.id.content_iv);
         ImageView iv_sex = helper.getView(R.id.iv_sex);
         final TextView zanTv = helper.getView(R.id.zan_tv);
         final TextView caiTv = helper.getView(R.id.tv_unliked);
         final TextView commentTv = helper.getView(R.id.tv_comments);
         JZVideoPlayerStandard jz = helper.getView(R.id.jz_video);
-        FrameLayout fl = helper.getView(R.id.fl);
 
         String type = item.getContextType();
         switch (type) {
             case "2"://段子
                 contentIv.setVisibility(View.GONE);
                 jz.setVisibility(View.GONE);
-                tv_content.setText(item.getContextText());
                 break;
             case "3"://图片
                 contentIv.setVisibility(View.VISIBLE);
                 jz.setVisibility(View.GONE);
 
-                tv_content.setText(item.getContextText());
                 ImageUtils.reCalculateImage(helper.getView(R.id.content_iv),
                         item.getPixelWidth(),
                         item.getPixelHeight(),
@@ -84,7 +81,6 @@ public class MainContentAdapter extends CommonAdapter<GetContentResponse.DyConte
                 contentIv.setVisibility(View.GONE);
                 jz.setVisibility(View.VISIBLE);
 
-                tv_content.setText(item.getContextText());
                 ImageUtils.reCalculateJzVideo(jz,
                         item.getPixelWidth(),
                         item.getPixelHeight(),
@@ -106,10 +102,10 @@ public class MainContentAdapter extends CommonAdapter<GetContentResponse.DyConte
                 .placeholder(R.drawable.default_pic)
                 .into(iv_avatar);
         if(TextUtils.isEmpty(item.getContextText())){
-            tv_content.setVisibility(View.GONE);
+            contentTv.setVisibility(View.GONE);
         }else{
-            tv_content.setVisibility(View.VISIBLE);
-            tv_content.setText(item.getContextText());
+            contentTv.setVisibility(View.VISIBLE);
+            contentTv.setText(item.getContextText());
         }
         //0-女 1-男
         if (item.getSex().equals("0")) {

@@ -24,7 +24,7 @@ public class VerticalVpAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        return CheckItemFragment.newInstance();
+        return CheckItemFragment.newInstance(mList.get(position));
     }
 
     @Override
