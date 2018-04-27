@@ -31,9 +31,15 @@ public class MyTwinklingRefreshLayout extends TwinklingRefreshLayout {
     }
 
     @Override
-    public boolean onInterceptHoverEvent(MotionEvent event) {
-        return enable;
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        switch (ev.getAction()) {
+            case MotionEvent.ACTION_UP:
+                return enable;
+
+        }
+
+        return super.dispatchTouchEvent(ev);
+
+
     }
-
-
 }

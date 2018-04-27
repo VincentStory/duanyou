@@ -2,11 +2,15 @@ package com.duanyou.lavimao.proj_duanyou.fragment;
 
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
+import com.duanyou.lavimao.proj_duanyou.Event.UpdateFragemntEvent;
 import com.duanyou.lavimao.proj_duanyou.R;
 import com.duanyou.lavimao.proj_duanyou.adapter.VerticalVpAdapter;
 import com.duanyou.lavimao.proj_duanyou.base.BaseFragment;
@@ -16,18 +20,16 @@ import com.duanyou.lavimao.proj_duanyou.net.request.GetContentUnreviewedRequest;
 import com.duanyou.lavimao.proj_duanyou.net.response.GetContentUnreviewedResponse;
 import com.duanyou.lavimao.proj_duanyou.util.ToastUtils;
 import com.duanyou.lavimao.proj_duanyou.util.UserInfo;
-import com.duanyou.lavimao.proj_duanyou.widgets.MyTwinklingRefreshLayout;
-import com.lcodecore.tkrefreshlayout.RefreshListenerAdapter;
-import com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout;
-import com.lcodecore.tkrefreshlayout.header.SinaRefreshView;
+import com.duanyou.lavimao.proj_duanyou.widgets.MyViewPager;
 import com.xiben.ebs.esbsdk.callback.ResultCallback;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import fr.castorflex.android.verticalviewpager.VerticalViewPager;
 
 
 /**
@@ -38,7 +40,11 @@ public class CheckFragment extends BaseFragment {
     //@BindView(R.id.refreshlayout)
     //MyTwinklingRefreshLayout refreshlayout;
     @BindView(R.id.vertical_vp)
-    VerticalViewPager verticalVp;
+    MyViewPager verticalVp;
+    @BindView(R.id.pb)
+    ProgressBar pb;
+    @BindView(R.id.load_again_tv)
+    TextView loadAgainTv;
 
     private VerticalVpAdapter adapter;
     private List<GetContentUnreviewedResponse.DyContextsBean> mList = new ArrayList<>();
@@ -83,6 +89,7 @@ public class CheckFragment extends BaseFragment {
         });*/
         adapter = new VerticalVpAdapter(getChildFragmentManager(), mList);
         verticalVp.setAdapter(adapter);
+        verticalVp.setOffscreenPageLimit(5);
         verticalVp.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -91,7 +98,10 @@ public class CheckFragment extends BaseFragment {
 
             @Override
             public void onPageSelected(int position) {
-
+                if (position == mList.size() - 1) {
+                    refreshTag = false;
+                    getContentUnreviewed();
+                }
             }
 
             @Override
@@ -99,7 +109,24 @@ public class CheckFragment extends BaseFragment {
 
             }
         });
-
+        //第一个item下滑监听
+        verticalVp.setUpSlideListener(new MyViewPager.UpSlideListener() {
+            @Override
+            public void upSlide() {
+                if (pb.getVisibility() == View.GONE) {
+                    refreshTag = true;
+                    getContentUnreviewed();
+                }
+            }
+        });
+        loadAgainTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                refreshTag = true;
+                getContentUnreviewed();
+                loadAgainTv.setVisibility(View.GONE);
+            }
+        });
     }
 
     private void initTitle(View view) {
@@ -110,34 +137,39 @@ public class CheckFragment extends BaseFragment {
     }
 
     public void getContentUnreviewed() {
+        pb.setVisibility(View.VISIBLE);
         GetContentUnreviewedRequest request = new GetContentUnreviewedRequest();
         request.setDyID(UserInfo.getDyId());
 
         NetUtil.getData(Api.getContentUnreviewed, getActivity(), request, new ResultCallback() {
             @Override
             public void onResult(String jsonResult) {
-                GetContentUnreviewedResponse response = JSON.parseObject(jsonResult, GetContentUnreviewedResponse.class);
-                if (null != response) {
-                    if ("0".equals(response.getRespCode())) {
-                        if (refreshTag) {
-                            mList.clear();
-                           // refreshlayout.finishRefreshing();
-                        } else {
-                          //  refreshlayout.finishLoadmore();
-                        }
-                        mList.addAll(response.getDyContexts());
-                        adapter.notifyDataSetChanged();
-                        if (mList.size() == 0 && !refreshTag) {
-                            ToastUtils.showShort(getResources().getString(R.string.no_more));
-                        }
+                pb.setVisibility(View.GONE);
+                try {
+                    GetContentUnreviewedResponse response = JSON.parseObject(jsonResult, GetContentUnreviewedResponse.class);
+                    if (null != response) {
+                        if ("0".equals(response.getRespCode())) {
+                            if (refreshTag) {
+                                mList.clear();
+                                mList.addAll(response.getDyContexts());
+                                adapter.notifyDataSetChanged();
+                                EventBus.getDefault().post(new UpdateFragemntEvent(mList));
+                            } else {
+                                mList.addAll(response.getDyContexts());
+                                adapter.notifyDataSetChanged();
+                            }
 
-                        if (mList.size() == 1) {
-                           // refreshlayout.setEnableRefresh(true);
-                           // refreshlayout.setEnableLoadmore(true);
+                            if (mList.size() == 0 && !refreshTag) {
+                                ToastUtils.showShort(getResources().getString(R.string.no_more));
+                            }
+
+                        } else {
+                            ToastUtils.showShort(response.getRespMessage());
                         }
-                    } else {
-                        ToastUtils.showShort(response.getRespMessage());
                     }
+                } catch (Exception e) {
+                    Log.i("TAG", "json解析异常");
+                    loadAgainTv.setVisibility(View.VISIBLE);
                 }
             }
 

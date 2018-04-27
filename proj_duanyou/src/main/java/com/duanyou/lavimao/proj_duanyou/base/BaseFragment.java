@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -104,14 +105,16 @@ public abstract class BaseFragment extends Fragment {
         NetUtil.getData(Api.GETCONTENT, context, request, new ResultCallback() {
             @Override
             public void onResult(final String jsonResult) {
-                BaseResponse response = JSON.parseObject(jsonResult, BaseResponse.class);
-                if (response.getRespCode().equals("0")) {
+                try {
+                    BaseResponse response = JSON.parseObject(jsonResult, BaseResponse.class);
+                    if (response.getRespCode().equals("0")) {
 
-                    result.success(jsonResult);
+                        result.success(jsonResult);
+                    } else {
 
-
-                } else {
-
+                    }
+                } catch (Exception e) {
+                    Log.i("TAG", "json解析异常");
                 }
 
             }

@@ -9,7 +9,7 @@ import java.util.List;
  * Created by luojialun on 2018/4/25.
  */
 
-public class GetContentUnreviewedResponse extends BaseResponse {
+public class GetContentUnreviewedResponse extends BaseResponse implements Serializable {
 
     public List<DyContextsBean> dyContexts;
 

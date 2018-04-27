@@ -1,9 +1,7 @@
 package com.duanyou.lavimao.proj_duanyou.fragment;
 
 
-import android.media.Image;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,13 +10,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.blankj.utilcode.util.ScreenUtils;
+import com.duanyou.lavimao.proj_duanyou.Event.UpdateFragemntEvent;
 import com.duanyou.lavimao.proj_duanyou.GlideApp;
 import com.duanyou.lavimao.proj_duanyou.R;
-import com.duanyou.lavimao.proj_duanyou.activity.DuanziDetailsActivity;
 import com.duanyou.lavimao.proj_duanyou.base.BaseFragment;
 import com.duanyou.lavimao.proj_duanyou.net.response.GetContentUnreviewedResponse;
 import com.duanyou.lavimao.proj_duanyou.util.Constants;
 import com.duanyou.lavimao.proj_duanyou.util.ImageUtils;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -37,9 +39,11 @@ public class CheckItemFragment extends BaseFragment {
     ImageView contentIv;
 
     public GetContentUnreviewedResponse.DyContextsBean item;
+    public int position;
 
-    public static CheckItemFragment newInstance(GetContentUnreviewedResponse.DyContextsBean item) {
+    public static CheckItemFragment newInstance(GetContentUnreviewedResponse.DyContextsBean item, int position) {
         Bundle args = new Bundle();
+        args.putInt(Constants.POSITION, position);
         args.putSerializable(Constants.DyContextsBean, item);
         CheckItemFragment fragment = new CheckItemFragment();
         fragment.setArguments(args);
@@ -50,6 +54,7 @@ public class CheckItemFragment extends BaseFragment {
     public View onCreate(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_check_item, container, false);
         ButterKnife.bind(this, view);
+        EventBus.getDefault().register(this);//订阅
         return view;
     }
 
@@ -66,6 +71,7 @@ public class CheckItemFragment extends BaseFragment {
 
     private void initParams() {
         item = (GetContentUnreviewedResponse.DyContextsBean) getArguments().getSerializable(Constants.DyContextsBean);
+        position = getArguments().getInt(Constants.POSITION);
     }
 
     private void initView() {
@@ -109,5 +115,20 @@ public class CheckItemFragment extends BaseFragment {
         }
     }
 
+    public void upData(GetContentUnreviewedResponse.DyContextsBean bean) {
+        item = bean;
+        initView();
+    }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        EventBus.getDefault().unregister(this);//解除订阅
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void upDateFragment(UpdateFragemntEvent event) {
+        item = event.getmList().get(position);
+        initView();
+    }
 }

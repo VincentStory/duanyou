@@ -6,16 +6,18 @@ package com.duanyou.lavimao.proj_duanyou.util;
 
 public class Constants {
 
-    public static final String targetDyID="targetDyID";
+    public static final String targetDyID = "targetDyID";
 
-    public static final String beginContentID="beginContentID";
+    public static final String beginContentID = "beginContentID";
 
-    public static final String type="type";
+    public static final String type = "type";
 
-    public static final String CLICK_BEAN="clickBean";
+    public static final String CLICK_BEAN = "clickBean";
 
-    public static final String dyContextID="dyContextID";
+    public static final String dyContextID = "dyContextID";
 
-    public static final String DyContextsBean="DyContextsBean";
+    public static final String DyContextsBean = "DyContextsBean";
+
+    public static final String POSITION = "position";
 
 }
