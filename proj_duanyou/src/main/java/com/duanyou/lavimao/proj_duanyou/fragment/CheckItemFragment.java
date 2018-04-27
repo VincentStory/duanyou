@@ -64,6 +64,10 @@ public class CheckItemFragment extends BaseFragment {
         initView();
     }
 
+    private void initParams() {
+        item = (GetContentUnreviewedResponse.DyContextsBean) getArguments().getSerializable(Constants.DyContextsBean);
+    }
+
     private void initView() {
         String type = item.getContextType();
         if ("2".equals(type)) {
@@ -103,10 +107,6 @@ public class CheckItemFragment extends BaseFragment {
             contentTv.setText(item.getContextText());
             contentTv.setVisibility(View.VISIBLE);
         }
-    }
-
-    private void initParams() {
-        item = (GetContentUnreviewedResponse.DyContextsBean) getArguments().getSerializable(Constants.DyContextsBean);
     }
 
 
