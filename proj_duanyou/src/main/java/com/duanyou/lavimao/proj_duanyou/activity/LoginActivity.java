@@ -56,16 +56,19 @@ public class LoginActivity extends BaseActivity {
     }
 
 
-    @OnClick({R.id.no_account_tv, R.id.login_btn, R.id.qq_iv, R.id.weixin_iv})
+    @OnClick({R.id.forget_pwd_tv, R.id.no_account_tv, R.id.login_btn, R.id.qq_iv, R.id.weixin_iv})
     public void onClick(View view) {
         switch (view.getId()) {
+            case R.id.forget_pwd_tv:
+                jumpTo(FindPwdActivity.class);
+                break;
             case R.id.no_account_tv:
                 Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
                 startActivity(intent);
                 break;
             case R.id.login_btn:
 
-                if (checkContent(accountEt.getText().toString().trim(), pwdEt.getText().toString().trim())){
+                if (checkContent(accountEt.getText().toString().trim(), pwdEt.getText().toString().trim())) {
 
                     login(LoginActivity.this, accountEt.getText().toString().trim(), pwdEt.getText().toString().trim(), new GetContentResult() {
                         @Override

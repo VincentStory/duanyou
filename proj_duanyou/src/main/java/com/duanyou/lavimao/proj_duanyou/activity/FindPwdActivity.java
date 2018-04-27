@@ -37,7 +37,7 @@ public class FindPwdActivity extends BaseActivity {
     public void setView() {
         setContentView(R.layout.activity_find_pwd);
         ButterKnife.bind(this);
-        //
+
     }
 
     @Override

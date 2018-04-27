@@ -12,6 +12,7 @@ import com.blankj.utilcode.util.Utils;
 import com.duanyou.lavimao.proj_duanyou.util.SpUtil;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.commonsdk.UMConfigure;
+import com.umeng.socialize.PlatformConfig;
 
 
 import java.util.LinkedList;
@@ -60,7 +61,7 @@ public class MyApplication extends MultiDexApplication {
 //        MobclickAgent.setSessionContinueMillis(1000);
         //初始化组件化基础库, 统计SDK/推送SDK/分享SDK都必须调用此初始化接口
         UMConfigure.init(this, "5ad04becb27b0a50cd00002f", "Umeng", UMConfigure.DEVICE_TYPE_PHONE,
-                "669c30a9584623e70e8cd01b0381dcb4");
+                "");
 
     }
 
@@ -70,11 +71,13 @@ public class MyApplication extends MultiDexApplication {
     }
 
 
-    public static boolean isLogin() {
-        if (SpUtil.getStringSp(SpUtil.dyID).isEmpty()) {
-            return false;
-        }
-        return true;
+
+
+    {
+        PlatformConfig.setWeixin("wx862040dc83b4edb1", "9a56cb95ce8b814887303de3366bf51a");
+        //豆瓣RENREN平台目前只能在服务器端配置
+        PlatformConfig.setSinaWeibo("4234486505", "8f3d9660e41d163dcc65fc14e53eb100", "http://sns.whalecloud.com");
+        PlatformConfig.setQQZone("1106520694", "BMAIyEzCyOU8E6fd");
     }
 
     public static MyApplication getInstance() {

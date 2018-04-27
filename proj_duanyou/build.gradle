@@ -6,7 +6,7 @@ android {
 
 
     defaultConfig {
-        applicationId "com.duanyou.lavimao.proj_duanyou"
+        applicationId "com.dyouclub.jokefriends"
         minSdkVersion 19
         targetSdkVersion 26
         versionCode 1
@@ -16,6 +16,26 @@ android {
 
     }
 
+    buildTypes {
+        debug {
+            minifyEnabled false
+            signingConfig signingConfigs.debug
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        release {
+            minifyEnabled false
+            signingConfig signingConfigs.debug
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    signingConfigs {
+        debug {
+            storeFile file('duanyou.jks')
+            storePassword "duanyou123456"
+            keyAlias "duanyou"
+            keyPassword "duanyou123456"
+        }
+    }
     buildTypes {
         release {
             minifyEnabled false
@@ -81,6 +101,8 @@ dependencies {
     //友盟统计
 //    compile 'com.umeng.sdk:common:latest.integration'
 //    compile 'com.umeng.sdk:analytics:latest.integration'
+
+
 
 
 }
