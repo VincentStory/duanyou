@@ -2,6 +2,7 @@ package com.duanyou.lavimao.proj_duanyou.activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -47,6 +48,11 @@ public class LoginActivity extends BaseActivity {
     @BindView(R.id.pwd_et)
     EditText pwdEt;
 
+    private final static String OPENID = "uid";
+    private final static String NICK = "name";
+    private final static String SEX = "gender";
+    private final static String AVATAR = "iconurl";
+
 
     @Override
     public void setView() {
@@ -76,102 +82,17 @@ public class LoginActivity extends BaseActivity {
                 startActivity(intent);
                 break;
             case R.id.login_btn:
-
                 if (checkContent(accountEt.getText().toString().trim(), pwdEt.getText().toString().trim())) {
-
-                    login(LoginActivity.this, accountEt.getText().toString().trim(), pwdEt.getText().toString().trim(), new GetContentResult() {
-                        @Override
-                        public void success(String json) {
-                            LoginResponse response = JSON.parseObject(json, LoginResponse.class);
-                            SpUtil.saveStringSP(SpUtil.dyID, response.getDyID());
-                            SpUtil.saveStringSP(SpUtil.TOKEN, response.getToken());
-                            SpUtil.saveStringSP(SpUtil.nickName, response.getNickName());
-                            SpUtil.saveStringSP(SpUtil.currentLocation, response.getCurrentLocation());
-                            UserInfo.setBgUrl(response.getBackgroundWall());
-                            UserInfo.setHeadUrl(response.getHeadPortraitUrl());
-                            finish();
-
-                        }
-
-                        @Override
-                        public void error(Exception ex) {
-
-                        }
-                    });
+                    login(LoginActivity.this, accountEt.getText().toString().trim(), pwdEt.getText().toString().trim());
                 }
 
                 break;
             case R.id.qq_iv:
-//                ToastUtils.showShort("正在维护");
-
-                UMShareAPI.get(LoginActivity.this).getPlatformInfo(LoginActivity.this, SHARE_MEDIA.QQ, new UMAuthListener() {
-                    @Override
-                    public void onStart(SHARE_MEDIA share_media) {
-
-                    }
-
-                    @Override
-                    public void onComplete(SHARE_MEDIA share_media, int i, Map<String, String> map) {
-                        StringBuilder sb = new StringBuilder();
-                        for (String key : map.keySet()) {
-                            sb.append(key).append(" : ").append(map.get(key)).append("\n");
-                        }
-//                        result.setText(sb.toString());
-                        ToastUtils.showShort(sb.toString());
-                    }
-
-                    @Override
-                    public void onError(SHARE_MEDIA share_media, int i, Throwable throwable) {
-//                        result.setText("错误" + throwable.getMessage());
-                        ToastUtils.showShort(throwable.getMessage());
-                    }
-
-                    @Override
-                    public void onCancel(SHARE_MEDIA share_media, int i) {
-//                        result.setText("用户已取消");
-                        ToastUtils.showShort("用户已取消");
-                    }
-                });
-
-//                UMShareAPI.get(LoginActivity.this).doOauthVerify(LoginActivity.this, SHARE_MEDIA.WEIXIN, authListener);
-//                ToastUtils.showShort("正在维护");
+                UMShareAPI.get(this).getPlatformInfo(this, SHARE_MEDIA.QQ, authListener);
                 break;
 
             case R.id.weixin_iv:
-//               UMShareAPI.init();
-//                UMShareAPI.get(LoginActivity.this).getPlatformInfo(LoginActivity.this, SHARE_MEDIA.WEIXIN_CIRCLE, authListener);
-
-                UMShareAPI.get(LoginActivity.this).doOauthVerify(LoginActivity.this, SHARE_MEDIA.WEIXIN, new UMAuthListener() {
-                    @Override
-                    public void onStart(SHARE_MEDIA share_media) {
-
-                    }
-
-                    @Override
-                    public void onComplete(SHARE_MEDIA share_media, int i, Map<String, String> map) {
-                        StringBuilder sb = new StringBuilder();
-                        for (String key : map.keySet()) {
-                            sb.append(key).append(" : ").append(map.get(key)).append("\n");
-                        }
-//                        result.setText(sb.toString());
-                        ToastUtils.showShort(sb.toString());
-                    }
-
-                    @Override
-                    public void onError(SHARE_MEDIA share_media, int i, Throwable throwable) {
-//                        result.setText("错误" + throwable.getMessage());
-                        ToastUtils.showShort(throwable.getMessage());
-                    }
-
-                    @Override
-                    public void onCancel(SHARE_MEDIA share_media, int i) {
-//                        result.setText("用户已取消");
-                        ToastUtils.showShort("用户已取消");
-                    }
-                });
-
-//                UMShareAPI.get(LoginActivity.this).doOauthVerify(LoginActivity.this, SHARE_MEDIA.WEIXIN, authListener);
-//                ToastUtils.showShort("正在维护");
+                UMShareAPI.get(this).getPlatformInfo(this, SHARE_MEDIA.WEIXIN, authListener);
                 break;
         }
     }
@@ -183,17 +104,20 @@ public class LoginActivity extends BaseActivity {
         }
 
         @Override
-        public void onComplete(SHARE_MEDIA platform, int action, Map<String, String> data) {
-
-            Set<Map.Entry<String, String>> set = data.entrySet();
-            Iterator<Map.Entry<String, String>> iterator = set.iterator();
-            while (iterator.hasNext()) {
-                Map.Entry mapEntry = (Map.Entry) iterator.next();
-
-                Log.i(TAG, "onComplete: " + mapEntry.getValue());
+        public void onComplete(SHARE_MEDIA platform, int action, Map<String, String> map) {
+            switch (platform) {
+                case QQ:
+                    otherLogin("1", map.get(OPENID), map.get(NICK), map.get(SEX), map.get(AVATAR));
+                    break;
+                case WEIXIN:
+                    otherLogin("2", map.get(OPENID), map.get(NICK), map.get(SEX), map.get(AVATAR));
+                    break;
             }
-            Toast.makeText(LoginActivity.this, "成功了", Toast.LENGTH_LONG).show();
 
+            Log.i("TAG", "platform-->" + platform.getName() + ":" + map.get(OPENID) + " "
+                    + "NICK-->" + map.get(NICK) + " "
+                    + "SEX-->" + map.get(SEX) + ""
+                    + "AVATAR-->" + map.get(AVATAR));
         }
 
         @Override
@@ -208,8 +132,6 @@ public class LoginActivity extends BaseActivity {
         }
     };
 
-
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -217,12 +139,6 @@ public class LoginActivity extends BaseActivity {
         UMShareAPI.get(this).onActivityResult(requestCode, resultCode, data);
     }
 
-//    @Override
-//    protected void onDestroy() {
-//        super.onDestroy();
-//        UMShareAPI.get(this).release();
-//
-//    }
     private boolean checkContent(String name, String pwd) {
         if (name.isEmpty() || pwd.isEmpty()) {
 
@@ -233,9 +149,9 @@ public class LoginActivity extends BaseActivity {
     }
 
     /**
-     * 登录
+     * 普通登录
      */
-    protected void login(final Activity context, String phone, String password, final GetContentResult result) {
+    protected void login(final Activity context, String phone, String password) {
         LoginRequest request = new LoginRequest();
         request.setMobilePhone(phone);
         request.setDeviceID(DeviceUtils.getAndroidID());
@@ -245,7 +161,7 @@ public class LoginActivity extends BaseActivity {
             public void onResult(final String jsonResult) {
                 BaseResponse response = JSON.parseObject(jsonResult, BaseResponse.class);
                 if (response.getRespCode().equals("0")) {
-                    result.success(jsonResult);
+                    loginSuccess(jsonResult);
                 } else {
                     ToastUtils.showShort(response.getRespMessage());
                 }
@@ -254,8 +170,65 @@ public class LoginActivity extends BaseActivity {
 
             @Override
             public void onError(Exception ex) {
-                result.error(ex);
+
             }
         });
+    }
+
+    /**
+     * 第三方登录
+     *
+     * @param loginType
+     * @param thirdPartyID
+     * @param nickName
+     * @param sex
+     * @param thirdHeadUrl
+     */
+    private void otherLogin(String loginType, String thirdPartyID, String nickName, String sex, String thirdHeadUrl) {
+        LoginRequest request = new LoginRequest();
+        request.setDeviceID(DeviceUtils.getAndroidID());
+        request.setLoginType(loginType);
+        request.setThirdPartyID(thirdPartyID);
+        request.setNickName(nickName);
+        request.setSex(sex);
+        request.setThirdHeadUrl(thirdHeadUrl);
+
+        NetUtil.getData(Api.LOGIN, this, request, new ResultCallback() {
+            @Override
+            public void onResult(final String jsonResult) {
+                BaseResponse response = JSON.parseObject(jsonResult, BaseResponse.class);
+                if (response.getRespCode().equals("0")) {
+                    loginSuccess(jsonResult);
+                } else {
+                    ToastUtils.showShort(response.getRespMessage());
+                }
+            }
+
+            @Override
+            public void onError(Exception ex) {
+            }
+        });
+    }
+
+    /**
+     * 登录成功后的数据解析
+     *
+     * @param json
+     */
+    public void loginSuccess(String json) {
+        LoginResponse response = JSON.parseObject(json, LoginResponse.class);
+        SpUtil.saveStringSP(SpUtil.dyID, response.getDyID());
+        SpUtil.saveStringSP(SpUtil.TOKEN, response.getToken());
+        SpUtil.saveStringSP(SpUtil.nickName, response.getNickName());
+        SpUtil.saveStringSP(SpUtil.currentLocation, response.getCurrentLocation());
+        UserInfo.setBgUrl(response.getBackgroundWall());
+        UserInfo.setHeadUrl(response.getHeadPortraitUrl());
+        finish();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        UMShareAPI.get(this).release();
     }
 }
