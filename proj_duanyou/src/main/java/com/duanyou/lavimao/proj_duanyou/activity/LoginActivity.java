@@ -2,8 +2,10 @@ package com.duanyou.lavimao.proj_duanyou.activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.blankj.utilcode.util.ToastUtils;
@@ -22,7 +24,14 @@ import com.duanyou.lavimao.proj_duanyou.util.DeviceUtils;
 import com.duanyou.lavimao.proj_duanyou.util.SpUtil;
 import com.duanyou.lavimao.proj_duanyou.util.StringUtil;
 import com.duanyou.lavimao.proj_duanyou.util.UserInfo;
+import com.umeng.socialize.UMAuthListener;
+import com.umeng.socialize.UMShareAPI;
+import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.xiben.ebs.esbsdk.callback.ResultCallback;
+
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -93,15 +102,127 @@ public class LoginActivity extends BaseActivity {
 
                 break;
             case R.id.qq_iv:
-                ToastUtils.showShort("正在维护");
+//                ToastUtils.showShort("正在维护");
+
+                UMShareAPI.get(LoginActivity.this).getPlatformInfo(LoginActivity.this, SHARE_MEDIA.QQ, new UMAuthListener() {
+                    @Override
+                    public void onStart(SHARE_MEDIA share_media) {
+
+                    }
+
+                    @Override
+                    public void onComplete(SHARE_MEDIA share_media, int i, Map<String, String> map) {
+                        StringBuilder sb = new StringBuilder();
+                        for (String key : map.keySet()) {
+                            sb.append(key).append(" : ").append(map.get(key)).append("\n");
+                        }
+//                        result.setText(sb.toString());
+                        ToastUtils.showShort(sb.toString());
+                    }
+
+                    @Override
+                    public void onError(SHARE_MEDIA share_media, int i, Throwable throwable) {
+//                        result.setText("错误" + throwable.getMessage());
+                        ToastUtils.showShort(throwable.getMessage());
+                    }
+
+                    @Override
+                    public void onCancel(SHARE_MEDIA share_media, int i) {
+//                        result.setText("用户已取消");
+                        ToastUtils.showShort("用户已取消");
+                    }
+                });
+
+//                UMShareAPI.get(LoginActivity.this).doOauthVerify(LoginActivity.this, SHARE_MEDIA.WEIXIN, authListener);
+//                ToastUtils.showShort("正在维护");
                 break;
+
             case R.id.weixin_iv:
-                ToastUtils.showShort("正在维护");
+//               UMShareAPI.init();
+//                UMShareAPI.get(LoginActivity.this).getPlatformInfo(LoginActivity.this, SHARE_MEDIA.WEIXIN_CIRCLE, authListener);
+
+                UMShareAPI.get(LoginActivity.this).doOauthVerify(LoginActivity.this, SHARE_MEDIA.WEIXIN, new UMAuthListener() {
+                    @Override
+                    public void onStart(SHARE_MEDIA share_media) {
+
+                    }
+
+                    @Override
+                    public void onComplete(SHARE_MEDIA share_media, int i, Map<String, String> map) {
+                        StringBuilder sb = new StringBuilder();
+                        for (String key : map.keySet()) {
+                            sb.append(key).append(" : ").append(map.get(key)).append("\n");
+                        }
+//                        result.setText(sb.toString());
+                        ToastUtils.showShort(sb.toString());
+                    }
+
+                    @Override
+                    public void onError(SHARE_MEDIA share_media, int i, Throwable throwable) {
+//                        result.setText("错误" + throwable.getMessage());
+                        ToastUtils.showShort(throwable.getMessage());
+                    }
+
+                    @Override
+                    public void onCancel(SHARE_MEDIA share_media, int i) {
+//                        result.setText("用户已取消");
+                        ToastUtils.showShort("用户已取消");
+                    }
+                });
+
+//                UMShareAPI.get(LoginActivity.this).doOauthVerify(LoginActivity.this, SHARE_MEDIA.WEIXIN, authListener);
+//                ToastUtils.showShort("正在维护");
                 break;
         }
     }
 
 
+    UMAuthListener authListener = new UMAuthListener() {
+        @Override
+        public void onStart(SHARE_MEDIA platform) {
+        }
+
+        @Override
+        public void onComplete(SHARE_MEDIA platform, int action, Map<String, String> data) {
+
+            Set<Map.Entry<String, String>> set = data.entrySet();
+            Iterator<Map.Entry<String, String>> iterator = set.iterator();
+            while (iterator.hasNext()) {
+                Map.Entry mapEntry = (Map.Entry) iterator.next();
+
+                Log.i(TAG, "onComplete: " + mapEntry.getValue());
+            }
+            Toast.makeText(LoginActivity.this, "成功了", Toast.LENGTH_LONG).show();
+
+        }
+
+        @Override
+        public void onError(SHARE_MEDIA platform, int action, Throwable t) {
+            Toast.makeText(LoginActivity.this, "失败：" + t.getMessage(), Toast.LENGTH_LONG).show();
+            Log.i(TAG, "onError: " + t.getMessage());
+        }
+
+        @Override
+        public void onCancel(SHARE_MEDIA platform, int action) {
+            Toast.makeText(LoginActivity.this, "取消了", Toast.LENGTH_LONG).show();
+        }
+    };
+
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        /** attention to this below ,must add this**/
+        UMShareAPI.get(this).onActivityResult(requestCode, resultCode, data);
+    }
+
+//    @Override
+//    protected void onDestroy() {
+//        super.onDestroy();
+//        UMShareAPI.get(this).release();
+//
+//    }
     private boolean checkContent(String name, String pwd) {
         if (name.isEmpty() || pwd.isEmpty()) {
 

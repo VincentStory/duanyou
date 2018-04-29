@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:paddingTop="10dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="分享到" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+        <LinearLayout
+            android:id="@+id/ll"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="15dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/sina_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:drawablePadding="6dp"
+                android:drawableTop="@drawable/sina22x"
+                android:gravity="center"
+                android:text="新浪微博"
+
+                />
+
+            <TextView
+                android:id="@+id/tentcent_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp"
+
+                android:drawablePadding="6dp"
+
+                android:drawableTop="@drawable/tencent2x"
+                android:gravity="center"
+                android:text="手机QQ" />
+
+            <TextView
+                android:id="@+id/friend_circle_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp"
+
+                android:drawablePadding="6dp"
+
+                android:drawableTop="@drawable/friend_circle2x"
+                android:gravity="center"
+                android:text="微信朋友圈" />
+
+            <TextView
+                android:id="@+id/weichat_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp"
+
+                android:drawablePadding="6dp"
+
+                android:drawableTop="@drawable/wechat22x"
+                android:gravity="center"
+                android:text="微信" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/qqsapce_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/ll"
+            android:layout_below="@+id/ll"
+            android:layout_gravity="left"
+
+            android:layout_marginTop="10dp"
+            android:drawablePadding="6dp"
+            android:drawableTop="@drawable/qqspace2x"
+            android:gravity="center"
+            android:text="QQ空间" />
+
+    </RelativeLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/gray" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+        <LinearLayout
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="15dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/copy_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:drawablePadding="6dp"
+                android:drawableTop="@drawable/copy2x"
+                android:gravity="center"
+                android:text="复制"
+
+                />
+
+            <TextView
+                android:id="@+id/collection_tv"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp"
+                android:layout_weight="1"
+                android:drawablePadding="6dp"
+
+                android:drawableTop="@drawable/collection12x"
+                android:gravity="center"
+                android:text="收藏" />
+
+            <TextView
+                android:id="@+id/report_tv"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp"
+                android:layout_weight="1"
+                android:drawablePadding="6dp"
+
+                android:drawableTop="@drawable/report2x"
+                android:gravity="center"
+                android:text="举报" />
+
+            <TextView
+                android:id="@+id/save_tv"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp"
+                android:layout_weight="1"
+                android:drawablePadding="6dp"
+
+                android:drawableTop="@drawable/save2x"
+                android:gravity="center"
+                android:text="保存" />
+
+        </LinearLayout>
+
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/cancel_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15dp"
+        android:layout_marginTop="15dp"
+        android:text="取消"
+        android:textSize="18sp" />
+
+
+</LinearLayout>

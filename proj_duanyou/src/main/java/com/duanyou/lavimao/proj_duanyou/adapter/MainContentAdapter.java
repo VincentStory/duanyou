@@ -15,6 +15,7 @@ import com.blankj.utilcode.util.ToastUtils;
 import com.bumptech.glide.Glide;
 import com.duanyou.lavimao.proj_duanyou.GlideApp;
 import com.duanyou.lavimao.proj_duanyou.R;
+import com.duanyou.lavimao.proj_duanyou.activity.DuanziDetailsActivity;
 import com.duanyou.lavimao.proj_duanyou.activity.LoginActivity;
 import com.duanyou.lavimao.proj_duanyou.net.Api;
 import com.duanyou.lavimao.proj_duanyou.net.BaseResponse;
@@ -38,6 +39,11 @@ import cn.jzvd.JZVideoPlayerStandard;
  * 标签fragment的适配器
  */
 public class MainContentAdapter extends CommonAdapter<GetContentResponse.DyContextsBean> {
+    private OnItemClickListener listener;
+
+    public void setListener(OnItemClickListener listener) {
+        this.listener = listener;
+    }
 
     public MainContentAdapter(Context context, List<GetContentResponse.DyContextsBean> mDatas, int itemLayoutId) {
         super(context, mDatas, itemLayoutId);
@@ -101,9 +107,9 @@ public class MainContentAdapter extends CommonAdapter<GetContentResponse.DyConte
                 .error(R.drawable.default_pic)
                 .placeholder(R.drawable.default_pic)
                 .into(iv_avatar);
-        if(TextUtils.isEmpty(item.getContextText())){
+        if (TextUtils.isEmpty(item.getContextText())) {
             contentTv.setVisibility(View.GONE);
-        }else{
+        } else {
             contentTv.setVisibility(View.VISIBLE);
             contentTv.setText(item.getContextText());
         }
@@ -176,7 +182,14 @@ public class MainContentAdapter extends CommonAdapter<GetContentResponse.DyConte
         helper.setOnClickListener(R.id.comment_ll, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                listener.comment(item);
+            }
+        });
+        //分享
+        helper.setOnClickListener(R.id.share_iv, new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                listener.share(item);
             }
         });
     }
@@ -217,5 +230,10 @@ public class MainContentAdapter extends CommonAdapter<GetContentResponse.DyConte
         }
     }
 
+    public interface OnItemClickListener {
+
+        void comment(GetContentResponse.DyContextsBean bean);
+        void share(GetContentResponse.DyContextsBean bean);
+    }
 
 }

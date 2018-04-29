@@ -112,15 +112,16 @@ public class MainActivity extends BaseActivity {
                 showExamain();
                 break;
             case R.id.id_activity_dymain_lay_mine:
-                                UMImage imageurl = new UMImage(this,R.drawable.back);
-                imageurl.setThumb(new UMImage(this, R.drawable.add2x));
-                new ShareAction(MainActivity.this).withMedia(imageurl )
-                        .setPlatform(SHARE_MEDIA.WEIXIN.toSnsPlatform().mPlatform)
-                        .setCallback(shareListener).share();
+//                UMImage imageurl = new UMImage(this, R.drawable.back);
+//                imageurl.setThumb(new UMImage(this, R.drawable.add2x));
+//                new ShareAction(MainActivity.this).withMedia(imageurl)
+//                        .setPlatform(SHARE_MEDIA.WEIXIN.toSnsPlatform().mPlatform)
+//                        .setCallback(shareListener).share();
 
-//                UMShareAPI.get(MainActivity.this).doOauthVerify(MainActivity.this, SHARE_MEDIA.WEIXIN.toSnsPlatform().mPlatform, authListener);
+//                UMShareAPI.get(MainActivity.this).doOauthVerify(MainActivity.this, SHARE_MEDIA.WEIXIN, authListener);
+//UMShareAPI.get(MainActivity.this).getPlatformInfo();
 
-//                showMine();
+                showMine();
                 break;
             case R.id.more_ll:
                 jumpTo(MoreActivity.class);
@@ -141,12 +142,12 @@ public class MainActivity extends BaseActivity {
         @Override
         public void onComplete(SHARE_MEDIA platform, int action, Map<String, String> data) {
 
-            Set<Map.Entry<String, String>> set=data.entrySet();
-            Iterator<Map.Entry<String, String>> iterator=set.iterator();
-            while(iterator.hasNext()){
-                Map.Entry mapEntry=(Map.Entry)iterator.next();
+            Set<Map.Entry<String, String>> set = data.entrySet();
+            Iterator<Map.Entry<String, String>> iterator = set.iterator();
+            while (iterator.hasNext()) {
+                Map.Entry mapEntry = (Map.Entry) iterator.next();
 
-                Log.i(TAG, "onComplete: "+mapEntry.getValue());
+                Log.i(TAG, "onComplete: " + mapEntry.getValue());
             }
             Toast.makeText(MainActivity.this, "成功了", Toast.LENGTH_LONG).show();
 
@@ -155,7 +156,7 @@ public class MainActivity extends BaseActivity {
         @Override
         public void onError(SHARE_MEDIA platform, int action, Throwable t) {
             Toast.makeText(MainActivity.this, "失败：" + t.getMessage(), Toast.LENGTH_LONG).show();
-            Log.i(TAG, "onError: "+t.getMessage());
+            Log.i(TAG, "onError: " + t.getMessage());
         }
 
         @Override
@@ -179,20 +180,20 @@ public class MainActivity extends BaseActivity {
 
         @Override
         public void onResult(SHARE_MEDIA platform) {
-            Toast.makeText(MainActivity.this,"成功了",Toast.LENGTH_LONG).show();
+            Toast.makeText(MainActivity.this, "成功了", Toast.LENGTH_LONG).show();
 //            SocializeUtils.safeCloseDialog(dialog);
         }
 
         @Override
         public void onError(SHARE_MEDIA platform, Throwable t) {
 //            SocializeUtils.safeCloseDialog(dialog);
-            Toast.makeText(MainActivity.this,"失败"+t.getMessage(),Toast.LENGTH_LONG).show();
+            Toast.makeText(MainActivity.this, "失败" + t.getMessage(), Toast.LENGTH_LONG).show();
         }
 
         @Override
         public void onCancel(SHARE_MEDIA platform) {
 //            SocializeUtils.safeCloseDialog(dialog);
-            Toast.makeText(MainActivity.this,"取消了",Toast.LENGTH_LONG).show();
+            Toast.makeText(MainActivity.this, "取消了", Toast.LENGTH_LONG).show();
 
         }
     };
@@ -210,6 +211,7 @@ public class MainActivity extends BaseActivity {
         UMShareAPI.get(this).release();
 
     }
+
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);

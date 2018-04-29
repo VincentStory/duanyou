@@ -49,8 +49,6 @@ dependencies {
     api fileTree(include: ['*.jar'], dir: 'libs')
     api project(':esbsdk')
     api project(':android-pickers')
-
-
     api 'com.android.support:appcompat-v7:26.1.0'
     api 'com.android.support:support-v4:26.1.0'
     api 'com.android.support:design:26.1.0'
@@ -59,50 +57,67 @@ dependencies {
 
     //拍照    https://github.com/crazycodeboy/TakePhoto
     api 'com.jph.takephoto:takephoto_library:4.0.3'
+
     // permission   https://github.com/yanzhenjie/AndPermission
     api 'com.yanzhenjie:permission:1.0.7'
+
     // slide    https://github.com/r0adkll/Slidr
     api 'com.r0adkll:slidableactivity:2.0.6'
+
     // eventbus
     api 'org.greenrobot:eventbus:3.1.1'
+
     // util
     api 'com.blankj:utilcode:1.11.1'
+
     //multidex
     api 'com.android.support:multidex:1.0.1'
+
     //butterknife
     api 'com.jakewharton:butterknife:8.8.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
+
     // Retrofit库
     implementation 'com.squareup.retrofit2:retrofit:2.4.0'
+
     // Okhttp库
     implementation 'com.squareup.okhttp3:okhttp:3.10.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.0.2'
+
     // https://github.com/alibaba/fastjson
     implementation 'com.alibaba:fastjson:1.1.67.android'
+
     // adapter  https://github.com/hongyangAndroid/baseAdapter
     implementation 'com.zhy:base-adapter:3.0.3'
     implementation 'com.zhy:base-rvadapter:3.0.3'
+
     // glide
     implementation 'com.github.bumptech.glide:glide:4.2.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.2.0'
     implementation 'com.github.bumptech.glide:okhttp3-integration:4.2.0'
+
     //player
     api 'cn.jzvd:jiaozivideoplayer:6.2.9'
+
     //圆角图片
     implementation 'com.makeramen:roundedimageview:2.3.0'
+
     //刷新控件
     implementation 'com.lcodecorex:tkrefreshlayout:1.0.7'
+
     //竖向viewpager
     implementation 'com.github.castorflex.verticalviewpager:library:19.0.1'
+
     //压缩图片框架
     compile 'com.jaywei:compresstool:1.2.0'
+
     //图片加载框架
     compile 'com.github.bumptech.glide:glide:3.7.0'
+
     //友盟统计
-//    compile 'com.umeng.sdk:common:latest.integration'
-//    compile 'com.umeng.sdk:analytics:latest.integration'
 
+    //    compile 'com.umeng.sdk:common:latest.integration'
 
-
-
+    //    compile 'com.umeng.sdk:analytics:latest.integration'
+//    implementation files('libs/alicloud-android-utils-1.0.3.jar')
 }

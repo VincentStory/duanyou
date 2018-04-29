@@ -7,10 +7,12 @@ import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.blankj.utilcode.util.ScreenUtils;
@@ -35,9 +37,16 @@ import com.duanyou.lavimao.proj_duanyou.util.ImageUtils;
 import com.duanyou.lavimao.proj_duanyou.util.KeyboardControlMnanager;
 import com.duanyou.lavimao.proj_duanyou.util.KeyboardUtils;
 import com.duanyou.lavimao.proj_duanyou.util.UserInfo;
+import com.duanyou.lavimao.proj_duanyou.widgets.ShareDialog;
 import com.lcodecore.tkrefreshlayout.RefreshListenerAdapter;
 import com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout;
 import com.lcodecore.tkrefreshlayout.header.SinaRefreshView;
+import com.umeng.socialize.ShareAction;
+import com.umeng.socialize.UMShareAPI;
+import com.umeng.socialize.UMShareListener;
+import com.umeng.socialize.bean.SHARE_MEDIA;
+import com.umeng.socialize.media.UMImage;
+import com.umeng.socialize.media.UMWeb;
 import com.xiben.ebs.esbsdk.callback.ResultCallback;
 
 import java.util.ArrayList;
@@ -93,6 +102,7 @@ public class DuanziDetailsActivity extends BaseActivity {
     private GetContentResponse.DyContextsBean bean;  //详情类
     private boolean refreshTag = true;//下拉刷新  true  加载更多  false
     private GetCommentResponse.CommentsNewBean clickItem;  //点击的回复item类
+    private ShareDialog shareDialog;
 
     @Override
     public void setView() {
@@ -234,7 +244,7 @@ public class DuanziDetailsActivity extends BaseActivity {
 
     }
 
-    @OnClick({R.id.iv_left, R.id.nav_right_iv, R.id.zan_iv, R.id.cai_iv, R.id.comment_iv, R.id.comment_tv, R.id.send_btn, R.id.empty_iv})
+    @OnClick({R.id.iv_left, R.id.nav_right_iv, R.id.zan_iv, R.id.cai_iv, R.id.comment_iv, R.id.comment_tv, R.id.send_btn, R.id.empty_iv, R.id.share_iv})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.iv_left:
@@ -300,13 +310,13 @@ public class DuanziDetailsActivity extends BaseActivity {
             case R.id.send_btn:
                 String commentContent = commentEt.getText().toString().trim();
                 if (!TextUtils.isEmpty(commentContent)) {
-                    if(UserInfo.getLoginState()){
+                    if (UserInfo.getLoginState()) {
                         if (null == clickItem) {
                             userComment(bean.getDyContextID(), commentContent, bean.getPublisherDyID());
                         } else {
                             userReply(clickItem.getCommentID(), clickItem.getCommentDyID(), commentContent, bean.getDyContextID() + "");
                         }
-                    }else {
+                    } else {
                         // TODO: 2018/4/25
                         jumpTo(LoginActivity.class);
                     }
@@ -320,11 +330,119 @@ public class DuanziDetailsActivity extends BaseActivity {
             case R.id.empty_iv:
                 KeyboardUtils.showSoftInput(this);
                 break;
+            case R.id.share_iv:
+                final UMWeb web = new UMWeb(bean.getShareUrl());
+                web.setTitle("段友");
+                web.setThumb(new UMImage(DuanziDetailsActivity.this, R.drawable.ic_launcher));
+                web.setDescription(bean.getContextText());
+
+                shareDialog = new ShareDialog(DuanziDetailsActivity.this, new ShareDialog.onClickListener() {
+                    @Override
+                    public void sinaClick() {
+
+                        new ShareAction(DuanziDetailsActivity.this).withMedia(web).withText(bean.getContextText())
+                                .setPlatform(SHARE_MEDIA.SINA.toSnsPlatform().mPlatform)
+                                .setCallback(shareListener).share();
+                    }
+
+                    @Override
+                    public void qqClick() {
+                        new ShareAction(DuanziDetailsActivity.this).withMedia(web).withText(bean.getContextText())
+                                .setPlatform(SHARE_MEDIA.QQ.toSnsPlatform().mPlatform)
+                                .setCallback(shareListener).share();
+                    }
+
+                    @Override
+                    public void circleClick() {
+                        new ShareAction(DuanziDetailsActivity.this).withMedia(web).withText(bean.getContextText())
+                                .setPlatform(SHARE_MEDIA.WEIXIN_CIRCLE.toSnsPlatform().mPlatform)
+                                .setCallback(shareListener).share();
+                    }
+
+                    @Override
+                    public void wechatClick() {
+                        new ShareAction(DuanziDetailsActivity.this).withMedia(web).withText(bean.getContextText())
+                                .setPlatform(SHARE_MEDIA.WEIXIN.toSnsPlatform().mPlatform)
+                                .setCallback(shareListener).share();
+                    }
+
+                    @Override
+                    public void qqspaceClick() {
+                        new ShareAction(DuanziDetailsActivity.this).withMedia(web).withText(bean.getContextText())
+                                .setPlatform(SHARE_MEDIA.QZONE.toSnsPlatform().mPlatform)
+                                .setCallback(shareListener).share();
+                    }
+
+                    @Override
+                    public void copyClick() {
+//                ToastUtils.showShort("已复制");
+
+                    }
+
+                    @Override
+                    public void collectionClick() {
+//                ToastUtils.showShort("已复制");
+                    }
+
+                    @Override
+                    public void reportClick() {
+//                ToastUtils.showShort("已复制");
+                    }
+
+                    @Override
+                    public void saveClick() {
+//                ToastUtils.showShort("已复制");
+                    }
+
+                    @Override
+                    public void cancleClick() {
+                        shareDialog.dismiss();
+                    }
+                }).builder()
+                        .setGravity(Gravity.BOTTOM);//默认居中，可以不设置
+                // ;
+                shareDialog.show();
+                break;
 
             default:
                 break;
 
         }
+    }
+
+
+    private UMShareListener shareListener = new UMShareListener() {
+        @Override
+        public void onStart(SHARE_MEDIA platform) {
+
+//            SocializeUtils.safeShowDialog(dialog);
+        }
+
+        @Override
+        public void onResult(SHARE_MEDIA platform) {
+            Toast.makeText(DuanziDetailsActivity.this, "成功了", Toast.LENGTH_LONG).show();
+//            SocializeUtils.safeCloseDialog(dialog);
+        }
+
+        @Override
+        public void onError(SHARE_MEDIA platform, Throwable t) {
+//            SocializeUtils.safeCloseDialog(dialog);
+            Toast.makeText(DuanziDetailsActivity.this, "失败" + t.getMessage(), Toast.LENGTH_LONG).show();
+        }
+
+        @Override
+        public void onCancel(SHARE_MEDIA platform) {
+//            SocializeUtils.safeCloseDialog(dialog);
+            Toast.makeText(DuanziDetailsActivity.this, "取消了", Toast.LENGTH_LONG).show();
+
+        }
+    };
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        /** attention to this below ,must add this**/
+        UMShareAPI.get(DuanziDetailsActivity.this).onActivityResult(requestCode, resultCode, data);
     }
 
     /**

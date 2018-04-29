@@ -52,7 +52,7 @@ public class EnsureDialog {
      * @return
      */
     public EnsureDialog builder() {
-        final View view = LayoutInflater.from(context).inflate(R.layout.    dialog_ensure_layout, null, false);
+        final View view = LayoutInflater.from(context).inflate(R.layout.dialog_ensure_layout, null, false);
         LinearLayout mLinearDialog = ((LinearLayout) view.findViewById(R.id.linear_dialog));
         mLinearBottom = ((LinearLayout) view.findViewById(R.id.linear_bottom));
 

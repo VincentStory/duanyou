@@ -3,24 +3,35 @@ package com.duanyou.lavimao.proj_duanyou.fragment.main;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.duanyou.lavimao.proj_duanyou.R;
 import com.duanyou.lavimao.proj_duanyou.activity.DuanziDetailsActivity;
+import com.duanyou.lavimao.proj_duanyou.activity.MainActivity;
 import com.duanyou.lavimao.proj_duanyou.adapter.MainContentAdapter;
 import com.duanyou.lavimao.proj_duanyou.base.BaseFragment;
 import com.duanyou.lavimao.proj_duanyou.net.GetContentResult;
 import com.duanyou.lavimao.proj_duanyou.net.response.GetContentResponse;
 import com.duanyou.lavimao.proj_duanyou.util.Constants;
 import com.duanyou.lavimao.proj_duanyou.util.ToastUtils;
+import com.duanyou.lavimao.proj_duanyou.widgets.EnsureDialog;
+import com.duanyou.lavimao.proj_duanyou.widgets.ShareDialog;
 import com.lcodecore.tkrefreshlayout.RefreshListenerAdapter;
 import com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout;
 import com.lcodecore.tkrefreshlayout.header.SinaRefreshView;
+import com.umeng.socialize.ShareAction;
+import com.umeng.socialize.UMShareAPI;
+import com.umeng.socialize.UMShareListener;
+import com.umeng.socialize.bean.SHARE_MEDIA;
+import com.umeng.socialize.media.UMImage;
+import com.umeng.socialize.media.UMWeb;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +45,7 @@ import cn.jzvd.JZVideoPlayer;
  * Created by luojialun on 2018/4/21.
  */
 
-public class TagFragment extends BaseFragment {
+public class TagFragment extends BaseFragment implements MainContentAdapter.OnItemClickListener {
 
     @BindView(R.id.refresh)
     TwinklingRefreshLayout refreshLayout;
@@ -45,6 +56,8 @@ public class TagFragment extends BaseFragment {
     private boolean refreshTag = true;  //下拉刷新  true   加载更多  false
     private List<GetContentResponse.DyContextsBean> mList;
     private MainContentAdapter mAdapter;
+    //    private UMImage imageurl;
+    private ShareDialog shareDialog;
 
     public static TagFragment newInstance(String type) {
         Bundle bundle = new Bundle();
@@ -105,6 +118,7 @@ public class TagFragment extends BaseFragment {
         if (mAdapter == null) {
             mList = new ArrayList<>();
             mAdapter = new MainContentAdapter(getActivity(), mList, R.layout.item_duanyouxiu);
+            mAdapter.setListener(this);
             listView.setAdapter(mAdapter);
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
@@ -157,6 +171,127 @@ public class TagFragment extends BaseFragment {
     public void onPause() {
         super.onPause();
         JZVideoPlayer.releaseAllVideos();
+    }
+
+
+    @Override
+    public void comment(GetContentResponse.DyContextsBean bean) {
+        Intent intent = new Intent(getActivity(), DuanziDetailsActivity.class);
+        intent.putExtra(Constants.CLICK_BEAN, bean);
+        startActivity(intent);
+    }
+
+    @Override
+    public void share(final GetContentResponse.DyContextsBean bean) {
+//        imageurl = new UMImage(getActivity(), R.drawable.ic_launcher);
+//        imageurl.setThumb(new UMImage(getActivity(), R.drawable.ic_launcher));
+        final UMWeb web = new UMWeb(bean.getShareUrl());
+        web.setTitle("段友");
+        web.setThumb(new UMImage(getActivity(), R.drawable.ic_launcher));
+        web.setDescription(bean.getContextText());
+
+        shareDialog = new ShareDialog(getActivity(), new ShareDialog.onClickListener() {
+            @Override
+            public void sinaClick() {
+
+                new ShareAction(getActivity()).withMedia(web).withText(bean.getContextText())
+                        .setPlatform(SHARE_MEDIA.SINA.toSnsPlatform().mPlatform)
+                        .setCallback(shareListener).share();
+            }
+
+            @Override
+            public void qqClick() {
+                new ShareAction(getActivity()).withMedia(web).withText(bean.getContextText())
+                        .setPlatform(SHARE_MEDIA.QQ.toSnsPlatform().mPlatform)
+                        .setCallback(shareListener).share();
+            }
+
+            @Override
+            public void circleClick() {
+                new ShareAction(getActivity()).withMedia(web).withText(bean.getContextText())
+                        .setPlatform(SHARE_MEDIA.WEIXIN_CIRCLE.toSnsPlatform().mPlatform)
+                        .setCallback(shareListener).share();
+            }
+
+            @Override
+            public void wechatClick() {
+                new ShareAction(getActivity()).withMedia(web).withText(bean.getContextText())
+                        .setPlatform(SHARE_MEDIA.WEIXIN.toSnsPlatform().mPlatform)
+                        .setCallback(shareListener).share();
+            }
+
+            @Override
+            public void qqspaceClick() {
+                new ShareAction(getActivity()).withMedia(web).withText(bean.getContextText())
+                        .setPlatform(SHARE_MEDIA.QZONE.toSnsPlatform().mPlatform)
+                        .setCallback(shareListener).share();
+            }
+
+            @Override
+            public void copyClick() {
+//                ToastUtils.showShort("已复制");
+
+            }
+
+            @Override
+            public void collectionClick() {
+//                ToastUtils.showShort("已复制");
+            }
+
+            @Override
+            public void reportClick() {
+//                ToastUtils.showShort("已复制");
+            }
+
+            @Override
+            public void saveClick() {
+//                ToastUtils.showShort("已复制");
+            }
+
+            @Override
+            public void cancleClick() {
+                shareDialog.dismiss();
+            }
+        }).builder()
+                .setGravity(Gravity.BOTTOM);//默认居中，可以不设置
+        // ;
+        shareDialog.show();
+
+    }
+
+
+    private UMShareListener shareListener = new UMShareListener() {
+        @Override
+        public void onStart(SHARE_MEDIA platform) {
+
+//            SocializeUtils.safeShowDialog(dialog);
+        }
+
+        @Override
+        public void onResult(SHARE_MEDIA platform) {
+            Toast.makeText(getActivity(), "成功了", Toast.LENGTH_LONG).show();
+//            SocializeUtils.safeCloseDialog(dialog);
+        }
+
+        @Override
+        public void onError(SHARE_MEDIA platform, Throwable t) {
+//            SocializeUtils.safeCloseDialog(dialog);
+            Toast.makeText(getActivity(), "失败" + t.getMessage(), Toast.LENGTH_LONG).show();
+        }
+
+        @Override
+        public void onCancel(SHARE_MEDIA platform) {
+//            SocializeUtils.safeCloseDialog(dialog);
+            Toast.makeText(getActivity(), "取消了", Toast.LENGTH_LONG).show();
+
+        }
+    };
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        /** attention to this below ,must add this**/
+        UMShareAPI.get(getActivity()).onActivityResult(requestCode, resultCode, data);
     }
 
 }
