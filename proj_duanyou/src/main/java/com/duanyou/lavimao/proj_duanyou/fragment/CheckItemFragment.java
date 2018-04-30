@@ -9,21 +9,35 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.alibaba.fastjson.JSON;
 import com.blankj.utilcode.util.ScreenUtils;
 import com.duanyou.lavimao.proj_duanyou.Event.UpdateFragemntEvent;
 import com.duanyou.lavimao.proj_duanyou.GlideApp;
 import com.duanyou.lavimao.proj_duanyou.R;
+import com.duanyou.lavimao.proj_duanyou.activity.LoginActivity;
 import com.duanyou.lavimao.proj_duanyou.base.BaseFragment;
+import com.duanyou.lavimao.proj_duanyou.net.Api;
+import com.duanyou.lavimao.proj_duanyou.net.BaseResponse;
+import com.duanyou.lavimao.proj_duanyou.net.GetContentResult;
+import com.duanyou.lavimao.proj_duanyou.net.NetUtil;
+import com.duanyou.lavimao.proj_duanyou.net.request.UserOperationRequest;
 import com.duanyou.lavimao.proj_duanyou.net.response.GetContentUnreviewedResponse;
 import com.duanyou.lavimao.proj_duanyou.util.Constants;
 import com.duanyou.lavimao.proj_duanyou.util.ImageUtils;
+import com.duanyou.lavimao.proj_duanyou.util.ToastUtils;
+import com.duanyou.lavimao.proj_duanyou.util.UserInfo;
+import com.xiben.ebs.esbsdk.callback.ResultCallback;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import cn.jzvd.JZVideoPlayerStandard;
 
 /**
@@ -54,7 +68,7 @@ public class CheckItemFragment extends BaseFragment {
     public View onCreate(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_check_item, container, false);
         ButterKnife.bind(this, view);
-        EventBus.getDefault().register(this);//订阅
+        EventBus.getDefault().register(this);
         return view;
     }
 
@@ -115,10 +129,10 @@ public class CheckItemFragment extends BaseFragment {
         }
     }
 
-    public void upData(GetContentUnreviewedResponse.DyContextsBean bean) {
+ /*   public void upData(GetContentUnreviewedResponse.DyContextsBean bean) {
         item = bean;
         initView();
-    }
+    }*/
 
     @Override
     public void onDestroyView() {
@@ -126,9 +140,76 @@ public class CheckItemFragment extends BaseFragment {
         EventBus.getDefault().unregister(this);//解除订阅
     }
 
+    @OnClick({R.id.report_ll})
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.report_ll:
+                userOperation("4", "3", "", new GetContentResult() {
+                    @Override
+                    public void success(String json) {
+                        BaseResponse response = JSON.parseObject(json, BaseResponse.class);
+                        if (null != response) {
+                            if ("0".equals(response.getRespCode())) {
+                                ToastUtils.showShort("举报成功");
+                            } else {
+                                ToastUtils.showShort(response.getRespMessage());
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void error(Exception ex) {
+
+                    }
+                });
+                break;
+        }
+    }
+
+    /**
+     * 刷新item
+     *
+     * @param event
+     */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void upDateFragment(UpdateFragemntEvent event) {
         item = event.getmList().get(position);
         initView();
     }
+
+    /**
+     * 用户操作
+     *
+     * @param type     1-段子 2-评论 3-回复 4-审核 5-用户
+     * @param operator 1-点赞 2-点踩 3-举报 4-视频播放 5-转发 6-收藏/关注 7-取消收藏/取消关注 8-删除（只能删除自己的） 9-用户反馈（type为9）
+     * @param remark
+     */
+    public void userOperation(String type, String operator, String remark, final GetContentResult result) {
+        if (UserInfo.getLoginState()) {
+            UserOperationRequest request = new UserOperationRequest();
+            request.setDyID(UserInfo.getDyId());
+            request.setDeviceID(UserInfo.getDeviceId());
+            request.setToken(UserInfo.getToken());
+            List<Integer> mList = new ArrayList<>();
+            mList.add(item.getDyContextID());
+            request.setDyDataID(mList);
+            request.setType(type);
+            request.setOperator(operator);
+            request.setRemark(remark);
+            NetUtil.getData(Api.userOperation, getActivity(), request, new ResultCallback() {
+                @Override
+                public void onResult(String jsonResult) {
+                    result.success(jsonResult);
+                }
+
+                @Override
+                public void onError(Exception ex) {
+                    result.error(ex);
+                }
+            });
+        } else {
+            gotoActivity(LoginActivity.class);
+        }
+    }
+
 }

@@ -113,12 +113,12 @@
             android:orientation="horizontal">
             <!--踩-->
             <FrameLayout
-                android:id="@+id/cai_ll"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1">
 
                 <LinearLayout
+                    android:id="@+id/cai_ll"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
                     android:layout_gravity="center"
@@ -146,12 +146,12 @@
 
             <!--赞-->
             <FrameLayout
-                android:id="@+id/zan_ll"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1">
 
                 <LinearLayout
+                    android:id="@+id/zan_ll"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
                     android:layout_gravity="center"

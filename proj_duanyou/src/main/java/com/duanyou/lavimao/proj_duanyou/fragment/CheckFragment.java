@@ -6,17 +6,25 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.duanyou.lavimao.proj_duanyou.Event.UpdateFragemntEvent;
+import com.duanyou.lavimao.proj_duanyou.MyApplication;
 import com.duanyou.lavimao.proj_duanyou.R;
+import com.duanyou.lavimao.proj_duanyou.activity.CheckExplainActivity;
+import com.duanyou.lavimao.proj_duanyou.activity.LoginActivity;
 import com.duanyou.lavimao.proj_duanyou.adapter.VerticalVpAdapter;
 import com.duanyou.lavimao.proj_duanyou.base.BaseFragment;
 import com.duanyou.lavimao.proj_duanyou.net.Api;
+import com.duanyou.lavimao.proj_duanyou.net.BaseResponse;
+import com.duanyou.lavimao.proj_duanyou.net.GetContentResult;
 import com.duanyou.lavimao.proj_duanyou.net.NetUtil;
 import com.duanyou.lavimao.proj_duanyou.net.request.GetContentUnreviewedRequest;
+import com.duanyou.lavimao.proj_duanyou.net.request.UserOperationRequest;
 import com.duanyou.lavimao.proj_duanyou.net.response.GetContentUnreviewedResponse;
 import com.duanyou.lavimao.proj_duanyou.util.ToastUtils;
 import com.duanyou.lavimao.proj_duanyou.util.UserInfo;
@@ -30,6 +38,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 
 /**
@@ -49,6 +58,7 @@ public class CheckFragment extends BaseFragment {
     private VerticalVpAdapter adapter;
     private List<GetContentUnreviewedResponse.DyContextsBean> mList = new ArrayList<>();
     private boolean refreshTag = true;
+    private int pos = 0;
 
     @Override
     public View onCreate(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -98,6 +108,7 @@ public class CheckFragment extends BaseFragment {
 
             @Override
             public void onPageSelected(int position) {
+                pos = position;
                 if (position == mList.size() - 1) {
                     refreshTag = false;
                     getContentUnreviewed();
@@ -180,5 +191,87 @@ public class CheckFragment extends BaseFragment {
         });
     }
 
+    @OnClick({R.id.cai_ll, R.id.zan_ll, R.id.nav_right_iv})
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.cai_ll:
+                userOperation("4", "2", "", new GetContentResult() {
+                    @Override
+                    public void success(String json) {
+                        BaseResponse response = JSON.parseObject(json, BaseResponse.class);
+                        if (null != response) {
+                            if ("0".equals(response.getRespCode())) {
+                                ToastUtils.showShort("已踩");
+                            } else {
+                                ToastUtils.showShort(response.getRespMessage());
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void error(Exception ex) {
+
+                    }
+                });
+                break;
+            case R.id.zan_ll:
+                userOperation("4", "1", "", new GetContentResult() {
+                    @Override
+                    public void success(String json) {
+                        BaseResponse response = JSON.parseObject(json, BaseResponse.class);
+                        if (null != response) {
+                            if ("0".equals(response.getRespCode())) {
+                                ToastUtils.showShort("已赞");
+                            } else {
+                                ToastUtils.showShort(response.getRespMessage());
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void error(Exception ex) {
+
+                    }
+                });
+            case R.id.nav_right_iv:
+                gotoActivity(CheckExplainActivity.class);
+                break;
+        }
+    }
+
+    /**
+     * 用户操作
+     *
+     * @param type     1-段子 2-评论 3-回复 4-审核 5-用户
+     * @param operator 1-点赞 2-点踩 3-举报 4-视频播放 5-转发 6-收藏/关注 7-取消收藏/取消关注 8-删除（只能删除自己的） 9-用户反馈（type为9）
+     * @param remark
+     */
+    public void userOperation(String type, String operator, String remark, final GetContentResult result) {
+        if (UserInfo.getLoginState()) {
+            UserOperationRequest request = new UserOperationRequest();
+            request.setDyID(UserInfo.getDyId());
+            request.setDeviceID(UserInfo.getDeviceId());
+            request.setToken(UserInfo.getToken());
+            List<Integer> idlist = new ArrayList<>();
+            idlist.add(mList.get(pos).getDyContextID());
+            request.setDyDataID(idlist);
+            request.setType(type);
+            request.setOperator(operator);
+            request.setRemark(remark);
+            NetUtil.getData(Api.userOperation, getActivity(), request, new ResultCallback() {
+                @Override
+                public void onResult(String jsonResult) {
+                    result.success(jsonResult);
+                }
+
+                @Override
+                public void onError(Exception ex) {
+                    result.error(ex);
+                }
+            });
+        } else {
+            gotoActivity(LoginActivity.class);
+        }
+    }
 
 }
