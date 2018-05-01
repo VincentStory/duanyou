@@ -60,27 +60,32 @@ public class RegisterActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.next_tv:
-                if (phoneEt.getText().toString().trim().isEmpty()) {
-                    ToastUtils.showShort("请输入正确的手机号");
-                    break;
-                }
+//                if (phoneEt.getText().toString().trim().isEmpty()) {
+//                    ToastUtils.showShort("请输入正确的手机号");
+//                    break;
+//                }
 
-                getContent(RegisterActivity.this, phoneEt.getText().toString(), new GetContentResult() {
-                    @Override
-                    public void success(String json) {
-                        BaseResponse response = JSON.parseObject(json, BaseResponse.class);
-                        SpUtil.saveStringSP(SpUtil.mobilePhone, phoneEt.getText().toString().trim());
-                        Intent intent = new Intent(RegisterActivity.this, CodeActivity.class);
-                        intent.putExtra("phone", phoneEt.getText().toString());
-                        startActivity(intent);
+                Intent intent = new Intent(RegisterActivity.this, CodeActivity.class);
+                intent.putExtra("phone", phoneEt.getText().toString());
+                intent.putExtra("type", Contents.REGISTER_CODE_TYPE);
+                startActivity(intent);
 
-                    }
-
-                    @Override
-                    public void error(Exception ex) {
-
-                    }
-                });
+//                getContent(RegisterActivity.this, phoneEt.getText().toString(), new GetContentResult() {
+//                    @Override
+//                    public void success(String json) {
+//                        BaseResponse response = JSON.parseObject(json, BaseResponse.class);
+//                        SpUtil.saveStringSP(SpUtil.mobilePhone, phoneEt.getText().toString().trim());
+//                        Intent intent = new Intent(RegisterActivity.this, CodeActivity.class);
+//                        intent.putExtra("phone", phoneEt.getText().toString());
+//                        startActivity(intent);
+//
+//                    }
+//
+//                    @Override
+//                    public void error(Exception ex) {
+//
+//                    }
+//                });
                 break;
             case R.id.goto_main_tv:
                 jumpTo(MainActivity.class);

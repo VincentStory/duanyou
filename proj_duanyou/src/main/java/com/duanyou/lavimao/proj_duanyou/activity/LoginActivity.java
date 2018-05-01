@@ -94,6 +94,8 @@ public class LoginActivity extends BaseActivity {
 
             case R.id.weixin_iv:
                 UMShareAPI.get(this).getPlatformInfo(this, SHARE_MEDIA.WEIXIN, authListener);
+
+
                 break;
         }
     }

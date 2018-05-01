@@ -36,9 +36,12 @@ import butterknife.OnClick;
 public class SettingPwdActivity extends BaseActivity {
     @BindView(R.id.password_et)
     TextView passwordEt;
+    @BindView(R.id.title_tv)
+    TextView titleTv;
     private String password;
     private String password2;
     private int type = 1;
+    private String pageType;
 
     @Override
     public void setView() {
@@ -48,6 +51,13 @@ public class SettingPwdActivity extends BaseActivity {
 
     @Override
     public void initData() {
+        pageType = getIntent().getStringExtra("pageType");
+
+        if (pageType.equals(Contents.PWD_CODE_TYPE)) {
+            titleTv.setText("设置新的密码");
+            passwordEt.setHint("新密码不能与原密码相同");
+        }
+
         MyApplication.getInstance().addActivity(this);
     }
 
@@ -79,21 +89,26 @@ public class SettingPwdActivity extends BaseActivity {
                     if (password2.length() >= 6) {
                         if (password.equals(password2)) {
 
-
-                            register(SettingPwdActivity.this, SpUtil.getStringSp(SpUtil.mobilePhone),
-                                    SpUtil.getStringSp(SpUtil.TOKEN), password2, new GetContentResult() {
-                                        @Override
-                                        public void success(String json) {
-                                            Intent intent = new Intent(SettingPwdActivity.this, RegisterSuccessActivity.class);
+                            if (pageType.equals(Contents.REGISTER_CODE_TYPE)) {
+                                register(SettingPwdActivity.this, SpUtil.getStringSp(SpUtil.mobilePhone),
+                                        SpUtil.getStringSp(SpUtil.TOKEN), password2, new GetContentResult() {
+                                            @Override
+                                            public void success(String json) {
+                                                Intent intent = new Intent(SettingPwdActivity.this, RegisterSuccessActivity.class);
 //
-                                            startActivity(intent);
-                                        }
+                                                startActivity(intent);
+                                            }
 
-                                        @Override
-                                        public void error(Exception ex) {
+                                            @Override
+                                            public void error(Exception ex) {
 
-                                        }
-                                    });
+                                            }
+                                        });
+                            } else if (pageType.equals(Contents.PWD_CODE_TYPE)) {
+
+
+                            }
+
 
                         } else {
                             ToastUtils.showShort("请输入相同密码");

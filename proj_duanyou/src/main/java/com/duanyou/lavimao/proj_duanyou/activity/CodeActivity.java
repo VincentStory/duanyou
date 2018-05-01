@@ -2,6 +2,8 @@ package com.duanyou.lavimao.proj_duanyou.activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
+import android.os.CountDownTimer;
 import android.view.View;
 import android.widget.TextView;
 
@@ -35,7 +37,13 @@ import butterknife.OnClick;
 public class CodeActivity extends BaseActivity {
     @BindView(R.id.code_et)
     TextView codeEt;
+    @BindView(R.id.get_code_tv)
+    TextView getCodeTv;
+    @BindView(R.id.title_tv)
+    TextView titleTv;
     private String phone;
+    private String type;
+    private TimeCount time;
 
     @Override
     public void setView() {
@@ -46,7 +54,50 @@ public class CodeActivity extends BaseActivity {
     @Override
     public void initData() {
         phone = getIntent().getStringExtra("phone");
+        type = getIntent().getStringExtra("type");
+//        if(type.equals(Contents.PWD_CODE_TYPE)){
+//            titleTv.setText("验证码已发送到您的手机号，请登录查看");
+//        }
         MyApplication.getInstance().addActivity(this);
+
+        time = new TimeCount(90000, 1000);
+        time.start();
+    }
+
+    class TimeCount extends CountDownTimer {
+
+        public TimeCount(long millisInFuture, long countDownInterval) {
+            super(millisInFuture, countDownInterval);
+        }
+
+        @Override
+        public void onTick(long millisUntilFinished) {
+//            getCodeTv.setBackgroundColor(Color.parseColor("#B6B6D8"));
+            getCodeTv.setClickable(false);
+            getCodeTv.setText("重新发送（" + getTime(millisUntilFinished / 1000) + ")");
+        }
+
+        @Override
+        public void onFinish() {
+            getCodeTv.setText("重新获取验证码");
+            getCodeTv.setClickable(true);
+//            getCodeTv.setBackgroundColor(Color.parseColor("#4EB84A"));
+
+        }
+    }
+
+    private String getTime(long second) {
+        String time = "";
+        int minute = 1;
+        int second1;
+        if (second > 60) {
+            time = minute + "分" + (second - 60) + "秒";
+        } else {
+            time = second + "秒";
+        }
+
+
+        return time;
     }
 
     @Override
@@ -59,38 +110,45 @@ public class CodeActivity extends BaseActivity {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.next_tv:
-                if(codeEt.getText().toString().trim().isEmpty()){
-                    ToastUtils.showShort("请输入正确的验证码");
-                    break;
-                }
-                VerifyCode(CodeActivity.this, codeEt.getText().toString(), new GetContentResult() {
-                    @Override
-                    public void success(String json) {
-                        VerifyCodeResponse response = JSON.parseObject(json, VerifyCodeResponse.class);
-                        String token = response.getToken();
+                Intent intent = new Intent(this, SettingPwdActivity.class);
+                intent.putExtra("pageType",type);
+                startActivity(intent);
 
-                        SpUtil.saveStringSP(SpUtil.TOKEN, token);
 
-                        Intent intent = new Intent(CodeActivity.this, SettingPwdActivity.class);
-
-                        startActivity(intent);
-                    }
-
-                    @Override
-                    public void error(Exception ex) {
-
-                    }
-                });
+//                if (codeEt.getText().toString().trim().isEmpty()) {
+//                    ToastUtils.showShort("请输入正确的验证码");
+//                    break;
+//                }
+//                VerifyCode(CodeActivity.this, codeEt.getText().toString(), new GetContentResult() {
+//                    @Override
+//                    public void success(String json) {
+//                        VerifyCodeResponse response = JSON.parseObject(json, VerifyCodeResponse.class);
+//                        String token = response.getToken();
+//
+//                        SpUtil.saveStringSP(SpUtil.TOKEN, token);
+//
+//                        jumpTo(SettingPwdActivity.class);
+//
+//                    }
+//
+//                    @Override
+//                    public void error(Exception ex) {
+//
+//                    }
+//                });
                 break;
             case R.id.back_tv:
                 finish();
                 break;
             case R.id.get_code_tv:
+
+
                 getCode(CodeActivity.this, phone, new GetContentResult() {
                     @Override
                     public void success(String json) {
 
-
+                        time = new TimeCount(90000, 1000);
+                        time.start();
                     }
 
                     @Override
@@ -140,7 +198,7 @@ public class CodeActivity extends BaseActivity {
     private void getCode(final Activity context, String phone, final GetContentResult result) {
         GetVerificationCodeRequest request = new GetVerificationCodeRequest();
         request.setMobilePhone(phone);
-        request.setCodeType(Contents.REGISTER_CODE_TYPE);
+        request.setCodeType(type);
         NetUtil.getData(Api.getVerificationCode, context, request, new ResultCallback() {
             @Override
             public void onResult(final String jsonResult) {
