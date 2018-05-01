@@ -65,7 +65,7 @@
                 android:id="@+id/content_iv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:scaleType="fitXY" />
+                android:scaleType="centerCrop" />
 
             <cn.jzvd.JZVideoPlayerStandard
                 android:id="@+id/jz_video"

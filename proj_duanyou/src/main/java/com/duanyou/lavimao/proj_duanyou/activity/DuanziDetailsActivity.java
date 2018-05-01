@@ -179,7 +179,7 @@ public class DuanziDetailsActivity extends BaseActivity {
                             ScreenUtils.getScreenWidth());
                     GlideApp.with(this)
                             .load(bean.getContextUrl())
-                            .placeholder(R.drawable.default_pic)
+                            .placeholder(R.drawable.default_load_long)
                             .into(contentIv);
                     break;
                 case "4":
@@ -193,9 +193,9 @@ public class DuanziDetailsActivity extends BaseActivity {
                     videoplayer.setUp(bean.getContextUrl(), JZVideoPlayerStandard.SCREEN_WINDOW_NORMAL, "");
                     GlideApp.with(DuanziDetailsActivity.this)
                             .load(bean.getVideoDisplay())
-                            .error(R.drawable.default_load)
-                            .placeholder(R.drawable.default_load)
                             .into(videoplayer.thumbImageView);
+//                    .error(R.drawable.default_load)
+//                        .placeholder(R.drawable.default_load)
                     break;
             }
             nameTv.setText(bean.getNickName());

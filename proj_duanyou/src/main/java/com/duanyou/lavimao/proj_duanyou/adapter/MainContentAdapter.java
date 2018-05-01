@@ -79,8 +79,8 @@ public class MainContentAdapter extends CommonAdapter<GetContentResponse.DyConte
 
                 GlideApp.with(mContext)
                         .load(item.getContextUrl())
-                        .error(R.drawable.default_load)
-                        .placeholder(R.drawable.default_load)
+                        .error(R.drawable.default_load_long)
+                        .placeholder(R.drawable.default_load_long)
                         .into(contentIv);
                 break;
             case "4"://视频
@@ -95,9 +95,11 @@ public class MainContentAdapter extends CommonAdapter<GetContentResponse.DyConte
                 jz.setUp(item.getContextUrl(), JZVideoPlayerStandard.SCREEN_WINDOW_NORMAL, "");
                 GlideApp.with(mContext)
                         .load(item.getVideoDisplay())
-                        .error(R.drawable.default_load)
-                        .placeholder(R.drawable.default_load)
+
                         .into(jz.thumbImageView);
+                /*.error(R.drawable.default_load)
+                        .placeholder(R.drawable.default_load)
+                        .centerCrop()*/
                 break;
         }
 
@@ -233,6 +235,7 @@ public class MainContentAdapter extends CommonAdapter<GetContentResponse.DyConte
     public interface OnItemClickListener {
 
         void comment(GetContentResponse.DyContextsBean bean);
+
         void share(GetContentResponse.DyContextsBean bean);
     }
 

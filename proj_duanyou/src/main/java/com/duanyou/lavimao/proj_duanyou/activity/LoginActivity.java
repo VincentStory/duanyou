@@ -27,6 +27,7 @@ import com.duanyou.lavimao.proj_duanyou.util.StringUtil;
 import com.duanyou.lavimao.proj_duanyou.util.UserInfo;
 import com.umeng.socialize.UMAuthListener;
 import com.umeng.socialize.UMShareAPI;
+import com.umeng.socialize.UMShareConfig;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.xiben.ebs.esbsdk.callback.ResultCallback;
 
@@ -67,7 +68,7 @@ public class LoginActivity extends BaseActivity {
 
     @Override
     public void startInvoke() {
-
+        UMShareAPI.get(this).setShareConfig(new UMShareConfig().isNeedAuthOnGetUserInfo(true));
     }
 
 
