@@ -55,9 +55,9 @@ public class CodeActivity extends BaseActivity {
     public void initData() {
         phone = getIntent().getStringExtra("phone");
         type = getIntent().getStringExtra("type");
-//        if(type.equals(Contents.PWD_CODE_TYPE)){
-//            titleTv.setText("验证码已发送到您的手机号，请登录查看");
-//        }
+        if (type.equals(Contents.PWD_CODE_TYPE)) {
+            titleTv.setText("验证码已发送到您的手机号，请登录查看");
+        }
         MyApplication.getInstance().addActivity(this);
 
         time = new TimeCount(90000, 1000);
@@ -110,32 +110,31 @@ public class CodeActivity extends BaseActivity {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.next_tv:
-                Intent intent = new Intent(this, SettingPwdActivity.class);
-                intent.putExtra("pageType",type);
-                startActivity(intent);
 
 
-//                if (codeEt.getText().toString().trim().isEmpty()) {
-//                    ToastUtils.showShort("请输入正确的验证码");
-//                    break;
-//                }
-//                VerifyCode(CodeActivity.this, codeEt.getText().toString(), new GetContentResult() {
-//                    @Override
-//                    public void success(String json) {
-//                        VerifyCodeResponse response = JSON.parseObject(json, VerifyCodeResponse.class);
-//                        String token = response.getToken();
-//
-//                        SpUtil.saveStringSP(SpUtil.TOKEN, token);
-//
-//                        jumpTo(SettingPwdActivity.class);
-//
-//                    }
-//
-//                    @Override
-//                    public void error(Exception ex) {
-//
-//                    }
-//                });
+                if (codeEt.getText().toString().trim().isEmpty()) {
+                    ToastUtils.showShort("请输入正确的验证码");
+                    break;
+                }
+                VerifyCode(CodeActivity.this, codeEt.getText().toString(), new GetContentResult() {
+                    @Override
+                    public void success(String json) {
+                        VerifyCodeResponse response = JSON.parseObject(json, VerifyCodeResponse.class);
+                        String token = response.getToken();
+
+                        SpUtil.saveStringSP(SpUtil.TOKEN, token);
+
+                        Intent intent = new Intent(CodeActivity.this, SettingPwdActivity.class);
+                        intent.putExtra("pageType", type);
+                        startActivity(intent);
+
+                    }
+
+                    @Override
+                    public void error(Exception ex) {
+
+                    }
+                });
                 break;
             case R.id.back_tv:
                 finish();

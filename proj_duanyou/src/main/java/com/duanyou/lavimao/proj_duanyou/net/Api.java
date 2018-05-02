@@ -61,4 +61,8 @@ public class Api {
      * 获取审核段子
      */
     public static final String getContentUnreviewed = "getContentUnreviewed";
+    /**
+     * 1.4.1	 设置密码
+     */
+    public static final String setPassword = "setPassword";
 }

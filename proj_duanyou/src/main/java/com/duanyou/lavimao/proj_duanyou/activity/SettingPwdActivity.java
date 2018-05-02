@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
+import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.duanyou.lavimao.proj_duanyou.MyApplication;
 import com.duanyou.lavimao.proj_duanyou.R;
@@ -16,12 +17,14 @@ import com.duanyou.lavimao.proj_duanyou.net.GetContentResult;
 import com.duanyou.lavimao.proj_duanyou.net.NetUtil;
 import com.duanyou.lavimao.proj_duanyou.net.request.GetVerificationCodeRequest;
 import com.duanyou.lavimao.proj_duanyou.net.request.RegisterRequest;
+import com.duanyou.lavimao.proj_duanyou.net.request.SetPasswordRequest;
 import com.duanyou.lavimao.proj_duanyou.net.request.VerifyCodeRequest;
 import com.duanyou.lavimao.proj_duanyou.net.response.VerifyCodeResponse;
 import com.duanyou.lavimao.proj_duanyou.util.Contents;
 import com.duanyou.lavimao.proj_duanyou.util.DeviceUtils;
 import com.duanyou.lavimao.proj_duanyou.util.SpUtil;
 import com.duanyou.lavimao.proj_duanyou.util.StringUtil;
+import com.duanyou.lavimao.proj_duanyou.util.UserInfo;
 import com.xiben.ebs.esbsdk.callback.ResultCallback;
 
 import butterknife.BindView;
@@ -90,12 +93,12 @@ public class SettingPwdActivity extends BaseActivity {
                         if (password.equals(password2)) {
 
                             if (pageType.equals(Contents.REGISTER_CODE_TYPE)) {
-                                register(SettingPwdActivity.this, SpUtil.getStringSp(SpUtil.mobilePhone),
-                                        SpUtil.getStringSp(SpUtil.TOKEN), password2, new GetContentResult() {
+                                register(SettingPwdActivity.this
+                                        , password2, new GetContentResult() {
                                             @Override
                                             public void success(String json) {
                                                 Intent intent = new Intent(SettingPwdActivity.this, RegisterSuccessActivity.class);
-//
+                                                intent.putExtra("pageType",pageType);
                                                 startActivity(intent);
                                             }
 
@@ -106,6 +109,20 @@ public class SettingPwdActivity extends BaseActivity {
                                         });
                             } else if (pageType.equals(Contents.PWD_CODE_TYPE)) {
 
+                                setPassword(SettingPwdActivity.this, password2, new GetContentResult() {
+
+                                    @Override
+                                    public void success(String json) {
+                                        Intent intent = new Intent(SettingPwdActivity.this, RegisterSuccessActivity.class);
+                                        intent.putExtra("pageType",pageType);
+                                        startActivity(intent);
+                                    }
+
+                                    @Override
+                                    public void error(Exception ex) {
+
+                                    }
+                                });
 
                             }
 
@@ -145,11 +162,11 @@ public class SettingPwdActivity extends BaseActivity {
     /**
      * 注册
      */
-    private void register(final Activity context, String phone, String token, String password, final GetContentResult result) {
+    private void register(final Activity context, String password, final GetContentResult result) {
         RegisterRequest request = new RegisterRequest();
-        request.setMobilePhone(phone);
+        request.setMobilePhone(SpUtil.getStringSp(SpUtil.mobilePhone));
         request.setDeviceID(DeviceUtils.getAndroidID());
-        request.setToken(token);
+        request.setToken(SpUtil.getStringSp(SpUtil.TOKEN));
         request.setPassword(StringUtil.md5(password));
         NetUtil.getData(Api.REGISTER, context, request, new ResultCallback() {
             @Override
@@ -172,13 +189,15 @@ public class SettingPwdActivity extends BaseActivity {
     }
 
     /**
-     * 效验验证码
+     * 设置密码
      */
-    private void getCode(final Activity context, String phone, final GetContentResult result) {
-        GetVerificationCodeRequest request = new GetVerificationCodeRequest();
-        request.setMobilePhone(phone);
-        request.setCodeType(Contents.REGISTER_CODE_TYPE);
-        NetUtil.getData(Api.getVerificationCode, context, request, new ResultCallback() {
+    private void setPassword(final Activity context, String password, final GetContentResult result) {
+        SetPasswordRequest request = new SetPasswordRequest();
+        request.setMobilePhone(SpUtil.getStringSp(SpUtil.mobilePhone));
+        request.setDeviceID(UserInfo.getDeviceId());
+        request.setNewPassword(password);
+        request.setToken(UserInfo.getToken());
+        NetUtil.getData(Api.setPassword, context, request, new ResultCallback() {
             @Override
             public void onResult(final String jsonResult) {
                 BaseResponse response = JSON.parseObject(jsonResult, BaseResponse.class);

@@ -2,11 +2,14 @@ package com.duanyou.lavimao.proj_duanyou.activity;
 
 import android.content.Intent;
 import android.view.View;
+import android.widget.TextView;
 
 import com.duanyou.lavimao.proj_duanyou.MyApplication;
 import com.duanyou.lavimao.proj_duanyou.R;
 import com.duanyou.lavimao.proj_duanyou.base.BaseActivity;
+import com.duanyou.lavimao.proj_duanyou.util.Contents;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -16,6 +19,10 @@ import butterknife.OnClick;
 
 public class RegisterSuccessActivity extends BaseActivity {
 
+    @BindView(R.id.content_tv)
+    TextView contentTv;
+
+    private String pageType;
 
     @Override
     public void setView() {
@@ -26,10 +33,17 @@ public class RegisterSuccessActivity extends BaseActivity {
     @Override
     public void initData() {
         MyApplication.getInstance().addActivity(this);
+        pageType = getIntent().getStringExtra("pageType");
+        if (pageType.equals(Contents.PWD_CODE_TYPE)) {
+            contentTv.setText("密码修改成功！快来一起嗨皮吧");
+
+        }
     }
 
     @Override
     public void startInvoke() {
+
+
 
     }
 

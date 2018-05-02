@@ -103,7 +103,7 @@ public class MineFragment extends BaseFragment {
             nicknameTv.setText(UserInfo.getNickName());
             locationTv.setText(SpUtil.getStringSp(SpUtil.currentLocation));
             loginTv.setVisibility(View.GONE);
-            Log.i(TAG, "onResume: "+UserInfo.getBgUrl());
+            Log.i(TAG, "onResume: " + UserInfo.getBgUrl());
             if (!UserInfo.getBgUrl().isEmpty())
                 Glide.with(getActivity()).load(UserInfo.getBgUrl()).into(bgIv);
             if (!UserInfo.getHeadUrl().isEmpty())
@@ -151,13 +151,13 @@ public class MineFragment extends BaseFragment {
     }
 
 
-    @OnClick({R.id.login_register_tv, R.id.edit_tv, R.id.bg_iv,R.id.setting_tv})
+    @OnClick({R.id.login_register_tv, R.id.edit_tv, R.id.bg_iv, R.id.setting_tv, R.id.nearby_duanyou_tv, R.id.duanyou_circle_tv, R.id.follow_tv})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.login_register_tv:
                 gotoActivity(LoginActivity.class);
                 break;
-                case R.id.setting_tv:
+            case R.id.setting_tv:
                 gotoActivity(SettingActivity.class);
                 break;
             case R.id.edit_tv:
@@ -208,6 +208,15 @@ public class MineFragment extends BaseFragment {
                         })
 
                         .show();
+
+                break;
+            case R.id.nearby_duanyou_tv:
+
+                break;
+            case R.id.duanyou_circle_tv:
+
+                break;
+            case R.id.follow_tv:
 
                 break;
         }
