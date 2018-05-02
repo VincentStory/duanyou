@@ -158,9 +158,19 @@
 
         <meta-data
             android:name="UMENG_APPKEY"
-            android:value="5ad04becb27b0a50cd00002f"></meta-data>
+            android:value="5ad04becb27b0a50cd00002f" />
 
-        <activity android:name=".activity.CheckExplainActivity"></activity>
+        <activity
+            android:name=".activity.CheckExplainActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".activity.UploadDuanziActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan|stateHidden" />
+
     </application>
 
 </manifest>

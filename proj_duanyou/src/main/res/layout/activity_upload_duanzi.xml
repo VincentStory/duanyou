@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.duanyou.lavimao.proj_duanyou.activity.UploadDuanziActivity">
+
+    <include
+        android:id="@+id/title"
+        layout="@layout/common_title" />
+
+
+    <EditText
+        android:id="@+id/content_et"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/bottom_ll"
+        android:layout_below="@+id/title"
+        android:background="@null"
+        android:gravity="start"
+        android:hint="请在此输入您的段子文稿"
+        android:padding="10dp"
+        android:textColor="@color/gray"
+        android:textSize="14sp" />
+
+
+    <LinearLayout
+        android:id="@+id/bottom_ll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/num_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            android:paddingBottom="10dp"
+            android:paddingLeft="10dp"
+            android:text="还可以输入500字哟！"
+            android:textColor="@color/gray"
+            android:textSize="14sp" />
+
+        <View
+
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_above="@+id/bottom_rl"
+            android:background="@color/gray" />
+
+        <RelativeLayout
+            android:id="@+id/bottom_rl"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp">
+
+            <ImageView
+                android:id="@+id/photo_iv"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginLeft="10dp"
+                android:src="@drawable/duanzi_photo" />
+
+            <ImageView
+                android:id="@+id/video_iv"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginLeft="10dp"
+                android:layout_toRightOf="@+id/photo_iv"
+                android:src="@drawable/duanzi_video" />
+
+            <ImageView
+                android:id="@+id/anonymous_iv"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="10dp"
+                android:layout_toLeftOf="@+id/anonymous_tv"
+                android:src="@drawable/anonymous" />
+
+            <TextView
+                android:id="@+id/anonymous_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="10dp"
+                android:text="匿名"
+                android:textSize="14sp" />
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>
