@@ -26,6 +26,7 @@ import com.bumptech.glide.Glide;
 import com.duanyou.lavimao.proj_duanyou.MyApplication;
 import com.duanyou.lavimao.proj_duanyou.R;
 import com.duanyou.lavimao.proj_duanyou.activity.LoginActivity;
+import com.duanyou.lavimao.proj_duanyou.activity.NearbyActivity;
 import com.duanyou.lavimao.proj_duanyou.activity.PersonInfoAcitvity;
 import com.duanyou.lavimao.proj_duanyou.activity.SettingActivity;
 import com.duanyou.lavimao.proj_duanyou.base.BaseFragment;
@@ -211,7 +212,7 @@ public class MineFragment extends BaseFragment {
 
                 break;
             case R.id.nearby_duanyou_tv:
-
+                gotoActivity(NearbyActivity.class);
                 break;
             case R.id.duanyou_circle_tv:
 
