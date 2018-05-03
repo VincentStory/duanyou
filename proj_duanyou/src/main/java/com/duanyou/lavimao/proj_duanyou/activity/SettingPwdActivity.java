@@ -182,7 +182,6 @@ public class SettingPwdActivity extends BaseActivity {
 
             @Override
             public void onError(Exception ex) {
-
                 result.error(ex);
             }
         });
@@ -195,19 +194,15 @@ public class SettingPwdActivity extends BaseActivity {
         SetPasswordRequest request = new SetPasswordRequest();
         request.setMobilePhone(SpUtil.getStringSp(SpUtil.mobilePhone));
         request.setDeviceID(UserInfo.getDeviceId());
-        request.setNewPassword(password);
+        request.setNewPassword(StringUtil.md5(password));
         request.setToken(UserInfo.getToken());
         NetUtil.getData(Api.setPassword, context, request, new ResultCallback() {
             @Override
             public void onResult(final String jsonResult) {
                 BaseResponse response = JSON.parseObject(jsonResult, BaseResponse.class);
                 if (response.getRespCode().equals("0")) {
-
                     result.success(jsonResult);
-
-
                 } else {
-
                 }
 
             }
