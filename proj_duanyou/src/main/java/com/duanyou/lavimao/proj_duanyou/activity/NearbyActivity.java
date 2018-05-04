@@ -2,6 +2,7 @@ package com.duanyou.lavimao.proj_duanyou.activity;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -11,12 +12,31 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.alibaba.fastjson.JSON;
+import com.bumptech.glide.Glide;
 import com.duanyou.lavimao.proj_duanyou.R;
 import com.duanyou.lavimao.proj_duanyou.base.BaseActivity;
+import com.duanyou.lavimao.proj_duanyou.net.Api;
+import com.duanyou.lavimao.proj_duanyou.net.BaseResponse;
+import com.duanyou.lavimao.proj_duanyou.net.GetContentResult;
+import com.duanyou.lavimao.proj_duanyou.net.NetUtil;
+import com.duanyou.lavimao.proj_duanyou.net.request.PeopleNearbyRequest;
+import com.duanyou.lavimao.proj_duanyou.net.response.NearbyPeopleResponse;
+import com.duanyou.lavimao.proj_duanyou.util.ToastUtils;
+import com.duanyou.lavimao.proj_duanyou.util.UserInfo;
+import com.makeramen.roundedimageview.RoundedImageView;
+import com.wuxiaolong.pullloadmorerecyclerview.PullLoadMoreRecyclerView;
+import com.xiben.ebs.esbsdk.callback.ResultCallback;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -33,8 +53,15 @@ public class NearbyActivity extends BaseActivity {
     TextView titleTv;
     @BindView(R.id.right_tv)
     TextView rightTv;
+    List<NearbyPeopleResponse.UserInfo> mUserInfoList = new ArrayList<>();
 
-    private final int LOCATION_CODE=0x01;
+    private final int LOCATION_CODE = 0x01;
+    private double latitude;
+    private double longitude;
+    private int page;
+    private String sex = "";
+    private PullLoadMoreRecyclerView mPullLoadMoreRecyclerView;
+    private RecyclerViewAdapter recyclerViewAdapter;
 
     @Override
     public void setView() {
@@ -51,14 +78,66 @@ public class NearbyActivity extends BaseActivity {
 
     @Override
     public void startInvoke() {
+        getLngAndLat(NearbyActivity.this);
+
+        mPullLoadMoreRecyclerView = (PullLoadMoreRecyclerView) findViewById(R.id.pullLoadMoreRecyclerView);
+        mPullLoadMoreRecyclerView.setLinearLayout();
+        recyclerViewAdapter = new RecyclerViewAdapter();
+        mPullLoadMoreRecyclerView.setAdapter(recyclerViewAdapter);
+        mPullLoadMoreRecyclerView.setOnPullLoadMoreListener(new PullLoadMoreRecyclerView.PullLoadMoreListener() {
+            @Override
+            public void onRefresh() {
+                page = 1;
+                getData(latitude, longitude, page, sex);
+            }
+
+            @Override
+            public void onLoadMore() {
+                page++;
+                getData(latitude, longitude, page, sex);
+            }
+        });
+
+    }
 
 
+    public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
 
+        public RecyclerViewAdapter() {
 
+        }
 
-        String s=getLngAndLat(NearbyActivity.this);
-        Log.i(TAG, "startInvoke: "+s);
+        @Override
+        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_nearby_people, parent, false);
+            return new ViewHolder(view);
+        }
 
+        @Override
+        public void onBindViewHolder(ViewHolder holder, int position) {
+            Glide.with(NearbyActivity.this).load(mUserInfoList.get(position).getHeadPortraitUrl()).into(holder.headIv);
+            holder.nameTv.setText(mUserInfoList.get(position).getNickName());
+            int dis = (Integer.parseInt(mUserInfoList.get(position).getDistance())) / 1000;
+            holder.distanceTv.setText(dis + "km | " + mUserInfoList.get(position).getLatelyTime());
+        }
+
+        @Override
+        public int getItemCount() {
+            return mUserInfoList.size();
+        }
+
+        public class ViewHolder extends RecyclerView.ViewHolder {
+            private RoundedImageView headIv;
+            private TextView nameTv;
+            private TextView distanceTv;
+
+            public ViewHolder(View itemView) {
+                super(itemView);
+                headIv = itemView.findViewById(R.id.head_iv);
+                nameTv = itemView.findViewById(R.id.name_tv);
+                distanceTv = itemView.findViewById(R.id.distance_tv);
+            }
+        }
     }
 
 
@@ -70,8 +149,7 @@ public class NearbyActivity extends BaseActivity {
      */
     @SuppressLint("MissingPermission")
     private String getLngAndLat(Context context) {
-        double latitude = 0.0;
-        double longitude = 0.0;
+
         LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
         if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {  //从gps获取经纬度
             Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
@@ -89,14 +167,14 @@ public class NearbyActivity extends BaseActivity {
                 longitude = location.getLongitude();
             }
         }
+        getData(latitude, longitude, page, sex);
         return longitude + "," + latitude;
     }
 
     //从网络获取经纬度
     @SuppressLint("MissingPermission")
     public String getLngAndLatWithNetwork() {
-        double latitude = 0.0;
-        double longitude = 0.0;
+
         LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 0, locationListener);
         Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
@@ -104,9 +182,30 @@ public class NearbyActivity extends BaseActivity {
             latitude = location.getLatitude();
             longitude = location.getLongitude();
         }
+        getData(latitude, longitude, page, sex);
         return longitude + "," + latitude;
     }
 
+
+    private void getData(Double latitude, Double longitude, final int page, String sex) {
+        getPeopleNearby(NearbyActivity.this, latitude, longitude, page, sex, new GetContentResult() {
+            @Override
+            public void success(String json) {
+                NearbyPeopleResponse response = JSON.parseObject(json, NearbyPeopleResponse.class);
+                if (page == 1) {
+                    mUserInfoList.clear();
+                }
+                mUserInfoList.addAll(response.getUserInfo());
+                recyclerViewAdapter.notifyDataSetChanged();
+                mPullLoadMoreRecyclerView.setPullLoadMoreCompleted();
+            }
+
+            @Override
+            public void error(Exception ex) {
+
+            }
+        });
+    }
 
     LocationListener locationListener = new LocationListener() {
 
@@ -147,5 +246,44 @@ public class NearbyActivity extends BaseActivity {
                 break;
         }
     }
+
+    /**
+     * 1.4.18	获取附近段友
+     */
+    private void getPeopleNearby(final Activity context, Double latitude, Double longitude, int page, String sex, final GetContentResult result) {
+        PeopleNearbyRequest request = new PeopleNearbyRequest();
+        request.setDyID(UserInfo.getDyId());
+        request.setDeviceID(UserInfo.getDeviceId());
+        request.setToken(UserInfo.getToken());
+        request.setLatitude(latitude);
+        request.setLongitude(longitude);
+        request.setPage(page);
+        request.setRange((float) 50);
+        request.setSex(sex);
+
+        NetUtil.getData(Api.peopleNearby, context, request, new ResultCallback() {
+            @Override
+            public void onResult(final String jsonResult) {
+                BaseResponse response = JSON.parseObject(jsonResult, BaseResponse.class);
+                if (response.getRespCode().equals("0")) {
+
+                    result.success(jsonResult);
+
+
+                } else {
+                    ToastUtils.showShort(response.getRespMessage());
+                }
+
+            }
+
+            @Override
+            public void onError(Exception ex) {
+
+                result.error(ex);
+            }
+        });
+
+    }
+
 
 }
