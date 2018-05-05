@@ -69,4 +69,5 @@ public class Api {
      * 1.4.18	获取附近段友
      */
     public static final String peopleNearby = "peopleNearby";
+
 }

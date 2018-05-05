@@ -6,9 +6,17 @@
 
     <include layout="@layout/common_title" />
 
-    <com.wuxiaolong.pullloadmorerecyclerview.PullLoadMoreRecyclerView
-        android:id="@+id/pullLoadMoreRecyclerView"
+    <com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout
+        android:id="@+id/refresh"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent">
 
+        <ListView
+            android:id="@+id/list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="@null"
+            android:scrollbars="none" />
+
+    </com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout>
 </LinearLayout>

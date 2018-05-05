@@ -20,6 +20,8 @@ import com.duanyou.lavimao.proj_duanyou.net.BaseResponse;
 import com.duanyou.lavimao.proj_duanyou.net.GetContentResult;
 import com.duanyou.lavimao.proj_duanyou.net.NetUtil;
 import com.duanyou.lavimao.proj_duanyou.net.request.GetContentRequest;
+import com.duanyou.lavimao.proj_duanyou.net.request.GetUserUploadContentRequest;
+import com.duanyou.lavimao.proj_duanyou.util.UserInfo;
 import com.xiben.ebs.esbsdk.callback.ResultCallback;
 
 
@@ -126,6 +128,45 @@ public abstract class BaseFragment extends Fragment {
             }
         });
     }
+
+
+      /**
+     * 1.4.1	 获取段友发布的段子
+       */
+    protected void getUserUploadContent(final Activity context, String targetId, String beginContentId,final GetContentResult result) {
+        GetUserUploadContentRequest request = new GetUserUploadContentRequest();
+        request.setDeviceID(UserInfo.getDeviceId());
+        request.setToken(UserInfo.getToken());
+        request.setDyID(UserInfo.getDyId());
+        request.setTargetDyID(targetId);
+        request.setBeginContentID(beginContentId);
+        NetUtil.getData(Api.getUserUploadContent, context, request, new ResultCallback() {
+            @Override
+            public void onResult(final String jsonResult) {
+                try {
+                    BaseResponse response = JSON.parseObject(jsonResult, BaseResponse.class);
+                    if (response.getRespCode().equals("0")) {
+
+                        result.success(jsonResult);
+                    } else {
+
+                    }
+                } catch (Exception e) {
+                    Log.i("TAG", "json解析异常");
+                }
+
+            }
+
+            @Override
+            public void onError(Exception ex) {
+
+                result.error(ex);
+            }
+        });
+    }
+
+
+
 
 
     protected void gotoActivity(Class activity) {

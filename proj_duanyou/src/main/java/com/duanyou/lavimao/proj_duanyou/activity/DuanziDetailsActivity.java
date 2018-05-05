@@ -244,14 +244,22 @@ public class DuanziDetailsActivity extends BaseActivity {
 
     }
 
-    @OnClick({R.id.iv_left, R.id.nav_right_iv, R.id.zan_iv, R.id.cai_iv, R.id.comment_iv, R.id.comment_tv, R.id.send_btn, R.id.empty_iv, R.id.share_iv})
+    @OnClick({R.id.head_iv,R.id.iv_left, R.id.nav_right_iv, R.id.zan_iv, R.id.cai_iv, R.id.comment_iv, R.id.comment_tv, R.id.send_btn, R.id.empty_iv, R.id.share_iv})
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.iv_left:
+            case R.id.head_iv:
+                Intent intent = new Intent(DuanziDetailsActivity.this, PeopleInfoActivity.class);
+                intent.putExtra(Constants.targetDyID, bean.getPublisherDyID());
+                intent.putExtra(Constants.beginContentID, bean.getDyContextID()+"");
+                startActivity(intent);
+
+
+                break;
+                case R.id.iv_left:
                 finish();
                 break;
             case R.id.nav_right_iv:
-                Intent intent = new Intent(this, ReportActivity.class);
+                intent = new Intent(this, ReportActivity.class);
                 intent.putExtra(Constants.dyContextID, bean.getDyContextID());
                 startActivity(intent);
                 break;
