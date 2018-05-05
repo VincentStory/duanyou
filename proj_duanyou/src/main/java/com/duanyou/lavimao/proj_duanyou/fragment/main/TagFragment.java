@@ -52,16 +52,27 @@ public class TagFragment extends BaseFragment implements MainContentAdapter.OnIt
     @BindView(R.id.list)
     ListView listView;
 
-    private String type; //内容类型。0-精选，1-热吧，2-段子，3-图片，4-视频
+    private String type; //内容类型。0-精选，1-热吧，2-段子，3-图片，4-视频 5-段友段子
     private boolean refreshTag = true;  //下拉刷新  true   加载更多  false
     private List<GetContentResponse.DyContextsBean> mList;
     private MainContentAdapter mAdapter;
     //    private UMImage imageurl;
     private ShareDialog shareDialog;
+    private String targetId;
+    private String beginContentId;
 
     public static TagFragment newInstance(String type) {
         Bundle bundle = new Bundle();
         bundle.putString(Constants.type, type);
+        TagFragment fragment = new TagFragment();
+        fragment.setArguments(bundle);
+        return fragment;
+    }
+    public static TagFragment newInstance(String type,String targetId,String beginContentId) {
+        Bundle bundle = new Bundle();
+        bundle.putString(Constants.type, type);
+        bundle.putString(Constants.targetDyID, targetId);
+        bundle.putString(Constants.beginContentID, beginContentId);
         TagFragment fragment = new TagFragment();
         fragment.setArguments(bundle);
         return fragment;
@@ -109,6 +120,8 @@ public class TagFragment extends BaseFragment implements MainContentAdapter.OnIt
 
     private void initParam() {
         type = getArguments().getString(Constants.type);
+        targetId = getArguments().getString(Constants.targetDyID);
+        beginContentId = getArguments().getString(Constants.beginContentID);
     }
 
     /**
@@ -133,8 +146,39 @@ public class TagFragment extends BaseFragment implements MainContentAdapter.OnIt
     }
 
     private void getContent() {
-        if (!TextUtils.isEmpty(type)) {
+        if (!TextUtils.isEmpty(type) && !type.equals("5")) {
             getContent(getActivity(), type, new GetContentResult() {
+                @Override
+                public void success(String json) {
+                    GetContentResponse response = JSON.parseObject(json, GetContentResponse.class);
+                    if (refreshTag) {
+                        mList.clear();
+                        refreshLayout.finishRefreshing();
+                    } else {
+                        refreshLayout.finishLoadmore();
+                    }
+
+                    if (null != response) {
+                        if ("0".equals(response.getRespCode())) {
+                            if (response.getDyContexts().size() > 0) {
+                                mList.addAll(response.getDyContexts());
+                                mAdapter.notifyDataSetChanged();
+                            } else {
+                                ToastUtils.showShort(getActivity().getResources().getString(R.string.no_more));
+                            }
+                        } else {
+                            ToastUtils.showShort(response.getRespMessage());
+                        }
+                    }
+                }
+
+                @Override
+                public void error(Exception ex) {
+
+                }
+            });
+        } else if (!TextUtils.isEmpty(type) && type.equals("5")) {
+            getUserUploadContent(getActivity(), targetId, beginContentId,new GetContentResult() {
                 @Override
                 public void success(String json) {
                     GetContentResponse response = JSON.parseObject(json, GetContentResponse.class);

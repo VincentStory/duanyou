@@ -4,6 +4,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
@@ -17,11 +18,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
 import com.bumptech.glide.Glide;
 import com.duanyou.lavimao.proj_duanyou.R;
+import com.duanyou.lavimao.proj_duanyou.adapter.MainContentAdapter;
+import com.duanyou.lavimao.proj_duanyou.adapter.NearbyPeopleAdapter;
 import com.duanyou.lavimao.proj_duanyou.base.BaseActivity;
 import com.duanyou.lavimao.proj_duanyou.net.Api;
 import com.duanyou.lavimao.proj_duanyou.net.BaseResponse;
@@ -29,10 +34,13 @@ import com.duanyou.lavimao.proj_duanyou.net.GetContentResult;
 import com.duanyou.lavimao.proj_duanyou.net.NetUtil;
 import com.duanyou.lavimao.proj_duanyou.net.request.PeopleNearbyRequest;
 import com.duanyou.lavimao.proj_duanyou.net.response.NearbyPeopleResponse;
+import com.duanyou.lavimao.proj_duanyou.util.Constants;
 import com.duanyou.lavimao.proj_duanyou.util.ToastUtils;
 import com.duanyou.lavimao.proj_duanyou.util.UserInfo;
-import com.makeramen.roundedimageview.RoundedImageView;
-import com.wuxiaolong.pullloadmorerecyclerview.PullLoadMoreRecyclerView;
+import com.lcodecore.tkrefreshlayout.RefreshListenerAdapter;
+import com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout;
+import com.lcodecore.tkrefreshlayout.header.SinaRefreshView;
+
 import com.xiben.ebs.esbsdk.callback.ResultCallback;
 
 import java.util.ArrayList;
@@ -60,8 +68,12 @@ public class NearbyActivity extends BaseActivity {
     private double longitude;
     private int page;
     private String sex = "";
-    private PullLoadMoreRecyclerView mPullLoadMoreRecyclerView;
-    private RecyclerViewAdapter recyclerViewAdapter;
+    @BindView(R.id.refresh)
+    TwinklingRefreshLayout refreshLayout;
+    @BindView(R.id.list)
+    ListView listView;
+    private boolean refreshTag = true;  //下拉刷新  true   加载更多  false
+    private NearbyPeopleAdapter mAdapter;
 
     @Override
     public void setView() {
@@ -78,21 +90,47 @@ public class NearbyActivity extends BaseActivity {
 
     @Override
     public void startInvoke() {
+
+
+//        mPullLoadMoreRecyclerView = (PullLoadMoreRecyclerView) findViewById(R.id.pullLoadMoreRecyclerView);
+//        mPullLoadMoreRecyclerView.setLinearLayout();
+//        recyclerViewAdapter = new RecyclerViewAdapter();
+//        mPullLoadMoreRecyclerView.setAdapter(recyclerViewAdapter);
+//        mPullLoadMoreRecyclerView.setOnPullLoadMoreListener(new PullLoadMoreRecyclerView.PullLoadMoreListener() {
+//            @Override
+//            public void onRefresh() {
+//                page = 1;
+//                getData(latitude, longitude, page, sex);
+//            }
+//
+//            @Override
+//            public void onLoadMore() {
+//                page++;
+//                getData(latitude, longitude, page, sex);
+//            }
+//        });
+        initView();
+        initData();
+        initList();
         getLngAndLat(NearbyActivity.this);
 
-        mPullLoadMoreRecyclerView = (PullLoadMoreRecyclerView) findViewById(R.id.pullLoadMoreRecyclerView);
-        mPullLoadMoreRecyclerView.setLinearLayout();
-        recyclerViewAdapter = new RecyclerViewAdapter();
-        mPullLoadMoreRecyclerView.setAdapter(recyclerViewAdapter);
-        mPullLoadMoreRecyclerView.setOnPullLoadMoreListener(new PullLoadMoreRecyclerView.PullLoadMoreListener() {
+    }
+
+    private void initView() {
+        refreshLayout.setHeaderView(new SinaRefreshView(NearbyActivity.this));
+        refreshLayout.setOnRefreshListener(new RefreshListenerAdapter() {
             @Override
-            public void onRefresh() {
-                page = 1;
+            public void onRefresh(TwinklingRefreshLayout refreshLayout) {
+                super.onRefresh(refreshLayout);
+                refreshTag = true;
+                page=1;
                 getData(latitude, longitude, page, sex);
             }
 
             @Override
-            public void onLoadMore() {
+            public void onLoadMore(TwinklingRefreshLayout refreshLayout) {
+                super.onLoadMore(refreshLayout);
+                refreshTag = false;
                 page++;
                 getData(latitude, longitude, page, sex);
             }
@@ -100,45 +138,31 @@ public class NearbyActivity extends BaseActivity {
 
     }
 
+    /**
+     * 初始化列表
+     */
+    private void initList() {
+        if (mAdapter == null) {
 
-    public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
+            mAdapter = new NearbyPeopleAdapter(NearbyActivity.this, mUserInfoList, R.layout.adapter_nearby_people);
 
-        public RecyclerViewAdapter() {
+            listView.setAdapter(mAdapter);
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    Intent intent = new Intent(NearbyActivity.this, PeopleInfoActivity.class);
+                    intent.putExtra(Constants.targetDyID, mUserInfoList.get(position).getDyID());
 
+                    startActivity(intent);
+
+
+                }
+            });
         }
 
-        @Override
-        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_nearby_people, parent, false);
-            return new ViewHolder(view);
-        }
-
-        @Override
-        public void onBindViewHolder(ViewHolder holder, int position) {
-            Glide.with(NearbyActivity.this).load(mUserInfoList.get(position).getHeadPortraitUrl()).into(holder.headIv);
-            holder.nameTv.setText(mUserInfoList.get(position).getNickName());
-            int dis = (Integer.parseInt(mUserInfoList.get(position).getDistance())) / 1000;
-            holder.distanceTv.setText(dis + "km | " + mUserInfoList.get(position).getLatelyTime());
-        }
-
-        @Override
-        public int getItemCount() {
-            return mUserInfoList.size();
-        }
-
-        public class ViewHolder extends RecyclerView.ViewHolder {
-            private RoundedImageView headIv;
-            private TextView nameTv;
-            private TextView distanceTv;
-
-            public ViewHolder(View itemView) {
-                super(itemView);
-                headIv = itemView.findViewById(R.id.head_iv);
-                nameTv = itemView.findViewById(R.id.name_tv);
-                distanceTv = itemView.findViewById(R.id.distance_tv);
-            }
-        }
     }
+
+
 
 
     /**
@@ -192,12 +216,20 @@ public class NearbyActivity extends BaseActivity {
             @Override
             public void success(String json) {
                 NearbyPeopleResponse response = JSON.parseObject(json, NearbyPeopleResponse.class);
-                if (page == 1) {
+
+                if (refreshTag) {
                     mUserInfoList.clear();
+                    refreshLayout.finishRefreshing();
+                } else {
+                    refreshLayout.finishLoadmore();
                 }
-                mUserInfoList.addAll(response.getUserInfo());
-                recyclerViewAdapter.notifyDataSetChanged();
-                mPullLoadMoreRecyclerView.setPullLoadMoreCompleted();
+
+                if (response.getUserInfo().size() > 0) {
+                    mUserInfoList.addAll(response.getUserInfo());
+                    mAdapter.notifyDataSetChanged();
+                } else {
+                    ToastUtils.showShort(getResources().getString(R.string.no_more));
+                }
             }
 
             @Override
