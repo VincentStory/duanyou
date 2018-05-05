@@ -69,5 +69,10 @@ public class Api {
      * 1.4.18	获取附近段友
      */
     public static final String peopleNearby = "peopleNearby";
+    /**
+     * 1.4.1	上传段子
+     */
+    public static final String uploadContent="uploadContent";
+
 
 }

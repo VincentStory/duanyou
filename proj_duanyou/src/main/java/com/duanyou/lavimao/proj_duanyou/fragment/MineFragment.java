@@ -2,7 +2,6 @@ package com.duanyou.lavimao.proj_duanyou.fragment;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.Application;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -14,7 +13,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -23,7 +21,6 @@ import android.widget.TextView;
 import com.alibaba.fastjson.JSON;
 import com.blankj.utilcode.util.ToastUtils;
 import com.bumptech.glide.Glide;
-import com.duanyou.lavimao.proj_duanyou.MyApplication;
 import com.duanyou.lavimao.proj_duanyou.R;
 import com.duanyou.lavimao.proj_duanyou.activity.LoginActivity;
 import com.duanyou.lavimao.proj_duanyou.activity.NearbyActivity;
@@ -50,7 +47,6 @@ import com.xiben.ebs.esbsdk.util.LogUtil;
 import net.bither.util.CompressTools;
 
 import java.io.File;
-import java.math.RoundingMode;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -73,9 +69,9 @@ public class MineFragment extends BaseFragment {
 
     private String picturePath;
     private static final int CROP_PHOTO = 2;
-    private static final int REQUEST_CODE_PICK_IMAGE = 3;
+    public static final int REQUEST_CODE_PICK_IMAGE = 3;
     private static final int MY_PERMISSIONS_REQUEST_CALL_PHONE = 6;
-    private static final int MY_PERMISSIONS_REQUEST_CALL_PHONE2 = 7;
+    public static final int MY_PERMISSIONS_REQUEST_CALL_PHONE2 = 7;
     private File output;
     private Uri imageUri;
 
@@ -176,13 +172,9 @@ public class MineFragment extends BaseFragment {
                             @Override
                             public void onClick(int which) {
                                 //需要对相机进行运行时权限的申请
-                                if (ContextCompat.checkSelfPermission(getActivity(),
-                                        Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                                        != PackageManager.PERMISSION_GRANTED) {
-                                    ActivityCompat.requestPermissions(getActivity(),
-                                            new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                                            MY_PERMISSIONS_REQUEST_CALL_PHONE2);
-
+                                if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
+                                        || ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                                    ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, MY_PERMISSIONS_REQUEST_CALL_PHONE2);
                                 } else {
                                     //权限已经被授予，在这里直接写要执行的相应方法即可
                                     takePhoto();
