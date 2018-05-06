@@ -9,6 +9,7 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.MediaMetadataRetriever;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Build;
@@ -37,8 +38,11 @@ import com.duanyou.lavimao.proj_duanyou.net.request.UploadContentRequest;
 import com.duanyou.lavimao.proj_duanyou.util.Constants;
 import com.duanyou.lavimao.proj_duanyou.util.DeviceUtils;
 import com.duanyou.lavimao.proj_duanyou.util.FileSizeUtil;
+import com.duanyou.lavimao.proj_duanyou.util.FileUtils;
 import com.duanyou.lavimao.proj_duanyou.util.UserInfo;
 import com.xiben.ebs.esbsdk.callback.ResultCallback;
+
+import java.io.File;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -62,7 +66,6 @@ public class UploadDuanziActivity extends BaseActivity {
     @BindView(R.id.pb)
     ProgressBar pb;
 
-
     private boolean selected = false;
     private String uploadPath = "";
     private BitmapFactory.Options opts;
@@ -71,7 +74,7 @@ public class UploadDuanziActivity extends BaseActivity {
     private int videoDuration;
     private long videoSize;
     private Bitmap videoThumbnail;
-
+    private String videoThumbnailPath;
 
     @Override
     public void setView() {
@@ -82,6 +85,22 @@ public class UploadDuanziActivity extends BaseActivity {
     @Override
     public void initData() {
         initTitle();
+        initParams();
+    }
+
+    private void initParams() {
+        if (!TextUtils.isEmpty(getIntent().getStringExtra(Constants.type))) {
+            type = getIntent().getStringExtra(Constants.type);
+            uploadPath = getIntent().getStringExtra(Constants.FILE_PATH);
+            if ("3".equals(type)) {
+                displayImage(uploadPath);
+            } else {
+                Bitmap bitmap = getVideoThumbnail(uploadPath);
+                FileUtils.saveBmp2Gallery(bitmap, "videoThumbnail");
+                preShowIv.setImageBitmap(bitmap);
+                preShowRl.setVisibility(View.VISIBLE);
+            }
+        }
     }
 
     private void initTitle() {
@@ -163,11 +182,12 @@ public class UploadDuanziActivity extends BaseActivity {
         startActivityForResult(intent, Constants.REQUEST_CODE_PICK_VIDEO);
     }
 
-
-    public void onActivityResult(int req, int res, Intent data) {
-        switch (req) {
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
             case Constants.REQUEST_CODE_PICK_IMAGE: //从相册中选取图片的请求标志
-                if (res == RESULT_OK) {
+                if (resultCode == RESULT_OK) {
                     if (Build.VERSION.SDK_INT >= 19) {  //4.4及以上的系统使用这个方法处理图片；
                         handleImageOnKitKat(data);
                     } else {
@@ -176,7 +196,7 @@ public class UploadDuanziActivity extends BaseActivity {
                 }
                 break;
             case Constants.REQUEST_CODE_PICK_VIDEO:
-                if (res == RESULT_OK) {
+                if (resultCode == RESULT_OK) {
                     getVideo(data);
                 }
                 break;
@@ -184,6 +204,7 @@ public class UploadDuanziActivity extends BaseActivity {
                 break;
         }
     }
+
 
     private void getVideo(Intent data) {
         Uri uri = data.getData();
@@ -210,7 +231,7 @@ public class UploadDuanziActivity extends BaseActivity {
                 videoSize = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.SIZE));
 
                 // 视频缩略图路径：MediaStore.Images.Media.DATA
-                String imagePath = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA));
+                videoThumbnailPath = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA));
                 // 缩略图ID:MediaStore.Audio.Media._ID
                 int imageId = cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID));
 
@@ -220,7 +241,7 @@ public class UploadDuanziActivity extends BaseActivity {
 
                 // 方法二 ThumbnailUtils 利用createVideoThumbnail 通过路径得到缩略图，保持为视频的默认比例
                 // 第一个参数为 视频/缩略图的位置，第二个依旧是分辨率相关的kind
-                videoThumbnail = ThumbnailUtils.createVideoThumbnail(imagePath, MediaStore.Video.Thumbnails.MICRO_KIND);
+                videoThumbnail = ThumbnailUtils.createVideoThumbnail(videoThumbnailPath, MediaStore.Video.Thumbnails.MICRO_KIND);
                 // 如果追求更好的话可以利用 ThumbnailUtils.extractThumbnail 把缩略图转化为的制定大小
 //                 ThumbnailUtils.extractThumbnail(bitmap, width,height ,ThumbnailUtils.OPTIONS_RECYCLE_INPUT);
 
@@ -228,12 +249,35 @@ public class UploadDuanziActivity extends BaseActivity {
                 //setText(tv_VideoDuration, R.string.duration, String.valueOf(duration));
                 //setText(tv_VideoSize, R.string.size, String.valueOf(size));
                 //setText(tv_VideoTitle, R.string.title, title);
+                //FileUtils.saveBmp2Gallery(videoThumbnail, "videoThumbnail");
+
                 preShowIv.setImageBitmap(videoThumbnail);
                 preShowRl.setVisibility(View.VISIBLE);
                 type = "4";
             }
             cursor.close();
         }
+    }
+
+    public Bitmap getVideoThumbnail(String filePath) {
+        Bitmap b = null;
+        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+        try {
+            retriever.setDataSource(filePath);
+            b = retriever.getFrameAtTime();
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+
+        } finally {
+            try {
+                retriever.release();
+            } catch (RuntimeException e) {
+                e.printStackTrace();
+            }
+        }
+        return b;
     }
 
     /**
@@ -353,7 +397,7 @@ public class UploadDuanziActivity extends BaseActivity {
         pb.setVisibility(View.VISIBLE);
 
         if ("4".equals(type)) {  //视频
-            NetUtil.postVideo(Api.uploadContent, this, uploadPath, request, new ResultCallback() {
+            NetUtil.postVideo(Api.uploadContent, this, uploadPath, FileUtils.galleryPath + "videoThumbnail", request, new ResultCallback() {
                 @Override
                 public void onResult(String jsonResult) {
                     pb.setVisibility(View.GONE);

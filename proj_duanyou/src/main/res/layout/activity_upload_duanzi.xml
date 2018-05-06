@@ -38,11 +38,11 @@
             android:orientation="horizontal">
 
             <RelativeLayout
+                android:visibility="invisible"
                 android:id="@+id/pre_show_rl"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:visibility="invisible">
+                android:layout_weight="1">
 
                 <ImageView
                     android:id="@+id/pre_show_iv"

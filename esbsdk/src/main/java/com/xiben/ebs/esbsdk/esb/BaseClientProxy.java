@@ -162,7 +162,6 @@ public class BaseClientProxy {
             MultipartBody.Builder builder = new MultipartBody.Builder()
                     .setType(MultipartBody.FORM)
                     .addFormDataPart("file1", file.getName(), RequestBody.create(MediaType.parse("application/octet-stream"), file))
-                    .addFormDataPart("file2", file.getName(), RequestBody.create(MediaType.parse("application/octet-stream"), file))
                     .addFormDataPart("parameter", jsonRequest);
 
             RequestBody requestBody = builder.build();
@@ -199,15 +198,14 @@ public class BaseClientProxy {
 
     public void upVideo(String serviceAddr, String serviceId, String path1, String path2, String jsonRequest, final InvokeCallback<String> callback) {
         try {
-            LogUtil.log(
-                    "\n" + "url:" + serviceAddr + serviceId
-                            + "\n" + "jsonRequest:" + jsonRequest);
+            LogUtil.log("\n" + "url:" + serviceAddr + serviceId + "\n" + "jsonRequest:" + jsonRequest);
 
             File file = new File(path1);
             File file2 = new File(path2);
             MultipartBody.Builder builder = new MultipartBody.Builder()
                     .setType(MultipartBody.FORM)
                     .addFormDataPart("file1", file.getName(), RequestBody.create(MediaType.parse("application/octet-stream"), file))
+                    .addFormDataPart("file2", file2.getName(), RequestBody.create(MediaType.parse("image/png"), file2))
                     .addFormDataPart("parameter", jsonRequest);
 
             RequestBody requestBody = builder.build();
@@ -228,7 +226,7 @@ public class BaseClientProxy {
                 public void onResponse(Call call, Response response) throws IOException {
                     try {
                         String result = response.body().string();
-                        LogUtil.log("" + response + "==>" + result);
+                        LogUtil.log("" + response + "-->" + result);
                         callback.onComplete("", result);
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -241,7 +239,6 @@ public class BaseClientProxy {
         }
 
     }
-
 
     /**
      * 默认信任所有的证书 *
@@ -280,11 +277,9 @@ public class BaseClientProxy {
         }
     }
 
-
     /**
      * 取消网络请求
      */
-
     public void cancel() {
         if (call.isExecuted()) {
             call.cancel();

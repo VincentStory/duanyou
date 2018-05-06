@@ -218,7 +218,6 @@ public class MainActivity extends BaseActivity {
         UMShareAPI.get(this).onSaveInstanceState(outState);
     }
 
-
     private void recoverDefaultState() {
         img_btn_home.setImageResource(R.drawable.icon_main_home_normal);
         img_btn_dyou.setImageResource(R.drawable.icon_main_friend_normal);
@@ -258,8 +257,6 @@ public class MainActivity extends BaseActivity {
         img_btn_dyou.setImageResource(R.drawable.icon_main_friend_selected);
         tv_dyou.setTextColor(Color.parseColor("#4d4d4d"));
         addFragmentStack(fragments, R.id.layFrame, 1);
-
-
     }
 
     //显示主页
