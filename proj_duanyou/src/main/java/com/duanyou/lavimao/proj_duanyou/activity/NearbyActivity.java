@@ -85,8 +85,6 @@ public class NearbyActivity extends BaseActivity {
 
     @Override
     public void startInvoke() {
-
-
         initView();
         initData();
         initList();

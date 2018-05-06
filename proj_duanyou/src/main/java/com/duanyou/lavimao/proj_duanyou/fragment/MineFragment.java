@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.blankj.utilcode.util.ToastUtils;
@@ -73,6 +74,7 @@ public class MineFragment extends BaseFragment {
     public static final int REQUEST_CODE_PICK_IMAGE = 3;
     private static final int MY_PERMISSIONS_REQUEST_CALL_PHONE = 6;
     public static final int MY_PERMISSIONS_REQUEST_CALL_PHONE2 = 7;
+    private static final int BAIDU_READ_PHONE_STATE = 100;
     private File output;
     private Uri imageUri;
 
@@ -206,8 +208,13 @@ public class MineFragment extends BaseFragment {
                 break;
             case R.id.nearby_duanyou_tv:
                 if (UserInfo.getLoginState()) {
-
-                    gotoActivity(NearbyActivity.class);
+                    if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                            || ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                        // 申请一个（或多个）权限，并提供用于回调返回的获取码（用户定义）
+                        ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.READ_PHONE_STATE}, BAIDU_READ_PHONE_STATE);
+                    } else {
+                        gotoActivity(NearbyActivity.class);
+                    }
                 } else {
                     gotoActivity(LoginActivity.class);
                 }
@@ -230,6 +237,7 @@ public class MineFragment extends BaseFragment {
                 break;
         }
     }
+
 
     /**
      * 拍照
@@ -302,6 +310,16 @@ public class MineFragment extends BaseFragment {
             } else {
                 // Permission Denied
                 ToastUtils.showShort("权限拒绝");
+            }
+        }
+
+        if (requestCode == BAIDU_READ_PHONE_STATE) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // 获取到权限，作相应处理（调用定位SDK应当确保相关权限均被授权，否则可能引起定位失败）
+                gotoActivity(NearbyActivity.class);
+            } else {
+                // 没有获取到权限，做特殊处理
+                ToastUtils.showShort("获取位置权限失败，请手动开启");
             }
         }
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
