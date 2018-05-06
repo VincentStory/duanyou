@@ -149,7 +149,7 @@ public class MoreActivity extends BaseActivity {
         }
 
         if (Build.VERSION.SDK_INT >= 24) {
-            imageUri = FileProvider.getUriForFile(this, "com.duanyou.fileprovider", outputImage);
+            imageUri = FileProvider.getUriForFile(this, "com.dyouclub.jokefriends.fileprovider", outputImage);
         } else {
             imageUri = Uri.fromFile(outputImage);
         }
