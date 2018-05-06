@@ -17,18 +17,28 @@ import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
+import com.blankj.utilcode.util.ToastUtils;
 import com.duanyou.lavimao.proj_duanyou.R;
 import com.duanyou.lavimao.proj_duanyou.base.BaseActivity;
 import com.duanyou.lavimao.proj_duanyou.net.Api;
+import com.duanyou.lavimao.proj_duanyou.net.BaseResponse;
 import com.duanyou.lavimao.proj_duanyou.net.NetUtil;
+import com.duanyou.lavimao.proj_duanyou.net.request.UploadContentRequest;
 import com.duanyou.lavimao.proj_duanyou.util.Constants;
-import com.duanyou.lavimao.proj_duanyou.util.ToastUtils;
+import com.duanyou.lavimao.proj_duanyou.util.DeviceUtils;
+import com.duanyou.lavimao.proj_duanyou.util.FileSizeUtil;
+import com.duanyou.lavimao.proj_duanyou.util.UserInfo;
+import com.xiben.ebs.esbsdk.callback.ResultCallback;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -47,10 +57,21 @@ public class UploadDuanziActivity extends BaseActivity {
     ImageView preShowIv;
     @BindView(R.id.pre_show_rl)
     RelativeLayout preShowRl;
+    @BindView(R.id.content_et)
+    EditText contentEt;
+    @BindView(R.id.pb)
+    ProgressBar pb;
 
 
     private boolean selected = false;
-    private String uploadPath;
+    private String uploadPath = "";
+    private BitmapFactory.Options opts;
+    private String type = "2";  //段子类型 2-段子，3-图片，4-视频
+    private String videoPath;
+    private int videoDuration;
+    private long videoSize;
+    private Bitmap videoThumbnail;
+
 
     @Override
     public void setView() {
@@ -79,7 +100,7 @@ public class UploadDuanziActivity extends BaseActivity {
             case R.id.iv_left:
                 finish();
                 break;
-            case R.id.anonymous_iv:
+            case R.id.anonymous_iv:  //匿名
                 if (selected) {
                     anonymousIv.setImageResource(R.drawable.anonymous_check);
                 } else {
@@ -87,8 +108,8 @@ public class UploadDuanziActivity extends BaseActivity {
                 }
                 selected = !selected;
                 break;
-            case R.id.right_tv:
-                //发布操作
+            case R.id.right_tv:  //发布操作
+                upLoadDuanzi(type);
                 break;
             case R.id.photo_iv:
                 if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
@@ -100,6 +121,7 @@ public class UploadDuanziActivity extends BaseActivity {
             case R.id.delete_iv:
                 preShowIv.setImageBitmap(null);
                 preShowRl.setVisibility(View.INVISIBLE);
+                type = "2";
                 break;
 
             case R.id.video_iv:
@@ -164,7 +186,6 @@ public class UploadDuanziActivity extends BaseActivity {
     }
 
     private void getVideo(Intent data) {
-
         Uri uri = data.getData();
         ContentResolver cr = this.getContentResolver();
         /** 数据库查询操作。
@@ -182,11 +203,11 @@ public class UploadDuanziActivity extends BaseActivity {
                 // 视频名称：MediaStore.Audio.Media.TITLE
                 String title = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.TITLE));
                 // 视频路径：MediaStore.Audio.Media.DATA
-                String videoPath = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA));
+                uploadPath = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA));
                 // 视频时长：MediaStore.Audio.Media.DURATION
-                int duration = cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DURATION));
+                videoDuration = cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DURATION));
                 // 视频大小：MediaStore.Audio.Media.SIZE
-                long size = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.SIZE));
+                videoSize = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.SIZE));
 
                 // 视频缩略图路径：MediaStore.Images.Media.DATA
                 String imagePath = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA));
@@ -195,11 +216,11 @@ public class UploadDuanziActivity extends BaseActivity {
 
                 // 方法一 Thumbnails 利用createVideoThumbnail 通过路径得到缩略图，保持为视频的默认比例
                 // 第一个参数为 ContentResolver，第二个参数为视频缩略图ID， 第三个参数kind有两种为：MICRO_KIND和MINI_KIND 字面意思理解为微型和迷你两种缩略模式，前者分辨率更低一些。
-                Bitmap bitmap1 = MediaStore.Video.Thumbnails.getThumbnail(cr, imageId, MediaStore.Video.Thumbnails.MICRO_KIND, null);
+                //Bitmap bitmap1 = MediaStore.Video.Thumbnails.getThumbnail(cr, imageId, MediaStore.Video.Thumbnails.MICRO_KIND, null);
 
                 // 方法二 ThumbnailUtils 利用createVideoThumbnail 通过路径得到缩略图，保持为视频的默认比例
                 // 第一个参数为 视频/缩略图的位置，第二个依旧是分辨率相关的kind
-                Bitmap bitmap2 = ThumbnailUtils.createVideoThumbnail(imagePath, MediaStore.Video.Thumbnails.MICRO_KIND);
+                videoThumbnail = ThumbnailUtils.createVideoThumbnail(imagePath, MediaStore.Video.Thumbnails.MICRO_KIND);
                 // 如果追求更好的话可以利用 ThumbnailUtils.extractThumbnail 把缩略图转化为的制定大小
 //                 ThumbnailUtils.extractThumbnail(bitmap, width,height ,ThumbnailUtils.OPTIONS_RECYCLE_INPUT);
 
@@ -207,8 +228,9 @@ public class UploadDuanziActivity extends BaseActivity {
                 //setText(tv_VideoDuration, R.string.duration, String.valueOf(duration));
                 //setText(tv_VideoSize, R.string.size, String.valueOf(size));
                 //setText(tv_VideoTitle, R.string.title, title);
-                preShowIv.setImageBitmap(bitmap1);
+                preShowIv.setImageBitmap(videoThumbnail);
                 preShowRl.setVisibility(View.VISIBLE);
+                type = "4";
             }
             cursor.close();
         }
@@ -222,6 +244,7 @@ public class UploadDuanziActivity extends BaseActivity {
     private void handleImageBeforeKitKat(Intent data) {
         Uri uri = data.getData();
         String imagePath = getImagePath(uri, null);
+        uploadPath = imagePath;
         displayImage(imagePath);
     }
 
@@ -269,26 +292,103 @@ public class UploadDuanziActivity extends BaseActivity {
             imagePath = uri.getPath();
 
         }
-
+        uploadPath = imagePath;
         displayImage(imagePath);
     }
 
     private void displayImage(String imagePath) {
         if (imagePath != null) {
-            Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
+            opts = new BitmapFactory.Options();
+            opts.inSampleSize = 1;
+            opts.inJustDecodeBounds = false;
+            Bitmap bitmap = BitmapFactory.decodeFile(imagePath, opts);
             preShowIv.setImageBitmap(bitmap);
             preShowRl.setVisibility(View.VISIBLE);
+            type = "3";
+            Log.i("TAG", "bitmap options height-->" + opts.outHeight);
         } else {
             Toast.makeText(this, "failed to get image", Toast.LENGTH_SHORT).show();
         }
     }
 
-    public void upLoadDuanzi() {
-        if(TextUtils.isEmpty(uploadPath)){
-            return;
+    /**
+     * 上传段子
+     *
+     * @param type 段子类型 2-段子，3-图片，4-视频
+     */
+    public void upLoadDuanzi(String type) {
+        UploadContentRequest request = new UploadContentRequest();
+        request.setDyID(UserInfo.getDyId());
+        request.setDeviceID(DeviceUtils.getAndroidID());
+        request.setToken(UserInfo.getToken());
+        request.setContentText(contentEt.getText().toString().trim());
+        request.setContentType(type);
+        if (selected) {
+            request.setIsAnonymous("1");
+        } else {
+            request.setIsAnonymous("2");
         }
 
-       // NetUtil.postFile(Api.uploadContent, this,uploadPath, );
+        if ("2".equals(type)) {
+            if (TextUtils.isEmpty(contentEt.getText().toString().trim())) {
+                ToastUtils.showShort("请输入发布内容");
+                return;
+            }
+            request.setPixelHeight(0);
+            request.setPixelWidth(0);
+            request.setDuration(0);
+            request.setFileSize(0);
+
+        } else if ("3".equals(type)) {
+            request.setPixelHeight(opts.outHeight);
+            request.setPixelWidth(opts.outWidth);
+            request.setDuration(0);
+            request.setFileSize((int) FileSizeUtil.getFileOrFilesSize(uploadPath, 2));
+        } else if ("4".equals(type)) {
+            request.setPixelHeight(videoThumbnail.getHeight());
+            request.setPixelWidth(videoThumbnail.getWidth());
+            request.setDuration(videoDuration);
+            request.setFileSize((int) FileSizeUtil.getFileOrFilesSize(uploadPath, 2));
+        }
+        pb.setVisibility(View.VISIBLE);
+
+        if ("4".equals(type)) {  //视频
+            NetUtil.postVideo(Api.uploadContent, this, uploadPath, request, new ResultCallback() {
+                @Override
+                public void onResult(String jsonResult) {
+                    pb.setVisibility(View.GONE);
+                    BaseResponse response = JSON.parseObject(jsonResult, BaseResponse.class);
+                    if ("0".equals(response.getRespCode())) {
+                        ToastUtils.showShort("上传成功");
+                        finish();
+                    }
+                }
+
+                @Override
+                public void onError(Exception ex) {
+                    pb.setVisibility(View.GONE);
+                    ToastUtils.showShort("上传失败，请重试");
+                }
+            });
+        } else {  //文字和图片
+            NetUtil.postFile(Api.uploadContent, this, uploadPath, request, new ResultCallback() {
+                @Override
+                public void onResult(String jsonResult) {
+                    pb.setVisibility(View.GONE);
+                    BaseResponse response = JSON.parseObject(jsonResult, BaseResponse.class);
+                    if ("0".equals(response.getRespCode())) {
+                        ToastUtils.showShort("上传成功");
+                        finish();
+                    }
+                }
+
+                @Override
+                public void onError(Exception ex) {
+                    pb.setVisibility(View.GONE);
+                    ToastUtils.showShort("上传失败，请重试");
+                }
+            });
+        }
     }
 
 }

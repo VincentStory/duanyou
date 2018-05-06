@@ -21,7 +21,7 @@
         android:hint="请在此输入您的段子文稿"
         android:maxEms="500"
         android:padding="10dp"
-        android:textColor="@color/gray"
+        android:textColor="@color/black"
         android:textSize="14sp" />
 
 
@@ -123,5 +123,12 @@
         </RelativeLayout>
 
     </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/pb"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_centerInParent="true"
+        android:visibility="gone" />
 
 </RelativeLayout>

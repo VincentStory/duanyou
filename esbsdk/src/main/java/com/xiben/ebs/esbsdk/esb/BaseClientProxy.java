@@ -1,6 +1,7 @@
 package com.xiben.ebs.esbsdk.esb;
 
 import android.annotation.SuppressLint;
+import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -106,11 +107,62 @@ public class BaseClientProxy {
                     "\n" + "url:" + serviceAddr + serviceId
                             + "\n" + "jsonRequest:" + jsonRequest);
 
+            MultipartBody.Builder builder;
+            if (TextUtils.isEmpty(path)) {
+                builder = new MultipartBody.Builder()
+                        .setType(MultipartBody.FORM)
+                        .addFormDataPart("parameter", jsonRequest);
+            } else {
+                File file = new File(path);
+                builder = new MultipartBody.Builder()
+                        .setType(MultipartBody.FORM)
+                        .addFormDataPart("file1", file.getName(), RequestBody.create(MediaType.parse("image/png"), file))
+                        .addFormDataPart("parameter", jsonRequest);
+            }
+
+
+            RequestBody requestBody = builder.build();
+
+            Request request = new Request.Builder()
+                    .url(serviceAddr + serviceId)
+                    .post(requestBody)
+                    .build();
+            Call call = client.newCall(request);
+            call.enqueue(new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    LogUtil.log("onFailure Exception:" + e.toString());
+                    callback.onError(e);
+                }
+
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    try {
+                        String result = response.body().string();
+                        LogUtil.log("" + response + "==>" + result);
+                        callback.onComplete("", result);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        } catch (Exception e) {
+            LogUtil.log("Exception:" + e.toString());
+            callback.onError(e);
+        }
+    }
+
+    public void upVideo(String serviceAddr, String serviceId, String path, String jsonRequest, final InvokeCallback<String> callback) {
+        try {
+            LogUtil.log(
+                    "\n" + "url:" + serviceAddr + serviceId
+                            + "\n" + "jsonRequest:" + jsonRequest);
+
             File file = new File(path);
             MultipartBody.Builder builder = new MultipartBody.Builder()
                     .setType(MultipartBody.FORM)
-                    .addFormDataPart("file1", file.getName(),
-                            RequestBody.create(MediaType.parse("image/png"), file))
+                    .addFormDataPart("file1", file.getName(), RequestBody.create(MediaType.parse("application/octet-stream"), file))
+                    .addFormDataPart("file2", file.getName(), RequestBody.create(MediaType.parse("application/octet-stream"), file))
                     .addFormDataPart("parameter", jsonRequest);
 
             RequestBody requestBody = builder.build();
@@ -142,6 +194,52 @@ public class BaseClientProxy {
             LogUtil.log("Exception:" + e.toString());
             callback.onError(e);
         }
+
+    }
+
+    public void upVideo(String serviceAddr, String serviceId, String path1, String path2, String jsonRequest, final InvokeCallback<String> callback) {
+        try {
+            LogUtil.log(
+                    "\n" + "url:" + serviceAddr + serviceId
+                            + "\n" + "jsonRequest:" + jsonRequest);
+
+            File file = new File(path1);
+            File file2 = new File(path2);
+            MultipartBody.Builder builder = new MultipartBody.Builder()
+                    .setType(MultipartBody.FORM)
+                    .addFormDataPart("file1", file.getName(), RequestBody.create(MediaType.parse("application/octet-stream"), file))
+                    .addFormDataPart("parameter", jsonRequest);
+
+            RequestBody requestBody = builder.build();
+
+            Request request = new Request.Builder()
+                    .url(serviceAddr + serviceId)
+                    .post(requestBody)
+                    .build();
+            Call call = client.newCall(request);
+            call.enqueue(new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    LogUtil.log("onFailure Exception:" + e.toString());
+                    callback.onError(e);
+                }
+
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    try {
+                        String result = response.body().string();
+                        LogUtil.log("" + response + "==>" + result);
+                        callback.onComplete("", result);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        } catch (Exception e) {
+            LogUtil.log("Exception:" + e.toString());
+            callback.onError(e);
+        }
+
     }
 
 

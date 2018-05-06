@@ -4,6 +4,7 @@ import android.view.View;
 
 import com.duanyou.lavimao.proj_duanyou.R;
 import com.duanyou.lavimao.proj_duanyou.base.BaseActivity;
+import com.duanyou.lavimao.proj_duanyou.util.UserInfo;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -34,7 +35,11 @@ public class MoreActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.duanzi_ll:
-                jumpTo(UploadDuanziActivity.class);
+                if (UserInfo.getLoginState()) {
+                    jumpTo(UploadDuanziActivity.class);
+                } else {
+                    jumpTo(LoginActivity.class);
+                }
                 finish();
                 break;
             case R.id.duanyouxiu_ll:

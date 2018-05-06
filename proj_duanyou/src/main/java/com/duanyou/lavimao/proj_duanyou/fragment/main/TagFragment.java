@@ -12,16 +12,14 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
+import com.blankj.utilcode.util.ToastUtils;
 import com.duanyou.lavimao.proj_duanyou.R;
 import com.duanyou.lavimao.proj_duanyou.activity.DuanziDetailsActivity;
-import com.duanyou.lavimao.proj_duanyou.activity.MainActivity;
 import com.duanyou.lavimao.proj_duanyou.adapter.MainContentAdapter;
 import com.duanyou.lavimao.proj_duanyou.base.BaseFragment;
 import com.duanyou.lavimao.proj_duanyou.net.GetContentResult;
 import com.duanyou.lavimao.proj_duanyou.net.response.GetContentResponse;
 import com.duanyou.lavimao.proj_duanyou.util.Constants;
-import com.duanyou.lavimao.proj_duanyou.util.ToastUtils;
-import com.duanyou.lavimao.proj_duanyou.widgets.EnsureDialog;
 import com.duanyou.lavimao.proj_duanyou.widgets.ShareDialog;
 import com.lcodecore.tkrefreshlayout.RefreshListenerAdapter;
 import com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout;

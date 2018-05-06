@@ -8,17 +8,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
+import com.blankj.utilcode.util.ToastUtils;
 import com.duanyou.lavimao.proj_duanyou.R;
 import com.duanyou.lavimao.proj_duanyou.adapter.ReportAdapter;
 import com.duanyou.lavimao.proj_duanyou.base.BaseActivity;
 import com.duanyou.lavimao.proj_duanyou.net.Api;
 import com.duanyou.lavimao.proj_duanyou.net.BaseResponse;
-import com.duanyou.lavimao.proj_duanyou.net.GetContentResult;
 import com.duanyou.lavimao.proj_duanyou.net.NetUtil;
 import com.duanyou.lavimao.proj_duanyou.net.request.UserOperationRequest;
-import com.duanyou.lavimao.proj_duanyou.util.CommonAdapter;
 import com.duanyou.lavimao.proj_duanyou.util.Constants;
-import com.duanyou.lavimao.proj_duanyou.util.ToastUtils;
 import com.duanyou.lavimao.proj_duanyou.util.UserInfo;
 import com.xiben.ebs.esbsdk.callback.ResultCallback;
 
@@ -95,7 +93,7 @@ public class ReportActivity extends BaseActivity {
             case R.id.right_tv:
                 StringBuffer sb = new StringBuffer();
                 for (int i = 0; i < reportAdapter.getSelectList().size(); i++) {
-                    if(reportAdapter.getSelectList().get(i)){
+                    if (reportAdapter.getSelectList().get(i)) {
                         sb.append(mList.get(i) + " ");
                     }
                 }
@@ -132,7 +130,7 @@ public class ReportActivity extends BaseActivity {
                     BaseResponse response = JSON.parseObject(jsonResult, BaseResponse.class);
                     if (null != response) {
                         if ("0".equals(response.getRespCode())) {
-                            Toast.makeText(getApplicationContext(),"提交成功",Toast.LENGTH_SHORT).show();
+                            ToastUtils.showShort("提交成功");
                             finish();
                         } else {
                             ToastUtils.showShort(response.getRespMessage());
