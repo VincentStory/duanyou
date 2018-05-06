@@ -14,11 +14,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
+import com.blankj.utilcode.util.ToastUtils;
 import com.duanyou.lavimao.proj_duanyou.R;
 import com.duanyou.lavimao.proj_duanyou.net.Api;
 import com.duanyou.lavimao.proj_duanyou.net.BaseResponse;
 import com.duanyou.lavimao.proj_duanyou.net.GetContentResult;
 import com.duanyou.lavimao.proj_duanyou.net.NetUtil;
+import com.duanyou.lavimao.proj_duanyou.net.request.FriendCircleRequest;
 import com.duanyou.lavimao.proj_duanyou.net.request.GetContentRequest;
 import com.duanyou.lavimao.proj_duanyou.net.request.GetUserUploadContentRequest;
 import com.duanyou.lavimao.proj_duanyou.util.UserInfo;
@@ -163,6 +165,40 @@ public abstract class BaseFragment extends Fragment {
                 result.error(ex);
             }
         });
+    }
+
+    /**
+     * 获取段友圈
+     */
+    protected void getDyCoterie(final Activity context, String beginContentId, final GetContentResult result) {
+        FriendCircleRequest request = new FriendCircleRequest();
+        request.setDyID(UserInfo.getDyId());
+        request.setDeviceID(UserInfo.getDeviceId());
+        request.setBeginContentID(beginContentId);
+        request.setToken(UserInfo.getToken());
+
+        NetUtil.getData(Api.getDyCoterie, context, request, new ResultCallback() {
+            @Override
+            public void onResult(final String jsonResult) {
+                BaseResponse response = JSON.parseObject(jsonResult, BaseResponse.class);
+                if (response.getRespCode().equals("0")) {
+
+                    result.success(jsonResult);
+
+
+                } else {
+                    ToastUtils.showShort(response.getRespMessage());
+                }
+
+            }
+
+            @Override
+            public void onError(Exception ex) {
+
+                result.error(ex);
+            }
+        });
+
     }
 
 

@@ -1,17 +1,23 @@
 package com.duanyou.lavimao.proj_duanyou.activity;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.blankj.utilcode.util.ToastUtils;
@@ -26,6 +32,7 @@ import com.duanyou.lavimao.proj_duanyou.net.request.PeopleNearbyRequest;
 import com.duanyou.lavimao.proj_duanyou.net.response.NearbyPeopleResponse;
 import com.duanyou.lavimao.proj_duanyou.util.Constants;
 import com.duanyou.lavimao.proj_duanyou.util.UserInfo;
+import com.duanyou.lavimao.proj_duanyou.widgets.BottomPopupWindow;
 import com.lcodecore.tkrefreshlayout.RefreshListenerAdapter;
 import com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout;
 import com.lcodecore.tkrefreshlayout.header.SinaRefreshView;
@@ -49,6 +56,7 @@ public class NearbyActivity extends BaseActivity {
     @BindView(R.id.right_tv)
     TextView rightTv;
     List<NearbyPeopleResponse.UserInfo> mUserInfoList = new ArrayList<>();
+    private static final int BAIDU_READ_PHONE_STATE = 100;
 
     private final int LOCATION_CODE = 0x01;
     private double latitude;
@@ -79,27 +87,15 @@ public class NearbyActivity extends BaseActivity {
     public void startInvoke() {
 
 
-//        mPullLoadMoreRecyclerView = (PullLoadMoreRecyclerView) findViewById(R.id.pullLoadMoreRecyclerView);
-//        mPullLoadMoreRecyclerView.setLinearLayout();
-//        recyclerViewAdapter = new RecyclerViewAdapter();
-//        mPullLoadMoreRecyclerView.setAdapter(recyclerViewAdapter);
-//        mPullLoadMoreRecyclerView.setOnPullLoadMoreListener(new PullLoadMoreRecyclerView.PullLoadMoreListener() {
-//            @Override
-//            public void onRefresh() {
-//                page = 1;
-//                getData(latitude, longitude, page, sex);
-//            }
-//
-//            @Override
-//            public void onLoadMore() {
-//                page++;
-//                getData(latitude, longitude, page, sex);
-//            }
-//        });
         initView();
         initData();
         initList();
-        getLngAndLat(NearbyActivity.this);
+        //判断是否为android6.0系统版本，如果是，需要动态添加权限
+        if (Build.VERSION.SDK_INT >= 23) {
+            showContacts();
+        } else {
+            getLngAndLat(NearbyActivity.this);
+        }
 
     }
 
@@ -110,7 +106,7 @@ public class NearbyActivity extends BaseActivity {
             public void onRefresh(TwinklingRefreshLayout refreshLayout) {
                 super.onRefresh(refreshLayout);
                 refreshTag = true;
-                page=1;
+                page = 1;
                 getData(latitude, longitude, page, sex);
             }
 
@@ -150,7 +146,36 @@ public class NearbyActivity extends BaseActivity {
     }
 
 
+    public void showContacts() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                || ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            Toast.makeText(getApplicationContext(), "没有权限,请手动开启定位权限", Toast.LENGTH_SHORT).show();
+            // 申请一个（或多个）权限，并提供用于回调返回的获取码（用户定义）
+            ActivityCompat.requestPermissions(NearbyActivity.this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.READ_PHONE_STATE}, BAIDU_READ_PHONE_STATE);
+        } else {
+            getLngAndLat(NearbyActivity.this);
+        }
+    }
 
+    //Android6.0申请权限的回调方法
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            // requestCode即所声明的权限获取码，在checkSelfPermission时传入
+            case BAIDU_READ_PHONE_STATE:
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // 获取到权限，作相应处理（调用定位SDK应当确保相关权限均被授权，否则可能引起定位失败）
+                    getLngAndLat(NearbyActivity.this);
+                } else {
+                    // 没有获取到权限，做特殊处理
+                    Toast.makeText(getApplicationContext(), "获取位置权限失败，请手动开启", Toast.LENGTH_SHORT).show();
+                }
+                break;
+            default:
+                break;
+        }
+    }
 
     /**
      * 获取经纬度
@@ -183,6 +208,7 @@ public class NearbyActivity extends BaseActivity {
     }
 
     //从网络获取经纬度
+
     @SuppressLint("MissingPermission")
     public String getLngAndLatWithNetwork() {
 
@@ -199,31 +225,36 @@ public class NearbyActivity extends BaseActivity {
 
 
     private void getData(Double latitude, Double longitude, final int page, String sex) {
-        getPeopleNearby(NearbyActivity.this, latitude, longitude, page, sex, new GetContentResult() {
-            @Override
-            public void success(String json) {
-                NearbyPeopleResponse response = JSON.parseObject(json, NearbyPeopleResponse.class);
+        if (latitude == 0) {
+            ToastUtils.showShort("定位失败");
+        } else {
+            getPeopleNearby(NearbyActivity.this, latitude, longitude, page, sex, new GetContentResult() {
+                @Override
+                public void success(String json) {
+                    NearbyPeopleResponse response = JSON.parseObject(json, NearbyPeopleResponse.class);
 
-                if (refreshTag) {
-                    mUserInfoList.clear();
-                    refreshLayout.finishRefreshing();
-                } else {
-                    refreshLayout.finishLoadmore();
+                    if (refreshTag) {
+                        mUserInfoList.clear();
+                        refreshLayout.finishRefreshing();
+                    } else {
+                        refreshLayout.finishLoadmore();
+                    }
+
+                    if (response.getUserInfo().size() > 0) {
+                        mUserInfoList.addAll(response.getUserInfo());
+                        mAdapter.notifyDataSetChanged();
+                    } else {
+                        ToastUtils.showShort(getResources().getString(R.string.no_more));
+                    }
                 }
 
-                if (response.getUserInfo().size() > 0) {
-                    mUserInfoList.addAll(response.getUserInfo());
-                    mAdapter.notifyDataSetChanged();
-                } else {
-                    ToastUtils.showShort(getResources().getString(R.string.no_more));
+                @Override
+                public void error(Exception ex) {
+
                 }
-            }
+            });
 
-            @Override
-            public void error(Exception ex) {
-
-            }
-        });
+        }
     }
 
     LocationListener locationListener = new LocationListener() {
@@ -259,7 +290,39 @@ public class NearbyActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.right_tv:
+                new BottomPopupWindow(NearbyActivity.this).builder()
+                        .setTitle("筛选附近人").setCancelable(false).setCanceled(true)
+                        .addSheetItem("只看男生", BottomPopupWindow.SheetItemColor.Blue, new BottomPopupWindow.OnSheetItemClickListener() {
+                            @Override
+                            public void onClick(int which) {
+                                page = 1;
+                                getData(latitude, longitude, page, "男");
 
+                            }
+                        })
+                        .addSheetItem("只看女生", BottomPopupWindow.SheetItemColor.Blue, new BottomPopupWindow.OnSheetItemClickListener() {
+                            @Override
+                            public void onClick(int which) {
+                                page = 1;
+                                getData(latitude, longitude, page, "女");
+
+                            }
+                        }).addSheetItem("神秘人士", BottomPopupWindow.SheetItemColor.Blue, new BottomPopupWindow.OnSheetItemClickListener() {
+                    @Override
+                    public void onClick(int which) {
+                        page = 1;
+                        getData(latitude, longitude, page, "0");
+                    }
+                }).addSheetItem("查看全部", BottomPopupWindow.SheetItemColor.Blue, new BottomPopupWindow.OnSheetItemClickListener() {
+                    @Override
+                    public void onClick(int which) {
+                        page = 1;
+                        getData(latitude, longitude, page, "");
+
+                    }
+                })
+
+                        .show();
                 break;
             default:
                 break;

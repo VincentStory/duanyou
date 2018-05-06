@@ -16,9 +16,11 @@ import com.blankj.utilcode.util.ToastUtils;
 import com.duanyou.lavimao.proj_duanyou.R;
 import com.duanyou.lavimao.proj_duanyou.activity.DuanziDetailsActivity;
 import com.duanyou.lavimao.proj_duanyou.adapter.MainContentAdapter;
+import com.duanyou.lavimao.proj_duanyou.adapter.MainContentAdapter2;
 import com.duanyou.lavimao.proj_duanyou.base.BaseFragment;
 import com.duanyou.lavimao.proj_duanyou.net.GetContentResult;
 import com.duanyou.lavimao.proj_duanyou.net.response.GetContentResponse;
+import com.duanyou.lavimao.proj_duanyou.net.response.GetContentResponse2;
 import com.duanyou.lavimao.proj_duanyou.util.Constants;
 import com.duanyou.lavimao.proj_duanyou.widgets.ShareDialog;
 import com.lcodecore.tkrefreshlayout.RefreshListenerAdapter;
@@ -43,17 +45,19 @@ import cn.jzvd.JZVideoPlayer;
  * Created by luojialun on 2018/4/21.
  */
 
-public class TagFragment extends BaseFragment implements MainContentAdapter.OnItemClickListener {
+public class TagFragment extends BaseFragment implements MainContentAdapter.OnItemClickListener,MainContentAdapter2.OnItemClickListener {
 
     @BindView(R.id.refresh)
     TwinklingRefreshLayout refreshLayout;
     @BindView(R.id.list)
     ListView listView;
 
-    private String type; //内容类型。0-精选，1-热吧，2-段子，3-图片，4-视频 5-段友段子
+    private String type; //内容类型。0-精选，1-热吧，2-段子，3-图片，4-视频 5-段友段子 ,6-段友圈
     private boolean refreshTag = true;  //下拉刷新  true   加载更多  false
     private List<GetContentResponse.DyContextsBean> mList;
+    private List<GetContentResponse2.DyContextsBean> mList2;
     private MainContentAdapter mAdapter;
+    private MainContentAdapter2 mAdapter2;
     //    private UMImage imageurl;
     private ShareDialog shareDialog;
     private String targetId;
@@ -66,10 +70,20 @@ public class TagFragment extends BaseFragment implements MainContentAdapter.OnIt
         fragment.setArguments(bundle);
         return fragment;
     }
-    public static TagFragment newInstance(String type,String targetId,String beginContentId) {
+
+    public static TagFragment newInstance(String type, String targetId, String beginContentId) {
         Bundle bundle = new Bundle();
         bundle.putString(Constants.type, type);
         bundle.putString(Constants.targetDyID, targetId);
+        bundle.putString(Constants.beginContentID, beginContentId);
+        TagFragment fragment = new TagFragment();
+        fragment.setArguments(bundle);
+        return fragment;
+    }
+    public static TagFragment newInstance(String type, String beginContentId) {
+        Bundle bundle = new Bundle();
+        bundle.putString(Constants.type, type);
+
         bundle.putString(Constants.beginContentID, beginContentId);
         TagFragment fragment = new TagFragment();
         fragment.setArguments(bundle);
@@ -110,7 +124,11 @@ public class TagFragment extends BaseFragment implements MainContentAdapter.OnIt
             public void onLoadMore(TwinklingRefreshLayout refreshLayout) {
                 super.onLoadMore(refreshLayout);
                 refreshTag = false;
-                getContent();
+                if (!TextUtils.isEmpty(type)) {
+                    getContent();
+                } else {
+                    refreshLayout.finishLoadmore();
+                }
             }
         });
 
@@ -127,10 +145,18 @@ public class TagFragment extends BaseFragment implements MainContentAdapter.OnIt
      */
     private void initList() {
         if (mAdapter == null) {
-            mList = new ArrayList<>();
-            mAdapter = new MainContentAdapter(getActivity(), mList, R.layout.item_duanyouxiu);
-            mAdapter.setListener(this);
-            listView.setAdapter(mAdapter);
+            if (!TextUtils.isEmpty(type) && type.equals("6")) {
+                mList2=new ArrayList<>();
+                mAdapter2 = new MainContentAdapter2(getActivity(), mList2, R.layout.item_duanyouxiu);
+                mAdapter2.setListener(this);
+                listView.setAdapter(mAdapter2);
+            }else{
+                mList = new ArrayList<>();
+                mAdapter = new MainContentAdapter(getActivity(), mList, R.layout.item_duanyouxiu);
+                mAdapter.setListener(this);
+                listView.setAdapter(mAdapter);
+            }
+
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -144,8 +170,8 @@ public class TagFragment extends BaseFragment implements MainContentAdapter.OnIt
     }
 
     private void getContent() {
-        if (!TextUtils.isEmpty(type) && !type.equals("5")) {
-            getContent(getActivity(), type, new GetContentResult() {
+         if (!TextUtils.isEmpty(type) && type.equals("5")) {
+            getUserUploadContent(getActivity(), targetId, beginContentId, new GetContentResult() {
                 @Override
                 public void success(String json) {
                     GetContentResponse response = JSON.parseObject(json, GetContentResponse.class);
@@ -160,6 +186,7 @@ public class TagFragment extends BaseFragment implements MainContentAdapter.OnIt
                         if ("0".equals(response.getRespCode())) {
                             if (response.getDyContexts().size() > 0) {
                                 mList.addAll(response.getDyContexts());
+                                beginContentId=mList.get(mList.size()-1).getDyContextID()+"";
                                 mAdapter.notifyDataSetChanged();
                             } else {
                                 ToastUtils.showShort(getActivity().getResources().getString(R.string.no_more));
@@ -175,13 +202,13 @@ public class TagFragment extends BaseFragment implements MainContentAdapter.OnIt
 
                 }
             });
-        } else if (!TextUtils.isEmpty(type) && type.equals("5")) {
-            getUserUploadContent(getActivity(), targetId, beginContentId,new GetContentResult() {
+        } else if (!TextUtils.isEmpty(type) && type.equals("6")) {
+            getDyCoterie(getActivity(), beginContentId, new GetContentResult() {
                 @Override
                 public void success(String json) {
-                    GetContentResponse response = JSON.parseObject(json, GetContentResponse.class);
+                    GetContentResponse2 response = JSON.parseObject(json, GetContentResponse2.class);
                     if (refreshTag) {
-                        mList.clear();
+                        mList2.clear();
                         refreshLayout.finishRefreshing();
                     } else {
                         refreshLayout.finishLoadmore();
@@ -189,9 +216,10 @@ public class TagFragment extends BaseFragment implements MainContentAdapter.OnIt
 
                     if (null != response) {
                         if ("0".equals(response.getRespCode())) {
-                            if (response.getDyContexts().size() > 0) {
-                                mList.addAll(response.getDyContexts());
-                                mAdapter.notifyDataSetChanged();
+                            if (response.getDyContents().size() > 0) {
+                                mList2.addAll(response.getDyContents());
+                                beginContentId=mList2.get(mList2.size()-1).getDyContextID()+"";
+                                mAdapter2.notifyDataSetChanged();
                             } else {
                                 ToastUtils.showShort(getActivity().getResources().getString(R.string.no_more));
                             }
@@ -206,7 +234,38 @@ public class TagFragment extends BaseFragment implements MainContentAdapter.OnIt
 
                 }
             });
-        }
+        }else if (!TextUtils.isEmpty(type)) {
+             getContent(getActivity(), type, new GetContentResult() {
+                 @Override
+                 public void success(String json) {
+                     GetContentResponse response = JSON.parseObject(json, GetContentResponse.class);
+                     if (refreshTag) {
+                         mList.clear();
+                         refreshLayout.finishRefreshing();
+                     } else {
+                         refreshLayout.finishLoadmore();
+                     }
+
+                     if (null != response) {
+                         if ("0".equals(response.getRespCode())) {
+                             if (response.getDyContexts().size() > 0) {
+                                 mList.addAll(response.getDyContexts());
+                                 mAdapter.notifyDataSetChanged();
+                             } else {
+                                 ToastUtils.showShort(getActivity().getResources().getString(R.string.no_more));
+                             }
+                         } else {
+                             ToastUtils.showShort(response.getRespMessage());
+                         }
+                     }
+                 }
+
+                 @Override
+                 public void error(Exception ex) {
+
+                 }
+             });
+         }
     }
 
     @Override
@@ -336,4 +395,85 @@ public class TagFragment extends BaseFragment implements MainContentAdapter.OnIt
         UMShareAPI.get(getActivity()).onActivityResult(requestCode, resultCode, data);
     }
 
+    @Override
+    public void comment(GetContentResponse2.DyContextsBean bean) {
+        Intent intent = new Intent(getActivity(), DuanziDetailsActivity.class);
+        intent.putExtra(Constants.CLICK_BEAN, bean);
+        startActivity(intent);
+    }
+
+    @Override
+    public void share(final GetContentResponse2.DyContextsBean bean) {
+        final UMWeb web = new UMWeb(bean.getShareUrl());
+        web.setTitle("段友");
+        web.setThumb(new UMImage(getActivity(), R.drawable.ic_launcher));
+        web.setDescription(bean.getContextText());
+
+        shareDialog = new ShareDialog(getActivity(), new ShareDialog.onClickListener() {
+            @Override
+            public void sinaClick() {
+
+                new ShareAction(getActivity()).withMedia(web).withText(bean.getContextText())
+                        .setPlatform(SHARE_MEDIA.SINA.toSnsPlatform().mPlatform)
+                        .setCallback(shareListener).share();
+            }
+
+            @Override
+            public void qqClick() {
+                new ShareAction(getActivity()).withMedia(web).withText(bean.getContextText())
+                        .setPlatform(SHARE_MEDIA.QQ.toSnsPlatform().mPlatform)
+                        .setCallback(shareListener).share();
+            }
+
+            @Override
+            public void circleClick() {
+                new ShareAction(getActivity()).withMedia(web).withText(bean.getContextText())
+                        .setPlatform(SHARE_MEDIA.WEIXIN_CIRCLE.toSnsPlatform().mPlatform)
+                        .setCallback(shareListener).share();
+            }
+
+            @Override
+            public void wechatClick() {
+                new ShareAction(getActivity()).withMedia(web).withText(bean.getContextText())
+                        .setPlatform(SHARE_MEDIA.WEIXIN.toSnsPlatform().mPlatform)
+                        .setCallback(shareListener).share();
+            }
+
+            @Override
+            public void qqspaceClick() {
+                new ShareAction(getActivity()).withMedia(web).withText(bean.getContextText())
+                        .setPlatform(SHARE_MEDIA.QZONE.toSnsPlatform().mPlatform)
+                        .setCallback(shareListener).share();
+            }
+
+            @Override
+            public void copyClick() {
+//                ToastUtils.showShort("已复制");
+
+            }
+
+            @Override
+            public void collectionClick() {
+//                ToastUtils.showShort("已复制");
+            }
+
+            @Override
+            public void reportClick() {
+//                ToastUtils.showShort("已复制");
+            }
+
+            @Override
+            public void saveClick() {
+//                ToastUtils.showShort("已复制");
+            }
+
+            @Override
+            public void cancleClick() {
+                shareDialog.dismiss();
+            }
+        }).builder()
+                .setGravity(Gravity.BOTTOM);//默认居中，可以不设置
+        // ;
+        shareDialog.show();
+    }
 }

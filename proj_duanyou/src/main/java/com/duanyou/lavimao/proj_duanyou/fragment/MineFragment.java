@@ -22,6 +22,7 @@ import com.alibaba.fastjson.JSON;
 import com.blankj.utilcode.util.ToastUtils;
 import com.bumptech.glide.Glide;
 import com.duanyou.lavimao.proj_duanyou.R;
+import com.duanyou.lavimao.proj_duanyou.activity.DyFriendCircleAcitvity;
 import com.duanyou.lavimao.proj_duanyou.activity.LoginActivity;
 import com.duanyou.lavimao.proj_duanyou.activity.NearbyActivity;
 import com.duanyou.lavimao.proj_duanyou.activity.PersonInfoAcitvity;
@@ -204,13 +205,28 @@ public class MineFragment extends BaseFragment {
 
                 break;
             case R.id.nearby_duanyou_tv:
-                gotoActivity(NearbyActivity.class);
+                if (UserInfo.getLoginState()) {
+
+                    gotoActivity(NearbyActivity.class);
+                } else {
+                    gotoActivity(LoginActivity.class);
+                }
                 break;
             case R.id.duanyou_circle_tv:
+                if (UserInfo.getLoginState()) {
 
+                    gotoActivity(DyFriendCircleAcitvity.class);
+                } else {
+                    gotoActivity(LoginActivity.class);
+                }
                 break;
             case R.id.follow_tv:
+                if (UserInfo.getLoginState()) {
 
+
+                } else {
+                    gotoActivity(LoginActivity.class);
+                }
                 break;
         }
     }

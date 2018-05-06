@@ -187,6 +187,10 @@
             android:name=".activity.PeopleInfoActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.DyFriendCircleAcitvity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".activity.UploadDuanziActivity"

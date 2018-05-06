@@ -70,6 +70,10 @@ public class Api {
      */
     public static final String peopleNearby = "peopleNearby";
     /**
+     * 获取段友圈
+     */
+    public static final String getDyCoterie = "getDyCoterie";
+    /**
      * 1.4.1	上传段子
      */
     public static final String uploadContent="uploadContent";

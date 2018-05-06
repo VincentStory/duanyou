@@ -195,7 +195,7 @@ public class PersonInfoAcitvity extends BaseActivity {
 
     @Override
     public void startInvoke() {
-        getUserInfo(PersonInfoAcitvity.this, new GetContentResult() {
+        getUserInfo(PersonInfoAcitvity.this,UserInfo.getDyId(), new GetContentResult() {
             @Override
             public void success(String json) {
                 UserInfoResponse response = JSON.parseObject(json, UserInfoResponse.class);
@@ -253,7 +253,6 @@ public class PersonInfoAcitvity extends BaseActivity {
                                     //权限已经被授予，在这里直接写要执行的相应方法即可
                                     takePhoto();
                                 }
-
 
                             }
                         })
@@ -672,39 +671,7 @@ public class PersonInfoAcitvity extends BaseActivity {
 
     private String newPath = null;
 
-    /**
-     * 获取个人信息
-     */
-    private void getUserInfo(final Activity context, final GetContentResult result) {
-        UserInfoRequest request = new UserInfoRequest();
-        request.setDyID(UserInfo.getDyId());
-        request.setDeviceID(UserInfo.getDeviceId());
-        request.setFriendDyID(UserInfo.getDyId());
-        request.setToken(UserInfo.getToken());
 
-        NetUtil.getData(Api.getUserInfo, context, request, new ResultCallback() {
-            @Override
-            public void onResult(final String jsonResult) {
-                BaseResponse response = JSON.parseObject(jsonResult, BaseResponse.class);
-                if (response.getRespCode().equals("0")) {
-
-                    result.success(jsonResult);
-
-
-                } else {
-                    ToastUtils.showShort(response.getRespMessage());
-                }
-
-            }
-
-            @Override
-            public void onError(Exception ex) {
-
-                result.error(ex);
-            }
-        });
-
-    }
 
 
     /**

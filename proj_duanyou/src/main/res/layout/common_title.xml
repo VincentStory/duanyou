@@ -67,6 +67,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/black"
+                android:paddingVertical="5dp"
+                android:paddingLeft="10dp"
                 android:textSize="13sp"
                 tools:text="right" />
         </LinearLayout>

@@ -27,15 +27,24 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 
+import com.alibaba.fastjson.JSON;
 import com.blankj.utilcode.util.SizeUtils;
+import com.blankj.utilcode.util.ToastUtils;
 import com.duanyou.lavimao.proj_duanyou.AppManager;
 import com.duanyou.lavimao.proj_duanyou.R;
+import com.duanyou.lavimao.proj_duanyou.net.Api;
+import com.duanyou.lavimao.proj_duanyou.net.BaseResponse;
+import com.duanyou.lavimao.proj_duanyou.net.GetContentResult;
+import com.duanyou.lavimao.proj_duanyou.net.NetUtil;
+import com.duanyou.lavimao.proj_duanyou.net.request.UserInfoRequest;
 import com.duanyou.lavimao.proj_duanyou.util.DeviceUtils;
 import com.duanyou.lavimao.proj_duanyou.util.PermissionRequest;
+import com.duanyou.lavimao.proj_duanyou.util.UserInfo;
 import com.r0adkll.slidr.Slidr;
 import com.r0adkll.slidr.model.SlidrConfig;
 import com.r0adkll.slidr.model.SlidrPosition;
 import com.umeng.analytics.MobclickAgent;
+import com.xiben.ebs.esbsdk.callback.ResultCallback;
 import com.yanzhenjie.permission.AndPermission;
 
 import java.util.List;
@@ -449,6 +458,40 @@ public abstract class BaseActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+
+    /**
+     * 获取个人信息
+     */
+    protected void getUserInfo(final Activity context,String friendId, final GetContentResult result) {
+        UserInfoRequest request = new UserInfoRequest();
+        request.setDyID(UserInfo.getDyId());
+        request.setDeviceID(UserInfo.getDeviceId());
+        request.setFriendDyID(friendId);
+        request.setToken(UserInfo.getToken());
+
+        NetUtil.getData(Api.getUserInfo, context, request, new ResultCallback() {
+            @Override
+            public void onResult(final String jsonResult) {
+                BaseResponse response = JSON.parseObject(jsonResult, BaseResponse.class);
+                if (response.getRespCode().equals("0")) {
+
+                    result.success(jsonResult);
+
+
+                } else {
+                    ToastUtils.showShort(response.getRespMessage());
+                }
+
+            }
+
+            @Override
+            public void onError(Exception ex) {
+
+                result.error(ex);
+            }
+        });
+
+    }
 
 
 }
