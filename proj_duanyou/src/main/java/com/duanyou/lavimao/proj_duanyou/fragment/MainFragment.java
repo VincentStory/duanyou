@@ -136,7 +136,7 @@ public class MainFragment extends BaseFragment {
         }
 
         if (Build.VERSION.SDK_INT >= 24) {
-            imageUri = FileProvider.getUriForFile(getActivity(), "com.gyq.cameraalbumtest.fileprovider", outputImage);
+            imageUri = FileProvider.getUriForFile(getActivity(), "com.dyouclub.jokefriends.fileprovider", outputImage);
         } else {
             imageUri = Uri.fromFile(outputImage);
         }
