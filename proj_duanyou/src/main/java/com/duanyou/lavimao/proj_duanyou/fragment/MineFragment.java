@@ -24,6 +24,7 @@ import com.blankj.utilcode.util.ToastUtils;
 import com.bumptech.glide.Glide;
 import com.duanyou.lavimao.proj_duanyou.R;
 import com.duanyou.lavimao.proj_duanyou.activity.DyFriendCircleAcitvity;
+import com.duanyou.lavimao.proj_duanyou.activity.FollowActivity;
 import com.duanyou.lavimao.proj_duanyou.activity.LoginActivity;
 import com.duanyou.lavimao.proj_duanyou.activity.NearbyActivity;
 import com.duanyou.lavimao.proj_duanyou.activity.PersonInfoAcitvity;
@@ -151,7 +152,8 @@ public class MineFragment extends BaseFragment {
     }
 
 
-    @OnClick({R.id.login_register_tv, R.id.edit_tv, R.id.bg_iv, R.id.setting_tv, R.id.nearby_duanyou_tv, R.id.duanyou_circle_tv, R.id.follow_tv})
+    @OnClick({R.id.login_register_tv, R.id.edit_tv, R.id.bg_iv, R.id.setting_tv, R.id.nearby_duanyou_tv,
+            R.id.duanyou_circle_tv, R.id.follow_tv,R.id.collection_tv,R.id.tougao_tv,R.id.hudong_tv})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.login_register_tv:
@@ -229,11 +231,19 @@ public class MineFragment extends BaseFragment {
                 break;
             case R.id.follow_tv:
                 if (UserInfo.getLoginState()) {
-
-
+                    gotoActivity(FollowActivity.class);
                 } else {
                     gotoActivity(LoginActivity.class);
                 }
+                break;
+            case R.id.collection_tv:
+
+                break;
+            case R.id.tougao_tv:
+
+                break;
+            case R.id.hudong_tv:
+
                 break;
         }
     }

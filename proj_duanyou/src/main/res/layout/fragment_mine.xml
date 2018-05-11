@@ -122,7 +122,8 @@
         </RelativeLayout>
 
         <TextView
-            android:visibility="gone"
+            android:id="@+id/collection_tv"
+            android:visibility="visible"
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:layout_marginTop="20dp"
@@ -136,9 +137,10 @@
             android:text="收藏" />
 
         <TextView
+            android:id="@+id/tougao_tv"
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:visibility="gone"
+            android:visibility="visible"
             android:background="@color/white"
             android:drawableLeft="@drawable/write2x"
             android:drawablePadding="10dp"
@@ -149,9 +151,10 @@
             android:text="投稿" />
 
         <TextView
+            android:id="@+id/hudong_tv"
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:visibility="gone"
+            android:visibility="visible"
             android:background="@color/white"
             android:drawableLeft="@drawable/hudong2x"
             android:drawablePadding="10dp"
