@@ -124,6 +124,13 @@ public class MainContentAdapter extends CommonAdapter<GetContentResponse.DyConte
         zanTv.setText(item.getPraiseNum() + "");
         caiTv.setText(item.getTrampleNum() + "");
         commentTv.setText(item.getCommentNum() + "");
+        if("1".equals(item.getIsLike())){
+            //helper.setImageResource(R.mipmap.)
+        }else if("2".equals(item.getIsLike())){
+
+        }else{
+
+        }
         //赞
         helper.setOnClickListener(R.id.zan_ll, new View.OnClickListener() {
             @Override
@@ -137,6 +144,7 @@ public class MainContentAdapter extends CommonAdapter<GetContentResponse.DyConte
                                 try {
                                     int zanNum = Integer.parseInt(zanTv.getText().toString().trim());
                                     zanTv.setText((++zanNum) + "");
+                                    ToastUtils.showShort("点赞成功");
                                 } catch (Exception e) {
                                 }
                             } else {
@@ -165,6 +173,7 @@ public class MainContentAdapter extends CommonAdapter<GetContentResponse.DyConte
                                 try {
                                     int caiNum = Integer.parseInt(caiTv.getText().toString().trim());
                                     caiTv.setText((++caiNum) + "");
+                                    ToastUtils.showShort("点踩成功");
                                 } catch (Exception e) {
                                 }
                             } else {

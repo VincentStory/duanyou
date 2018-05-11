@@ -1,8 +1,5 @@
 package com.duanyou.lavimao.proj_duanyou.activity;
 
-import android.animation.ObjectAnimator;
-import android.animation.ValueAnimator;
-import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -17,7 +14,6 @@ import android.widget.Toast;
 import com.alibaba.fastjson.JSON;
 import com.blankj.utilcode.util.ScreenUtils;
 import com.blankj.utilcode.util.ToastUtils;
-import com.bumptech.glide.Glide;
 import com.duanyou.lavimao.proj_duanyou.GlideApp;
 import com.duanyou.lavimao.proj_duanyou.R;
 import com.duanyou.lavimao.proj_duanyou.adapter.CommentAdapter;
@@ -273,6 +269,7 @@ public class DuanziDetailsActivity extends BaseActivity {
                                 try {
                                     int zanNum = Integer.parseInt(zanTv.getText().toString().trim());
                                     zanTv.setText((++zanNum) + "");
+                                    ToastUtils.showShort("点赞成功");
                                 } catch (Exception e) {
                                 }
                             } else {
@@ -298,6 +295,7 @@ public class DuanziDetailsActivity extends BaseActivity {
                                 try {
                                     int caiNum = Integer.parseInt(caiTv.getText().toString().trim());
                                     caiTv.setText((++caiNum) + "");
+                                    ToastUtils.showShort("点踩成功");
                                 } catch (Exception e) {
                                 }
                             } else {
@@ -325,7 +323,6 @@ public class DuanziDetailsActivity extends BaseActivity {
                             userReply(clickItem.getCommentID(), clickItem.getCommentDyID(), commentContent, bean.getDyContextID() + "");
                         }
                     } else {
-                        // TODO: 2018/4/25
                         jumpTo(LoginActivity.class);
                     }
 
