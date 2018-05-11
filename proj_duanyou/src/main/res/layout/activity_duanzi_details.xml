@@ -100,8 +100,8 @@
 
                         <ImageView
                             android:id="@+id/zan_iv"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_width="23dp"
+                            android:layout_height="23dp"
                             android:src="@drawable/icon_liked" />
 
                         <TextView
@@ -123,8 +123,8 @@
 
                         <ImageView
                             android:id="@+id/cai_iv"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_width="23dp"
+                            android:layout_height="23dp"
                             android:src="@drawable/icon_unliked" />
 
                         <TextView
@@ -147,8 +147,8 @@
 
                         <ImageView
                             android:id="@+id/comment_iv"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_width="23dp"
+                            android:layout_height="23dp"
                             android:src="@drawable/icon_comments" />
 
                         <TextView
@@ -163,8 +163,8 @@
 
                     <ImageView
                         android:id="@+id/share_iv"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="23dp"
+                        android:layout_height="23dp"
                         android:layout_gravity="center_vertical"
                         android:layout_marginRight="14dp"
                         android:paddingLeft="5dp"

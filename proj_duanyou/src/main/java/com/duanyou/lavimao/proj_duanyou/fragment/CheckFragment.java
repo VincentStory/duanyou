@@ -198,6 +198,7 @@ public class CheckFragment extends BaseFragment {
                         BaseResponse response = JSON.parseObject(json, BaseResponse.class);
                         if (null != response) {
                             if ("0".equals(response.getRespCode())) {
+                                verticalVp.setCurrentItem(pos + 1);
                                 ToastUtils.showShort("已踩");
                             } else {
                                 ToastUtils.showShort(response.getRespMessage());
@@ -218,6 +219,7 @@ public class CheckFragment extends BaseFragment {
                         BaseResponse response = JSON.parseObject(json, BaseResponse.class);
                         if (null != response) {
                             if ("0".equals(response.getRespCode())) {
+                                verticalVp.setCurrentItem(pos + 1);
                                 ToastUtils.showShort("已赞");
                             } else {
                                 ToastUtils.showShort(response.getRespMessage());
@@ -230,6 +232,7 @@ public class CheckFragment extends BaseFragment {
 
                     }
                 });
+                break;
             case R.id.nav_right_iv:
                 gotoActivity(CheckExplainActivity.class);
                 break;

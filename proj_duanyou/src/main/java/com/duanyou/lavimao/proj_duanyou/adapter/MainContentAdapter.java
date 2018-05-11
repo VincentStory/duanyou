@@ -50,7 +50,7 @@ public class MainContentAdapter extends CommonAdapter<GetContentResponse.DyConte
     }
 
     @Override
-    public void convert(ViewHolder helper, final GetContentResponse.DyContextsBean item) {
+    public void convert(final ViewHolder helper, final GetContentResponse.DyContextsBean item) {
 
         RoundedImageView iv_avatar = helper.getView(R.id.iv_avatar);
         TextView tv_name = helper.getView(R.id.tv_name);
@@ -124,12 +124,13 @@ public class MainContentAdapter extends CommonAdapter<GetContentResponse.DyConte
         zanTv.setText(item.getPraiseNum() + "");
         caiTv.setText(item.getTrampleNum() + "");
         commentTv.setText(item.getCommentNum() + "");
-        if("1".equals(item.getIsLike())){
-            //helper.setImageResource(R.mipmap.)
-        }else if("2".equals(item.getIsLike())){
-
-        }else{
-
+        if ("1".equals(item.getIsLike())) {
+            helper.setImageResource(R.id.zan_iv, R.drawable.good1);
+        } else if ("2".equals(item.getIsLike())) {
+            helper.setImageResource(R.id.cai_iv, R.drawable.fuck1);
+        } else {
+            helper.setImageResource(R.id.zan_iv, R.drawable.good2);
+            helper.setImageResource(R.id.cai_iv, R.drawable.fuck2);
         }
         //赞
         helper.setOnClickListener(R.id.zan_ll, new View.OnClickListener() {
@@ -144,6 +145,7 @@ public class MainContentAdapter extends CommonAdapter<GetContentResponse.DyConte
                                 try {
                                     int zanNum = Integer.parseInt(zanTv.getText().toString().trim());
                                     zanTv.setText((++zanNum) + "");
+                                    helper.setImageResource(R.id.zan_iv, R.drawable.good1);
                                     ToastUtils.showShort("点赞成功");
                                 } catch (Exception e) {
                                 }
@@ -173,6 +175,7 @@ public class MainContentAdapter extends CommonAdapter<GetContentResponse.DyConte
                                 try {
                                     int caiNum = Integer.parseInt(caiTv.getText().toString().trim());
                                     caiTv.setText((++caiNum) + "");
+                                    helper.setImageResource(R.id.cai_iv, R.drawable.fuck1);
                                     ToastUtils.showShort("点踩成功");
                                 } catch (Exception e) {
                                 }

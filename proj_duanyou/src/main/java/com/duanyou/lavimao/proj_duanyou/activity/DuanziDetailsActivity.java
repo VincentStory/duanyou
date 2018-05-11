@@ -79,7 +79,7 @@ public class DuanziDetailsActivity extends BaseActivity {
     @BindView(R.id.zan_tv)
     TextView zanTv;
     @BindView(R.id.cai_iv)
-    ImageView cai_tv;
+    ImageView caiIv;
     @BindView(R.id.cai_tv)
     TextView caiTv;
     @BindView(R.id.comment_iv)
@@ -209,6 +209,12 @@ public class DuanziDetailsActivity extends BaseActivity {
                 contentTv.setText(bean.getContextText());
             }
         }
+        if ("1".equals(bean.getIsLike())) {
+            zanIv.setImageResource(R.drawable.good1);
+        } else if ("2".equals(bean.getIsLike())) {
+            caiIv.setImageResource(R.drawable.fuck1);
+        }
+
 
     }
 
@@ -240,18 +246,18 @@ public class DuanziDetailsActivity extends BaseActivity {
 
     }
 
-    @OnClick({R.id.head_iv,R.id.iv_left, R.id.nav_right_iv, R.id.zan_iv, R.id.cai_iv, R.id.comment_iv, R.id.comment_tv, R.id.send_btn, R.id.empty_iv, R.id.share_iv})
+    @OnClick({R.id.head_iv, R.id.iv_left, R.id.nav_right_iv, R.id.zan_iv, R.id.cai_iv, R.id.comment_iv, R.id.comment_tv, R.id.send_btn, R.id.empty_iv, R.id.share_iv})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.head_iv:
                 Intent intent = new Intent(DuanziDetailsActivity.this, PeopleInfoActivity.class);
                 intent.putExtra(Constants.targetDyID, bean.getPublisherDyID());
-                intent.putExtra(Constants.beginContentID, bean.getDyContextID()+"");
+                intent.putExtra(Constants.beginContentID, bean.getDyContextID() + "");
                 startActivity(intent);
 
 
                 break;
-                case R.id.iv_left:
+            case R.id.iv_left:
                 finish();
                 break;
             case R.id.nav_right_iv:
@@ -269,6 +275,7 @@ public class DuanziDetailsActivity extends BaseActivity {
                                 try {
                                     int zanNum = Integer.parseInt(zanTv.getText().toString().trim());
                                     zanTv.setText((++zanNum) + "");
+                                    zanIv.setImageResource(R.drawable.good1);
                                     ToastUtils.showShort("点赞成功");
                                 } catch (Exception e) {
                                 }
@@ -295,6 +302,7 @@ public class DuanziDetailsActivity extends BaseActivity {
                                 try {
                                     int caiNum = Integer.parseInt(caiTv.getText().toString().trim());
                                     caiTv.setText((++caiNum) + "");
+                                    caiIv.setImageResource(R.drawable.fuck1);
                                     ToastUtils.showShort("点踩成功");
                                 } catch (Exception e) {
                                 }
