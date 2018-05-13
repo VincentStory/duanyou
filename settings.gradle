@@ -1,1 +1,1 @@
-include ':proj_duanyou','esbsdk','android-pickers'
+include ':proj_duanyou', 'esbsdk', 'android-pickers', ':wx'

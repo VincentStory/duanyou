@@ -42,7 +42,7 @@ public class InteractionAdapter extends CommonAdapter<GetInteraction.Interaction
         Glide.with(mContext).load(UserInfo.getHeadUrl()).into(headIv);
         Glide.with(mContext).load(item.getVideoDisplay()).into(content_iv);
         nameTv.setText(item.getNickName());
-        dyNameTv.setText(item.getReplyToNickName());
+        dyNameTv.setText("回复@"+item.getReplyToNickName());
         contentTv.setText(item.getCommentContent());
         upload_date_tv.setText(item.getUploadDate());
         replay_name_tv.setText(item.getReplyToNickName());

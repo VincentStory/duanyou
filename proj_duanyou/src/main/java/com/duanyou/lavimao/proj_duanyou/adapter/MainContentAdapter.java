@@ -22,6 +22,7 @@ import com.duanyou.lavimao.proj_duanyou.net.BaseResponse;
 import com.duanyou.lavimao.proj_duanyou.net.GetContentResult;
 import com.duanyou.lavimao.proj_duanyou.net.NetUtil;
 import com.duanyou.lavimao.proj_duanyou.net.request.UserOperationRequest;
+import com.duanyou.lavimao.proj_duanyou.net.response.DyContextsBean;
 import com.duanyou.lavimao.proj_duanyou.net.response.GetContentResponse;
 import com.duanyou.lavimao.proj_duanyou.util.CommonAdapter;
 import com.duanyou.lavimao.proj_duanyou.util.ImageUtils;
@@ -38,29 +39,38 @@ import cn.jzvd.JZVideoPlayerStandard;
 /**
  * 标签fragment的适配器
  */
-public class MainContentAdapter extends CommonAdapter<GetContentResponse.DyContextsBean> {
+public class MainContentAdapter extends CommonAdapter<DyContextsBean> {
     private OnItemClickListener listener;
 
     public void setListener(OnItemClickListener listener) {
         this.listener = listener;
     }
 
-    public MainContentAdapter(Context context, List<GetContentResponse.DyContextsBean> mDatas, int itemLayoutId) {
+    public MainContentAdapter(Context context, List<DyContextsBean> mDatas, int itemLayoutId) {
         super(context, mDatas, itemLayoutId);
     }
 
     @Override
-    public void convert(final ViewHolder helper, final GetContentResponse.DyContextsBean item) {
+    public void convert(final ViewHolder helper, final DyContextsBean item) {
 
         RoundedImageView iv_avatar = helper.getView(R.id.iv_avatar);
         TextView tv_name = helper.getView(R.id.tv_name);
         TextView contentTv = helper.getView(R.id.tv_content);
+        final TextView checked_tv = helper.getView(R.id.checked_tv);
         ImageView contentIv = helper.getView(R.id.content_iv);
         ImageView iv_sex = helper.getView(R.id.iv_sex);
         final TextView zanTv = helper.getView(R.id.zan_tv);
         final TextView caiTv = helper.getView(R.id.tv_unliked);
         final TextView commentTv = helper.getView(R.id.tv_comments);
         JZVideoPlayerStandard jz = helper.getView(R.id.jz_video);
+        checked_tv.setVisibility(item.isEdit() ? View.VISIBLE : View.GONE);
+        checked_tv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                checked_tv.setSelected(!checked_tv.isSelected());
+            }
+        });
+
 
         String type = item.getContextType();
         switch (type) {
@@ -215,7 +225,7 @@ public class MainContentAdapter extends CommonAdapter<GetContentResponse.DyConte
      * @param operator 1-点赞 2-点踩 3-举报 4-视频播放 5-转发 6-收藏/关注 7-取消收藏/取消关注 8-删除（只能删除自己的） 9-用户反馈（type为9）
      * @param remark
      */
-    public void userOperation(String type, String operator, String remark, GetContentResponse.DyContextsBean item, final GetContentResult result) {
+    public void userOperation(String type, String operator, String remark, DyContextsBean item, final GetContentResult result) {
         if (UserInfo.getLoginState()) {
             UserOperationRequest request = new UserOperationRequest();
             request.setDyID(UserInfo.getDyId());
@@ -246,9 +256,9 @@ public class MainContentAdapter extends CommonAdapter<GetContentResponse.DyConte
 
     public interface OnItemClickListener {
 
-        void comment(GetContentResponse.DyContextsBean bean);
+        void comment(DyContextsBean bean);
 
-        void share(GetContentResponse.DyContextsBean bean);
+        void share(DyContextsBean bean);
     }
 
 }

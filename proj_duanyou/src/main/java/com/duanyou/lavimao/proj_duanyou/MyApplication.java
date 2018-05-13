@@ -8,7 +8,7 @@ import android.support.multidex.MultiDexApplication;
 import android.util.Log;
 
 
-import com.alibaba.mobileim.YWAPI;
+
 import com.blankj.utilcode.util.Utils;
 import com.duanyou.lavimao.proj_duanyou.util.SpUtil;
 import com.umeng.analytics.MobclickAgent;

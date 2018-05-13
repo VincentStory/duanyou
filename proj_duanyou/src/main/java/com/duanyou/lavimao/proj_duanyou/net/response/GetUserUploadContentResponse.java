@@ -19,7 +19,7 @@ public class GetUserUploadContentResponse extends BaseResponse {
         this.dyContexts = dyContexts;
     }
 
-    public static class DetailsDyContextsBean extends GetContentResponse.DyContextsBean{
+    public static class DetailsDyContextsBean extends DyContextsBean{
         private String adopt;
         private String chatGroupID;
 

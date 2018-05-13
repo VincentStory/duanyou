@@ -15,6 +15,7 @@ import com.duanyou.lavimao.proj_duanyou.activity.DuanziDetailsActivity;
 import com.duanyou.lavimao.proj_duanyou.adapter.MainContentAdapter;
 import com.duanyou.lavimao.proj_duanyou.base.BaseFragment;
 import com.duanyou.lavimao.proj_duanyou.net.GetContentResult;
+import com.duanyou.lavimao.proj_duanyou.net.response.DyContextsBean;
 import com.duanyou.lavimao.proj_duanyou.net.response.GetContentResponse;
 import com.duanyou.lavimao.proj_duanyou.util.Constants;
 import com.xiben.ebs.esbsdk.util.LogUtil;
@@ -29,7 +30,7 @@ public class GuanzhuFragment extends BaseFragment {
     @BindView(R.id.list)
     ListView listView;
 
-    private List<GetContentResponse.DyContextsBean> mList;
+    private List<DyContextsBean> mList;
     private MainContentAdapter mAdapter;
 
 

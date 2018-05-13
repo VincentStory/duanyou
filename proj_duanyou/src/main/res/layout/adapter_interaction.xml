@@ -55,21 +55,15 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="回复" />
+            android:text="回复@" />
 
         <TextView
             android:id="@+id/dy_name_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingLeft="5dp"
-            android:textColor="@color/bg_color"
-            tools:text="Mr肾公子" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingLeft="5dp"
-            android:text=":" />
+
+            tools:text="Mr肾公子:" />
 
         <TextView
             android:id="@+id/content_tv"

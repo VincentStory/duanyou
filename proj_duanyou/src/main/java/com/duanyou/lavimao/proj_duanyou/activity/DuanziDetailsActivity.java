@@ -26,6 +26,7 @@ import com.duanyou.lavimao.proj_duanyou.net.request.GetCommentRequest;
 import com.duanyou.lavimao.proj_duanyou.net.request.UserCommentRequest;
 import com.duanyou.lavimao.proj_duanyou.net.request.UserOperationRequest;
 import com.duanyou.lavimao.proj_duanyou.net.request.UserReplyRequest;
+import com.duanyou.lavimao.proj_duanyou.net.response.DyContextsBean;
 import com.duanyou.lavimao.proj_duanyou.net.response.GetCommentResponse;
 import com.duanyou.lavimao.proj_duanyou.net.response.GetContentResponse;
 import com.duanyou.lavimao.proj_duanyou.util.Constants;
@@ -95,7 +96,7 @@ public class DuanziDetailsActivity extends BaseActivity {
 
     private CommentAdapter commentAdapter;    //评论列表适配器
     private List<GetCommentResponse.CommentsNewBean> mlist = new ArrayList<>();
-    private GetContentResponse.DyContextsBean bean;  //详情类
+    private DyContextsBean bean;  //详情类
     private boolean refreshTag = true;//下拉刷新  true  加载更多  false
     private GetCommentResponse.CommentsNewBean clickItem;  //点击的回复item类
     private ShareDialog shareDialog;
@@ -158,7 +159,7 @@ public class DuanziDetailsActivity extends BaseActivity {
     }
 
     private void initParams() {
-        bean = (GetContentResponse.DyContextsBean) getIntent().getSerializableExtra(Constants.CLICK_BEAN);
+        bean = (DyContextsBean) getIntent().getSerializableExtra(Constants.CLICK_BEAN);
         if (null != bean) {
             switch (bean.getContextType()) {
                 case "2":

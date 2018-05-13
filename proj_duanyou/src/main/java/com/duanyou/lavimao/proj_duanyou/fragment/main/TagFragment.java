@@ -18,12 +18,13 @@ import com.duanyou.lavimao.proj_duanyou.R;
 import com.duanyou.lavimao.proj_duanyou.activity.DuanziDetailsActivity;
 import com.duanyou.lavimao.proj_duanyou.activity.LoginActivity;
 import com.duanyou.lavimao.proj_duanyou.adapter.MainContentAdapter;
-import com.duanyou.lavimao.proj_duanyou.adapter.MainContentAdapter2;
+import com.duanyou.lavimao.proj_duanyou.adapter.MainContentAdapter;
 import com.duanyou.lavimao.proj_duanyou.base.BaseFragment;
 import com.duanyou.lavimao.proj_duanyou.net.Api;
 import com.duanyou.lavimao.proj_duanyou.net.GetContentResult;
 import com.duanyou.lavimao.proj_duanyou.net.NetUtil;
 import com.duanyou.lavimao.proj_duanyou.net.request.UserOperationRequest;
+import com.duanyou.lavimao.proj_duanyou.net.response.DyContextsBean;
 import com.duanyou.lavimao.proj_duanyou.net.response.GetContentResponse;
 import com.duanyou.lavimao.proj_duanyou.net.response.GetContentResponse2;
 import com.duanyou.lavimao.proj_duanyou.util.Constants;
@@ -52,7 +53,7 @@ import cn.jzvd.JZVideoPlayer;
  * Created by luojialun on 2018/4/21.
  */
 
-public class TagFragment extends BaseFragment implements MainContentAdapter.OnItemClickListener, MainContentAdapter2.OnItemClickListener {
+public class TagFragment extends BaseFragment implements MainContentAdapter.OnItemClickListener {
 
     @BindView(R.id.refresh)
     TwinklingRefreshLayout refreshLayout;
@@ -61,15 +62,17 @@ public class TagFragment extends BaseFragment implements MainContentAdapter.OnIt
 
     private String type; //内容类型。0-精选，1-热吧，2-段子，3-图片，4-视频 5-段友段子 ,6-段友圈,7-收藏的段子
     private boolean refreshTag = true;  //下拉刷新  true   加载更多  false
-    private List<GetContentResponse.DyContextsBean> mList;
-    private List<GetContentResponse2.DyContextsBean> mList2;
+    private List<DyContextsBean> mList;
+   
+
     private MainContentAdapter mAdapter;
-    private MainContentAdapter2 mAdapter2;
+//    private MainContentAdapter mAdapter;
     //    private UMImage imageurl;
     private ShareDialog shareDialog;
     private String targetId;
     private String beginContentId;
     private int page = 1;
+    private boolean isEdit;
 
     public static TagFragment newInstance(String type) {
         Bundle bundle = new Bundle();
@@ -89,6 +92,17 @@ public class TagFragment extends BaseFragment implements MainContentAdapter.OnIt
         return fragment;
     }
 
+    public static TagFragment newInstance(String type, String targetId, boolean isEdit) {
+        Bundle bundle = new Bundle();
+        bundle.putString(Constants.type, type);
+        bundle.putString(Constants.targetDyID, targetId);
+        bundle.putBoolean(Constants.isEdit, isEdit);
+        TagFragment fragment = new TagFragment();
+        fragment.setArguments(bundle);
+        return fragment;
+    }
+
+
     public static TagFragment newInstance(String type, String beginContentId) {
         Bundle bundle = new Bundle();
         bundle.putString(Constants.type, type);
@@ -97,6 +111,21 @@ public class TagFragment extends BaseFragment implements MainContentAdapter.OnIt
         TagFragment fragment = new TagFragment();
         fragment.setArguments(bundle);
         return fragment;
+    }
+
+    public void setIsEdit(boolean isEdit) {
+
+        if (mList.size() > 0) {
+
+            for (int i = 0; i < mList.size(); i++) {
+                mList.get(i).setEdit(isEdit);
+
+            }
+
+            mAdapter.notifyDataSetChanged();
+        }
+
+       
     }
 
     @Override
@@ -149,6 +178,7 @@ public class TagFragment extends BaseFragment implements MainContentAdapter.OnIt
         type = getArguments().getString(Constants.type);
         targetId = getArguments().getString(Constants.targetDyID);
         beginContentId = getArguments().getString(Constants.beginContentID);
+        isEdit = getArguments().getBoolean(Constants.isEdit);
     }
 
     /**
@@ -157,10 +187,10 @@ public class TagFragment extends BaseFragment implements MainContentAdapter.OnIt
     private void initList() {
         if (mAdapter == null) {
             if (!TextUtils.isEmpty(type) && type.equals("6") || type.equals("7")) {
-                mList2 = new ArrayList<>();
-                mAdapter2 = new MainContentAdapter2(getActivity(), mList2, R.layout.item_duanyouxiu);
-                mAdapter2.setListener(this);
-                listView.setAdapter(mAdapter2);
+                mList = new ArrayList<>();
+                mAdapter = new MainContentAdapter(getActivity(), mList, R.layout.item_duanyouxiu);
+                mAdapter.setListener(this);
+                listView.setAdapter(mAdapter);
             } else {
                 mList = new ArrayList<>();
                 mAdapter = new MainContentAdapter(getActivity(), mList, R.layout.item_duanyouxiu);
@@ -172,7 +202,12 @@ public class TagFragment extends BaseFragment implements MainContentAdapter.OnIt
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     Intent intent = new Intent(getActivity(), DuanziDetailsActivity.class);
-                    intent.putExtra(Constants.CLICK_BEAN, mList.get(position));
+                    if (!TextUtils.isEmpty(type) && type.equals("6") || type.equals("7")) {
+                        intent.putExtra(Constants.CLICK_BEAN, mList.get(position));
+                    } else {
+                        intent.putExtra(Constants.CLICK_BEAN, mList.get(position));
+                    }
+
                     startActivity(intent);
                 }
             });
@@ -219,7 +254,7 @@ public class TagFragment extends BaseFragment implements MainContentAdapter.OnIt
                 public void success(String json) {
                     GetContentResponse2 response = JSON.parseObject(json, GetContentResponse2.class);
                     if (refreshTag) {
-                        mList2.clear();
+                        mList.clear();
                         refreshLayout.finishRefreshing();
                     } else {
                         refreshLayout.finishLoadmore();
@@ -228,9 +263,9 @@ public class TagFragment extends BaseFragment implements MainContentAdapter.OnIt
                     if (null != response) {
                         if ("0".equals(response.getRespCode())) {
                             if (response.getDyContents().size() > 0) {
-                                mList2.addAll(response.getDyContents());
-                                beginContentId = mList2.get(mList2.size() - 1).getDyContextID() + "";
-                                mAdapter2.notifyDataSetChanged();
+                                mList.addAll(response.getDyContents());
+                                beginContentId = mList.get(mList.size() - 1).getDyContextID() + "";
+                                mAdapter.notifyDataSetChanged();
                             } else {
                                 ToastUtils.showShort(getActivity().getResources().getString(R.string.no_more));
                             }
@@ -251,7 +286,7 @@ public class TagFragment extends BaseFragment implements MainContentAdapter.OnIt
                 public void success(String json) {
                     GetContentResponse2 response = JSON.parseObject(json, GetContentResponse2.class);
                     if (refreshTag) {
-                        mList2.clear();
+                        mList.clear();
                         refreshLayout.finishRefreshing();
                     } else {
                         refreshLayout.finishLoadmore();
@@ -260,9 +295,15 @@ public class TagFragment extends BaseFragment implements MainContentAdapter.OnIt
                     if (null != response) {
                         if ("0".equals(response.getRespCode())) {
                             if (response.getDyContents().size() > 0) {
-                                mList2.addAll(response.getDyContents());
 
-                                mAdapter2.notifyDataSetChanged();
+                                for (int i = 0; i < response.getDyContents().size(); i++) {
+                                    DyContextsBean bean = response.getDyContents().get(i);
+                                    bean.setEdit(isEdit);
+                                    mList.add(bean);
+                                }
+
+
+                                mAdapter.notifyDataSetChanged();
                             } else {
                                 ToastUtils.showShort(getActivity().getResources().getString(R.string.no_more));
                             }
@@ -319,14 +360,14 @@ public class TagFragment extends BaseFragment implements MainContentAdapter.OnIt
 
 
     @Override
-    public void comment(GetContentResponse.DyContextsBean bean) {
+    public void comment(DyContextsBean bean) {
         Intent intent = new Intent(getActivity(), DuanziDetailsActivity.class);
         intent.putExtra(Constants.CLICK_BEAN, bean);
         startActivity(intent);
     }
 
     @Override
-    public void share(final GetContentResponse.DyContextsBean bean) {
+    public void share(final DyContextsBean bean) {
 //        imageurl = new UMImage(getActivity(), R.drawable.ic_launcher);
 //        imageurl.setThumb(new UMImage(getActivity(), R.drawable.ic_launcher));
         final UMWeb web = new UMWeb(bean.getShareUrl());
@@ -449,101 +490,101 @@ public class TagFragment extends BaseFragment implements MainContentAdapter.OnIt
         /** attention to this below ,must add this**/
         UMShareAPI.get(getActivity()).onActivityResult(requestCode, resultCode, data);
     }
-
-    @Override
-    public void comment(GetContentResponse2.DyContextsBean bean) {
-        Intent intent = new Intent(getActivity(), DuanziDetailsActivity.class);
-        intent.putExtra(Constants.CLICK_BEAN, bean);
-        startActivity(intent);
-    }
-
-    @Override
-    public void share(final GetContentResponse2.DyContextsBean bean) {
-        final UMWeb web = new UMWeb(bean.getShareUrl());
-        web.setTitle("段友");
-        web.setThumb(new UMImage(getActivity(), R.drawable.ic_launcher));
-        web.setDescription(bean.getContextText());
-
-        shareDialog = new ShareDialog(getActivity(), new ShareDialog.onClickListener() {
-            @Override
-            public void sinaClick() {
-
-                new ShareAction(getActivity()).withMedia(web).withText(bean.getContextText())
-                        .setPlatform(SHARE_MEDIA.SINA.toSnsPlatform().mPlatform)
-                        .setCallback(shareListener).share();
-            }
-
-            @Override
-            public void qqClick() {
-                new ShareAction(getActivity()).withMedia(web).withText(bean.getContextText())
-                        .setPlatform(SHARE_MEDIA.QQ.toSnsPlatform().mPlatform)
-                        .setCallback(shareListener).share();
-            }
-
-            @Override
-            public void circleClick() {
-                new ShareAction(getActivity()).withMedia(web).withText(bean.getContextText())
-                        .setPlatform(SHARE_MEDIA.WEIXIN_CIRCLE.toSnsPlatform().mPlatform)
-                        .setCallback(shareListener).share();
-            }
-
-            @Override
-            public void wechatClick() {
-                new ShareAction(getActivity()).withMedia(web).withText(bean.getContextText())
-                        .setPlatform(SHARE_MEDIA.WEIXIN.toSnsPlatform().mPlatform)
-                        .setCallback(shareListener).share();
-            }
-
-            @Override
-            public void qqspaceClick() {
-                new ShareAction(getActivity()).withMedia(web).withText(bean.getContextText())
-                        .setPlatform(SHARE_MEDIA.QZONE.toSnsPlatform().mPlatform)
-                        .setCallback(shareListener).share();
-            }
-
-            @Override
-            public void copyClick() {
-//                ToastUtils.showShort("已复制");
-
-            }
-
-            @Override
-            public void collectionClick() {
-//                ToastUtils.showShort("已收藏");
-
-                userOperation2("1", "6", "", bean, new GetContentResult() {
-                    @Override
-                    public void success(String json) {
-                        ToastUtils.showShort("已收藏");
-                    }
-
-                    @Override
-                    public void error(Exception ex) {
-
-                    }
-                });
-
-            }
-
-            @Override
-            public void reportClick() {
-//                ToastUtils.showShort("已举报");
-            }
-
-            @Override
-            public void saveClick() {
-//                ToastUtils.showShort("已保存");
-            }
-
-            @Override
-            public void cancleClick() {
-                shareDialog.dismiss();
-            }
-        }).builder()
-                .setGravity(Gravity.BOTTOM);//默认居中，可以不设置
-        // ;
-        shareDialog.show();
-    }
+//
+//    @Override
+//    public void comment(DyContextsBean bean) {
+//        Intent intent = new Intent(getActivity(), DuanziDetailsActivity.class);
+//        intent.putExtra(Constants.CLICK_BEAN, bean);
+//        startActivity(intent);
+//    }
+//
+//    @Override
+//    public void share(final DyContextsBean bean) {
+//        final UMWeb web = new UMWeb(bean.getShareUrl());
+//        web.setTitle("段友");
+//        web.setThumb(new UMImage(getActivity(), R.drawable.ic_launcher));
+//        web.setDescription(bean.getContextText());
+//
+//        shareDialog = new ShareDialog(getActivity(), new ShareDialog.onClickListener() {
+//            @Override
+//            public void sinaClick() {
+//
+//                new ShareAction(getActivity()).withMedia(web).withText(bean.getContextText())
+//                        .setPlatform(SHARE_MEDIA.SINA.toSnsPlatform().mPlatform)
+//                        .setCallback(shareListener).share();
+//            }
+//
+//            @Override
+//            public void qqClick() {
+//                new ShareAction(getActivity()).withMedia(web).withText(bean.getContextText())
+//                        .setPlatform(SHARE_MEDIA.QQ.toSnsPlatform().mPlatform)
+//                        .setCallback(shareListener).share();
+//            }
+//
+//            @Override
+//            public void circleClick() {
+//                new ShareAction(getActivity()).withMedia(web).withText(bean.getContextText())
+//                        .setPlatform(SHARE_MEDIA.WEIXIN_CIRCLE.toSnsPlatform().mPlatform)
+//                        .setCallback(shareListener).share();
+//            }
+//
+//            @Override
+//            public void wechatClick() {
+//                new ShareAction(getActivity()).withMedia(web).withText(bean.getContextText())
+//                        .setPlatform(SHARE_MEDIA.WEIXIN.toSnsPlatform().mPlatform)
+//                        .setCallback(shareListener).share();
+//            }
+//
+//            @Override
+//            public void qqspaceClick() {
+//                new ShareAction(getActivity()).withMedia(web).withText(bean.getContextText())
+//                        .setPlatform(SHARE_MEDIA.QZONE.toSnsPlatform().mPlatform)
+//                        .setCallback(shareListener).share();
+//            }
+//
+//            @Override
+//            public void copyClick() {
+////                ToastUtils.showShort("已复制");
+//
+//            }
+//
+//            @Override
+//            public void collectionClick() {
+////                ToastUtils.showShort("已收藏");
+//
+//                userOperation2("1", "6", "", bean, new GetContentResult() {
+//                    @Override
+//                    public void success(String json) {
+//                        ToastUtils.showShort("已收藏");
+//                    }
+//
+//                    @Override
+//                    public void error(Exception ex) {
+//
+//                    }
+//                });
+//
+//            }
+//
+//            @Override
+//            public void reportClick() {
+////                ToastUtils.showShort("已举报");
+//            }
+//
+//            @Override
+//            public void saveClick() {
+////                ToastUtils.showShort("已保存");
+//            }
+//
+//            @Override
+//            public void cancleClick() {
+//                shareDialog.dismiss();
+//            }
+//        }).builder()
+//                .setGravity(Gravity.BOTTOM);//默认居中，可以不设置
+//        // ;
+//        shareDialog.show();
+//    }
 
     /**
      * 用户操作
@@ -552,7 +593,7 @@ public class TagFragment extends BaseFragment implements MainContentAdapter.OnIt
      * @param operator 1-点赞 2-点踩 3-举报 4-视频播放 5-转发 6-收藏/关注 7-取消收藏/取消关注 8-删除（只能删除自己的） 9-用户反馈（type为9）
      * @param remark
      */
-    public void userOperation(String type, String operator, String remark, GetContentResponse.DyContextsBean item, final GetContentResult result) {
+    public void userOperation(String type, String operator, String remark, DyContextsBean item, final GetContentResult result) {
         if (UserInfo.getLoginState()) {
             UserOperationRequest request = new UserOperationRequest();
             request.setDyID(UserInfo.getDyId());
@@ -580,6 +621,7 @@ public class TagFragment extends BaseFragment implements MainContentAdapter.OnIt
             getActivity().startActivity(intent);
         }
     }
+
     /**
      * 用户操作
      *
@@ -587,7 +629,7 @@ public class TagFragment extends BaseFragment implements MainContentAdapter.OnIt
      * @param operator 1-点赞 2-点踩 3-举报 4-视频播放 5-转发 6-收藏/关注 7-取消收藏/取消关注 8-删除（只能删除自己的） 9-用户反馈（type为9）
      * @param remark
      */
-    public void userOperation2(String type, String operator, String remark, GetContentResponse2.DyContextsBean item, final GetContentResult result) {
+    public void userOperation2(String type, String operator, String remark, DyContextsBean item, final GetContentResult result) {
         if (UserInfo.getLoginState()) {
             UserOperationRequest request = new UserOperationRequest();
             request.setDyID(UserInfo.getDyId());

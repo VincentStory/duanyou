@@ -36,26 +36,31 @@ import butterknife.OnClick;
 
 public class CollectionActivity extends BaseActivity {
     private int type;
+    private int operateType = 1;
+    private TagFragment tagFragment;
 
 
     @Override
     public void setView() {
         setContentView(R.layout.activity_collection);
-
+        ButterKnife.bind(this);
     }
 
     @Override
     public void initData() {
-        type=getIntent().getIntExtra("type",0);
-        if(type== Contents.COLLECTION_TYPE){
+        type = getIntent().getIntExtra("type", 0);
+        if (type == Contents.COLLECTION_TYPE) {
             setTitle("收藏");
 
-        }else {
+        } else {
             setTitle("投稿");
         }
 
+        setRightTitle("编辑");
+        tagFragment = TagFragment.newInstance(type + "", UserInfo.getDyId(), false);
+
 //必需继承FragmentActivity,嵌套fragment只需要这行代码
-        getSupportFragmentManager().beginTransaction().replace(R.id.framelayout, TagFragment.newInstance(type+"", UserInfo.getDyId(), "")).commitAllowingStateLoss();
+        getSupportFragmentManager().beginTransaction().replace(R.id.framelayout, tagFragment).commitAllowingStateLoss();
 
     }
 
@@ -66,11 +71,25 @@ public class CollectionActivity extends BaseActivity {
     }
 
 
-    @OnClick({R.id.iv_left})
+    @OnClick({R.id.iv_left, R.id.right_tv})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.iv_left:
                 finish();
+                break;
+            case R.id.right_tv:
+                if (operateType == 1) {//编辑
+                    operateType = 2;
+                    setRightTitle("编辑");
+                    tagFragment.setIsEdit(true);
+
+
+                } else if (operateType == 2) {//取消
+                    operateType = 1;
+                    setRightTitle("取消");
+                    tagFragment.setIsEdit(false);
+
+                }
                 break;
 
 

@@ -9,6 +9,7 @@ public class Constants {
     public static final String targetDyID = "targetDyID";
 
     public static final String beginContentID = "beginContentID";
+    public static final String isEdit = "isEdit";
 
     public static final String type = "type";
 

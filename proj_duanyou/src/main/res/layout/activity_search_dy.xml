@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
     <include layout="@layout/common_title" />
 
-<EditText
-    android:layout_width="match_parent"
-    android:layout_height="55dp"
-    android:hint="请输入段友昵称"
-    android:paddingLeft="15dp"
-    android:background="@color/white"/>
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:background="@color/white"
+        android:hint="搜索段友号或昵称"
+        android:paddingLeft="15dp" />
 </LinearLayout>

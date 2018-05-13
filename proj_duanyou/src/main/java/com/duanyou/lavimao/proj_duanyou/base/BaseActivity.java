@@ -364,6 +364,15 @@ public abstract class BaseActivity extends AppCompatActivity {
             tv.setText(title);
         }
     }
+    /**
+     * 设置标题栏抬头文字
+     */
+    public void setRightTitle(String title) {
+        TextView tv = findViewById(R.id.right_tv);
+        if (tv != null) {
+            tv.setText(title);
+        }
+    }
 
 
     protected void setRightIv(int ResId) {
