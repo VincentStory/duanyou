@@ -181,9 +181,9 @@ public class NearbyActivity extends BaseActivity {
      * @param context
      * @return
      */
+
     @SuppressLint("MissingPermission")
     private String getLngAndLat(Context context) {
-
         LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
         if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {  //从gps获取经纬度
             Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
@@ -209,7 +209,6 @@ public class NearbyActivity extends BaseActivity {
 
     @SuppressLint("MissingPermission")
     public String getLngAndLatWithNetwork() {
-
         LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 0, locationListener);
         Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);

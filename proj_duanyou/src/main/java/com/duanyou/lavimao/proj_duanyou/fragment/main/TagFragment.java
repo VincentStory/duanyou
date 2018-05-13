@@ -1,5 +1,6 @@
 package com.duanyou.lavimao.proj_duanyou.fragment.main;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -15,13 +16,18 @@ import com.alibaba.fastjson.JSON;
 import com.blankj.utilcode.util.ToastUtils;
 import com.duanyou.lavimao.proj_duanyou.R;
 import com.duanyou.lavimao.proj_duanyou.activity.DuanziDetailsActivity;
+import com.duanyou.lavimao.proj_duanyou.activity.LoginActivity;
 import com.duanyou.lavimao.proj_duanyou.adapter.MainContentAdapter;
 import com.duanyou.lavimao.proj_duanyou.adapter.MainContentAdapter2;
 import com.duanyou.lavimao.proj_duanyou.base.BaseFragment;
+import com.duanyou.lavimao.proj_duanyou.net.Api;
 import com.duanyou.lavimao.proj_duanyou.net.GetContentResult;
+import com.duanyou.lavimao.proj_duanyou.net.NetUtil;
+import com.duanyou.lavimao.proj_duanyou.net.request.UserOperationRequest;
 import com.duanyou.lavimao.proj_duanyou.net.response.GetContentResponse;
 import com.duanyou.lavimao.proj_duanyou.net.response.GetContentResponse2;
 import com.duanyou.lavimao.proj_duanyou.util.Constants;
+import com.duanyou.lavimao.proj_duanyou.util.UserInfo;
 import com.duanyou.lavimao.proj_duanyou.widgets.ShareDialog;
 import com.lcodecore.tkrefreshlayout.RefreshListenerAdapter;
 import com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout;
@@ -32,6 +38,7 @@ import com.umeng.socialize.UMShareListener;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.umeng.socialize.media.UMImage;
 import com.umeng.socialize.media.UMWeb;
+import com.xiben.ebs.esbsdk.callback.ResultCallback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,14 +52,14 @@ import cn.jzvd.JZVideoPlayer;
  * Created by luojialun on 2018/4/21.
  */
 
-public class TagFragment extends BaseFragment implements MainContentAdapter.OnItemClickListener,MainContentAdapter2.OnItemClickListener {
+public class TagFragment extends BaseFragment implements MainContentAdapter.OnItemClickListener, MainContentAdapter2.OnItemClickListener {
 
     @BindView(R.id.refresh)
     TwinklingRefreshLayout refreshLayout;
     @BindView(R.id.list)
     ListView listView;
 
-    private String type; //内容类型。0-精选，1-热吧，2-段子，3-图片，4-视频 5-段友段子 ,6-段友圈
+    private String type; //内容类型。0-精选，1-热吧，2-段子，3-图片，4-视频 5-段友段子 ,6-段友圈,7-收藏的段子
     private boolean refreshTag = true;  //下拉刷新  true   加载更多  false
     private List<GetContentResponse.DyContextsBean> mList;
     private List<GetContentResponse2.DyContextsBean> mList2;
@@ -62,6 +69,7 @@ public class TagFragment extends BaseFragment implements MainContentAdapter.OnIt
     private ShareDialog shareDialog;
     private String targetId;
     private String beginContentId;
+    private int page = 1;
 
     public static TagFragment newInstance(String type) {
         Bundle bundle = new Bundle();
@@ -80,6 +88,7 @@ public class TagFragment extends BaseFragment implements MainContentAdapter.OnIt
         fragment.setArguments(bundle);
         return fragment;
     }
+
     public static TagFragment newInstance(String type, String beginContentId) {
         Bundle bundle = new Bundle();
         bundle.putString(Constants.type, type);
@@ -117,6 +126,7 @@ public class TagFragment extends BaseFragment implements MainContentAdapter.OnIt
             public void onRefresh(TwinklingRefreshLayout refreshLayout) {
                 super.onRefresh(refreshLayout);
                 refreshTag = true;
+                page = 1;
                 getContent();
             }
 
@@ -125,6 +135,7 @@ public class TagFragment extends BaseFragment implements MainContentAdapter.OnIt
                 super.onLoadMore(refreshLayout);
                 refreshTag = false;
                 if (!TextUtils.isEmpty(type)) {
+                    page++;
                     getContent();
                 } else {
                     refreshLayout.finishLoadmore();
@@ -145,12 +156,12 @@ public class TagFragment extends BaseFragment implements MainContentAdapter.OnIt
      */
     private void initList() {
         if (mAdapter == null) {
-            if (!TextUtils.isEmpty(type) && type.equals("6")) {
-                mList2=new ArrayList<>();
+            if (!TextUtils.isEmpty(type) && type.equals("6") || type.equals("7")) {
+                mList2 = new ArrayList<>();
                 mAdapter2 = new MainContentAdapter2(getActivity(), mList2, R.layout.item_duanyouxiu);
                 mAdapter2.setListener(this);
                 listView.setAdapter(mAdapter2);
-            }else{
+            } else {
                 mList = new ArrayList<>();
                 mAdapter = new MainContentAdapter(getActivity(), mList, R.layout.item_duanyouxiu);
                 mAdapter.setListener(this);
@@ -170,7 +181,7 @@ public class TagFragment extends BaseFragment implements MainContentAdapter.OnIt
     }
 
     private void getContent() {
-         if (!TextUtils.isEmpty(type) && type.equals("5")) {
+        if (!TextUtils.isEmpty(type) && type.equals("5")) {
             getUserUploadContent(getActivity(), targetId, beginContentId, new GetContentResult() {
                 @Override
                 public void success(String json) {
@@ -186,7 +197,7 @@ public class TagFragment extends BaseFragment implements MainContentAdapter.OnIt
                         if ("0".equals(response.getRespCode())) {
                             if (response.getDyContexts().size() > 0) {
                                 mList.addAll(response.getDyContexts());
-                                beginContentId=mList.get(mList.size()-1).getDyContextID()+"";
+                                beginContentId = mList.get(mList.size() - 1).getDyContextID() + "";
                                 mAdapter.notifyDataSetChanged();
                             } else {
                                 ToastUtils.showShort(getActivity().getResources().getString(R.string.no_more));
@@ -218,7 +229,7 @@ public class TagFragment extends BaseFragment implements MainContentAdapter.OnIt
                         if ("0".equals(response.getRespCode())) {
                             if (response.getDyContents().size() > 0) {
                                 mList2.addAll(response.getDyContents());
-                                beginContentId=mList2.get(mList2.size()-1).getDyContextID()+"";
+                                beginContentId = mList2.get(mList2.size() - 1).getDyContextID() + "";
                                 mAdapter2.notifyDataSetChanged();
                             } else {
                                 ToastUtils.showShort(getActivity().getResources().getString(R.string.no_more));
@@ -234,38 +245,70 @@ public class TagFragment extends BaseFragment implements MainContentAdapter.OnIt
 
                 }
             });
-        }else if (!TextUtils.isEmpty(type)) {
-             getContent(getActivity(), type, new GetContentResult() {
-                 @Override
-                 public void success(String json) {
-                     GetContentResponse response = JSON.parseObject(json, GetContentResponse.class);
-                     if (refreshTag) {
-                         mList.clear();
-                         refreshLayout.finishRefreshing();
-                     } else {
-                         refreshLayout.finishLoadmore();
-                     }
+        } else if (!TextUtils.isEmpty(type) && type.equals("7")) {
+            getCollection(getActivity(), page, new GetContentResult() {
+                @Override
+                public void success(String json) {
+                    GetContentResponse2 response = JSON.parseObject(json, GetContentResponse2.class);
+                    if (refreshTag) {
+                        mList2.clear();
+                        refreshLayout.finishRefreshing();
+                    } else {
+                        refreshLayout.finishLoadmore();
+                    }
 
-                     if (null != response) {
-                         if ("0".equals(response.getRespCode())) {
-                             if (response.getDyContexts().size() > 0) {
-                                 mList.addAll(response.getDyContexts());
-                                 mAdapter.notifyDataSetChanged();
-                             } else {
-                                 ToastUtils.showShort(getActivity().getResources().getString(R.string.no_more));
-                             }
-                         } else {
-                             ToastUtils.showShort(response.getRespMessage());
-                         }
-                     }
-                 }
+                    if (null != response) {
+                        if ("0".equals(response.getRespCode())) {
+                            if (response.getDyContents().size() > 0) {
+                                mList2.addAll(response.getDyContents());
 
-                 @Override
-                 public void error(Exception ex) {
+                                mAdapter2.notifyDataSetChanged();
+                            } else {
+                                ToastUtils.showShort(getActivity().getResources().getString(R.string.no_more));
+                            }
+                        } else {
+                            ToastUtils.showShort(response.getRespMessage());
+                        }
+                    }
+                }
 
-                 }
-             });
-         }
+                @Override
+                public void error(Exception ex) {
+
+                }
+            });
+        } else if (!TextUtils.isEmpty(type)) {
+            getContent(getActivity(), type, new GetContentResult() {
+                @Override
+                public void success(String json) {
+                    GetContentResponse response = JSON.parseObject(json, GetContentResponse.class);
+                    if (refreshTag) {
+                        mList.clear();
+                        refreshLayout.finishRefreshing();
+                    } else {
+                        refreshLayout.finishLoadmore();
+                    }
+
+                    if (null != response) {
+                        if ("0".equals(response.getRespCode())) {
+                            if (response.getDyContexts().size() > 0) {
+                                mList.addAll(response.getDyContexts());
+                                mAdapter.notifyDataSetChanged();
+                            } else {
+                                ToastUtils.showShort(getActivity().getResources().getString(R.string.no_more));
+                            }
+                        } else {
+                            ToastUtils.showShort(response.getRespMessage());
+                        }
+                    }
+                }
+
+                @Override
+                public void error(Exception ex) {
+
+                }
+            });
+        }
     }
 
     @Override
@@ -336,17 +379,29 @@ public class TagFragment extends BaseFragment implements MainContentAdapter.OnIt
 
             @Override
             public void collectionClick() {
-//                ToastUtils.showShort("已复制");
+//                ToastUtils.showShort("已收藏");
+                userOperation("1", "6", "", bean, new GetContentResult() {
+                    @Override
+                    public void success(String json) {
+                        ToastUtils.showShort("已收藏");
+                    }
+
+                    @Override
+                    public void error(Exception ex) {
+
+                    }
+                });
+
             }
 
             @Override
             public void reportClick() {
-//                ToastUtils.showShort("已复制");
+//                ToastUtils.showShort("已举报");
             }
 
             @Override
             public void saveClick() {
-//                ToastUtils.showShort("已复制");
+//                ToastUtils.showShort("已保存");
             }
 
             @Override
@@ -454,17 +509,30 @@ public class TagFragment extends BaseFragment implements MainContentAdapter.OnIt
 
             @Override
             public void collectionClick() {
-//                ToastUtils.showShort("已复制");
+//                ToastUtils.showShort("已收藏");
+
+                userOperation2("1", "6", "", bean, new GetContentResult() {
+                    @Override
+                    public void success(String json) {
+                        ToastUtils.showShort("已收藏");
+                    }
+
+                    @Override
+                    public void error(Exception ex) {
+
+                    }
+                });
+
             }
 
             @Override
             public void reportClick() {
-//                ToastUtils.showShort("已复制");
+//                ToastUtils.showShort("已举报");
             }
 
             @Override
             public void saveClick() {
-//                ToastUtils.showShort("已复制");
+//                ToastUtils.showShort("已保存");
             }
 
             @Override
@@ -476,4 +544,76 @@ public class TagFragment extends BaseFragment implements MainContentAdapter.OnIt
         // ;
         shareDialog.show();
     }
+
+    /**
+     * 用户操作
+     *
+     * @param type     1-段子 2-评论 3-回复 4-审核 5-用户
+     * @param operator 1-点赞 2-点踩 3-举报 4-视频播放 5-转发 6-收藏/关注 7-取消收藏/取消关注 8-删除（只能删除自己的） 9-用户反馈（type为9）
+     * @param remark
+     */
+    public void userOperation(String type, String operator, String remark, GetContentResponse.DyContextsBean item, final GetContentResult result) {
+        if (UserInfo.getLoginState()) {
+            UserOperationRequest request = new UserOperationRequest();
+            request.setDyID(UserInfo.getDyId());
+            request.setDeviceID(UserInfo.getDeviceId());
+            request.setToken(UserInfo.getToken());
+            List<Integer> mList = new ArrayList<>();
+            mList.add(item.getDyContextID());
+            request.setDyDataID(mList);
+            request.setType(type);
+            request.setOperator(operator);
+            request.setRemark(remark);
+            NetUtil.getData(Api.userOperation, getActivity(), request, new ResultCallback() {
+                @Override
+                public void onResult(String jsonResult) {
+                    result.success(jsonResult);
+                }
+
+                @Override
+                public void onError(Exception ex) {
+                    result.error(ex);
+                }
+            });
+        } else {
+            Intent intent = new Intent(getActivity(), LoginActivity.class);
+            getActivity().startActivity(intent);
+        }
+    }
+    /**
+     * 用户操作
+     *
+     * @param type     1-段子 2-评论 3-回复 4-审核 5-用户
+     * @param operator 1-点赞 2-点踩 3-举报 4-视频播放 5-转发 6-收藏/关注 7-取消收藏/取消关注 8-删除（只能删除自己的） 9-用户反馈（type为9）
+     * @param remark
+     */
+    public void userOperation2(String type, String operator, String remark, GetContentResponse2.DyContextsBean item, final GetContentResult result) {
+        if (UserInfo.getLoginState()) {
+            UserOperationRequest request = new UserOperationRequest();
+            request.setDyID(UserInfo.getDyId());
+            request.setDeviceID(UserInfo.getDeviceId());
+            request.setToken(UserInfo.getToken());
+            List<Integer> mList = new ArrayList<>();
+            mList.add(item.getDyContextID());
+            request.setDyDataID(mList);
+            request.setType(type);
+            request.setOperator(operator);
+            request.setRemark(remark);
+            NetUtil.getData(Api.userOperation, getActivity(), request, new ResultCallback() {
+                @Override
+                public void onResult(String jsonResult) {
+                    result.success(jsonResult);
+                }
+
+                @Override
+                public void onError(Exception ex) {
+                    result.error(ex);
+                }
+            });
+        } else {
+            Intent intent = new Intent(getActivity(), LoginActivity.class);
+            getActivity().startActivity(intent);
+        }
+    }
+
 }

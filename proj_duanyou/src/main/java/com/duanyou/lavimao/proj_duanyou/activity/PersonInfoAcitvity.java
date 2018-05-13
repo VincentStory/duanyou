@@ -486,7 +486,7 @@ public class PersonInfoAcitvity extends BaseActivity {
                         sexTv.getText().toString(), hunyinTv.getText().toString(), workEt.getText().toString(), new GetContentResult() {
                             @Override
                             public void success(String json) {
-                                SpUtil.saveStringSP(SpUtil.currentLocation, areaTv.getText().toString());
+                                SpUtil.saveStringSP(SpUtil.getRegion, areaTv.getText().toString());
                             }
 
                             @Override

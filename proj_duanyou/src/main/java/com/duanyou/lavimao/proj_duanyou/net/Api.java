@@ -77,6 +77,22 @@ public class Api {
      * 1.4.1	上传段子
      */
     public static final String uploadContent="uploadContent";
+    /**
+     * 1.4.1	获取个人关注
+     */
+    public static final String getFollowList="getFollowList";
+    /**
+     * 1.4.1	获取粉丝列表
+     */
+    public static final String getFansList="getFansList";
+    /**
+     * 1.4.1	获取个人收藏
+     */
+    public static final String getCollection="getCollection";
+    /**
+     * 1.4.23	 互动
+     */
+    public static final String getInteraction="getInteraction";
 
 
 }

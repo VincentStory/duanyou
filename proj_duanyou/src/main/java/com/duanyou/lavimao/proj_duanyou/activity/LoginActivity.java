@@ -220,10 +220,11 @@ public class LoginActivity extends BaseActivity {
      */
     public void loginSuccess(String json) {
         LoginResponse response = JSON.parseObject(json, LoginResponse.class);
+        Log.i(TAG, "loginSuccess: ID=="+response.getDyID());
         SpUtil.saveStringSP(SpUtil.dyID, response.getDyID());
         SpUtil.saveStringSP(SpUtil.TOKEN, response.getToken());
         SpUtil.saveStringSP(SpUtil.nickName, response.getNickName());
-        SpUtil.saveStringSP(SpUtil.currentLocation, response.getCurrentLocation());
+        SpUtil.saveStringSP(SpUtil.getRegion, response.getRegion());
         UserInfo.setBgUrl(response.getBackgroundWall());
         UserInfo.setHeadUrl(response.getHeadPortraitUrl());
         finish();

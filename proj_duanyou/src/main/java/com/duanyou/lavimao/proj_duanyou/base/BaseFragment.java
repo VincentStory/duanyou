@@ -200,6 +200,39 @@ public abstract class BaseFragment extends Fragment {
         });
 
     }
+ /**
+     * 获取个人收藏
+     */
+    protected void getCollection(final Activity context, int page, final GetContentResult result) {
+        FriendCircleRequest request = new FriendCircleRequest();
+        request.setDyID(UserInfo.getDyId());
+        request.setDeviceID(UserInfo.getDeviceId());
+        request.setPage(page);
+        request.setToken(UserInfo.getToken());
+
+        NetUtil.getData(Api.getCollection, context, request, new ResultCallback() {
+            @Override
+            public void onResult(final String jsonResult) {
+                BaseResponse response = JSON.parseObject(jsonResult, BaseResponse.class);
+                if (response.getRespCode().equals("0")) {
+
+                    result.success(jsonResult);
+
+
+                } else {
+                    ToastUtils.showShort(response.getRespMessage());
+                }
+
+            }
+
+            @Override
+            public void onError(Exception ex) {
+
+                result.error(ex);
+            }
+        });
+
+    }
 
 
 

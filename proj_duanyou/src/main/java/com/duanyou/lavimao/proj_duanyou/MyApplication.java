@@ -8,6 +8,7 @@ import android.support.multidex.MultiDexApplication;
 import android.util.Log;
 
 
+import com.alibaba.mobileim.YWAPI;
 import com.blankj.utilcode.util.Utils;
 import com.duanyou.lavimao.proj_duanyou.util.SpUtil;
 import com.umeng.analytics.MobclickAgent;
@@ -64,6 +65,8 @@ public class MyApplication extends MultiDexApplication {
         UMConfigure.init(this, "5ad04becb27b0a50cd00002f", "Umeng", UMConfigure.DEVICE_TYPE_PHONE,
                 "");
         UMShareAPI.get(this);
+
+        //SDK初始化
 
     }
 

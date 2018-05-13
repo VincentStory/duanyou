@@ -94,7 +94,7 @@ public class SpUtil {
     public final static String nickName = "nickName";
     public final static String headUrl = "headUrl";
     public final static String backgroundUrl = "bgUrl";
-    public final static String currentLocation = "currentLocation";
+    public final static String getRegion = "getRegion";
     public final static String EMAIL = "email";
     public final static String TOKEN = "token";
     public final static String PHOTO_URL = "photourl";

@@ -394,17 +394,29 @@ public class DuanziDetailsActivity extends BaseActivity {
 
                     @Override
                     public void collectionClick() {
-//                ToastUtils.showShort("已复制");
+//                ToastUtils.showShort("已收藏");
+                 userOperation("1", "6", "", new GetContentResult() {
+                     @Override
+                     public void success(String json) {
+                         ToastUtils.showShort("已收藏");
+                     }
+
+                     @Override
+                     public void error(Exception ex) {
+
+                     }
+                 });
+
                     }
 
                     @Override
                     public void reportClick() {
-//                ToastUtils.showShort("已复制");
+//                ToastUtils.showShort("已举报");
                     }
 
                     @Override
                     public void saveClick() {
-//                ToastUtils.showShort("已复制");
+//                ToastUtils.showShort("已保存");
                     }
 
                     @Override
