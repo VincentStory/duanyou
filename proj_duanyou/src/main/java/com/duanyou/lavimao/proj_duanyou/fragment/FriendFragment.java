@@ -1,19 +1,25 @@
 package com.duanyou.lavimao.proj_duanyou.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.alibaba.mobileim.IYWLoginService;
+import com.alibaba.mobileim.YWLoginParam;
+import com.alibaba.mobileim.channel.event.IWxCallback;
+import com.duanyou.lavimao.proj_duanyou.MyApplication;
 import com.duanyou.lavimao.proj_duanyou.R;
 import com.duanyou.lavimao.proj_duanyou.activity.SearchDyActivity;
 import com.duanyou.lavimao.proj_duanyou.adapter.MainPagerAdapter;
 import com.duanyou.lavimao.proj_duanyou.base.BaseFragment;
 import com.duanyou.lavimao.proj_duanyou.fragment.main.TagFragment;
+import com.duanyou.lavimao.proj_duanyou.util.Md5Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,7 +66,7 @@ public class FriendFragment extends BaseFragment {
         friend_tv.setTextColor(getResources().getColor(R.color.black2));
     }
 
-    @OnClick({R.id.message_tv, R.id.friend_tv, R.id.search_rl})
+    @OnClick({R.id.message_tv, R.id.friend_tv, R.id.search_rl, R.id.iv_right})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.message_tv:
@@ -76,7 +82,39 @@ public class FriendFragment extends BaseFragment {
             case R.id.search_rl:
                 gotoActivity(SearchDyActivity.class);
                 break;
+            case R.id.iv_right:
+                initChat();
+                break;
         }
+    }
+
+    private void initChat() {
+        //开始登录
+        String userid = "7748480";
+        String password = "zhanglei";
+        String md5Str=Md5Utils.getMD5(password);
+        IYWLoginService loginService = MyApplication.getImKit().getLoginService();
+        YWLoginParam loginParam = YWLoginParam.createLoginParam(userid, Md5Utils.getMD5(password));
+
+        loginService.login(loginParam, new IWxCallback() {
+
+            @Override
+            public void onSuccess(Object... arg0) {
+                Intent intent = MyApplication.getImKit().getConversationActivityIntent();
+                startActivity(intent);
+            }
+
+            @Override
+            public void onProgress(int arg0) {
+
+            }
+
+            @Override
+            public void onError(int errCode, String description) {
+                //如果登录失败，errCode为错误码,description是错误的具体描述信息
+                Log.i("TAG", "chat error-->" + errCode + " " + description);
+            }
+        });
     }
 
 
