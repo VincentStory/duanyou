@@ -23,13 +23,17 @@ import android.widget.ImageView;
 
 import com.blankj.utilcode.util.ToastUtils;
 import com.duanyou.lavimao.proj_duanyou.R;
+import com.duanyou.lavimao.proj_duanyou.activity.LoginActivity;
+import com.duanyou.lavimao.proj_duanyou.activity.MainActivity;
 import com.duanyou.lavimao.proj_duanyou.activity.UploadDuanziActivity;
 import com.duanyou.lavimao.proj_duanyou.adapter.MainPagerAdapter;
 import com.duanyou.lavimao.proj_duanyou.adapter.TitlesAdapter;
+import com.duanyou.lavimao.proj_duanyou.base.BaseActivity;
 import com.duanyou.lavimao.proj_duanyou.base.BaseFragment;
 import com.duanyou.lavimao.proj_duanyou.fragment.main.TagFragment;
 import com.duanyou.lavimao.proj_duanyou.util.Constants;
 import com.duanyou.lavimao.proj_duanyou.util.FileUtils;
+import com.duanyou.lavimao.proj_duanyou.util.UserInfo;
 import com.duanyou.lavimao.proj_duanyou.widgets.BottomPopupWindow;
 
 import java.io.File;
@@ -78,6 +82,10 @@ public class MainFragment extends BaseFragment {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.nav_right_iv:
+                if (!UserInfo.getLoginState()) {
+                    ((MainActivity) getActivity()).jumpTo(LoginActivity.class);
+                    return;
+                }
                 if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
                         || ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
                     ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, Constants.MY_PERMISSIONS_REQUEST_CALL_PHOTO);

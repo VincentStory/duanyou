@@ -1,8 +1,15 @@
 package com.duanyou.lavimao.proj_duanyou.fragment.main;
 
-import android.app.Activity;
+import android.Manifest;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Environment;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -18,7 +25,6 @@ import com.duanyou.lavimao.proj_duanyou.R;
 import com.duanyou.lavimao.proj_duanyou.activity.DuanziDetailsActivity;
 import com.duanyou.lavimao.proj_duanyou.activity.LoginActivity;
 import com.duanyou.lavimao.proj_duanyou.adapter.MainContentAdapter;
-import com.duanyou.lavimao.proj_duanyou.adapter.MainContentAdapter;
 import com.duanyou.lavimao.proj_duanyou.base.BaseFragment;
 import com.duanyou.lavimao.proj_duanyou.net.Api;
 import com.duanyou.lavimao.proj_duanyou.net.GetContentResult;
@@ -28,6 +34,7 @@ import com.duanyou.lavimao.proj_duanyou.net.response.DyContextsBean;
 import com.duanyou.lavimao.proj_duanyou.net.response.GetContentResponse;
 import com.duanyou.lavimao.proj_duanyou.net.response.GetContentResponse2;
 import com.duanyou.lavimao.proj_duanyou.util.Constants;
+import com.duanyou.lavimao.proj_duanyou.util.FileUtils;
 import com.duanyou.lavimao.proj_duanyou.util.UserInfo;
 import com.duanyou.lavimao.proj_duanyou.widgets.ShareDialog;
 import com.lcodecore.tkrefreshlayout.RefreshListenerAdapter;
@@ -41,6 +48,7 @@ import com.umeng.socialize.media.UMImage;
 import com.umeng.socialize.media.UMWeb;
 import com.xiben.ebs.esbsdk.callback.ResultCallback;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -73,6 +81,7 @@ public class TagFragment extends BaseFragment implements MainContentAdapter.OnIt
     private String beginContentId;
     private int page = 1;
     private boolean isEdit;
+    public DyContextsBean dyContextsBean;
 
     public static TagFragment newInstance(String type) {
         Bundle bundle = new Bundle();
@@ -384,14 +393,20 @@ public class TagFragment extends BaseFragment implements MainContentAdapter.OnIt
         web.setTitle("段友");
         web.setThumb(new UMImage(getActivity(), R.drawable.ic_launcher));
         web.setDescription(bean.getContextText());
-
-        shareDialog = new ShareDialog(getActivity(), new ShareDialog.onClickListener() {
+        boolean save = true;
+        if ("2".equals(bean.getContextType())) {
+            save = false;
+        } else {
+            save = true;
+        }
+        shareDialog = new ShareDialog(getActivity(), save, new ShareDialog.onClickListener() {
             @Override
             public void sinaClick() {
 
                 new ShareAction(getActivity()).withMedia(web).withText(bean.getContextText())
                         .setPlatform(SHARE_MEDIA.SINA.toSnsPlatform().mPlatform)
                         .setCallback(shareListener).share();
+                shareDialog.dismiss();
             }
 
             @Override
@@ -399,6 +414,7 @@ public class TagFragment extends BaseFragment implements MainContentAdapter.OnIt
                 new ShareAction(getActivity()).withMedia(web).withText(bean.getContextText())
                         .setPlatform(SHARE_MEDIA.QQ.toSnsPlatform().mPlatform)
                         .setCallback(shareListener).share();
+                shareDialog.dismiss();
             }
 
             @Override
@@ -406,6 +422,8 @@ public class TagFragment extends BaseFragment implements MainContentAdapter.OnIt
                 new ShareAction(getActivity()).withMedia(web).withText(bean.getContextText())
                         .setPlatform(SHARE_MEDIA.WEIXIN_CIRCLE.toSnsPlatform().mPlatform)
                         .setCallback(shareListener).share();
+                shareDialog.dismiss();
+
             }
 
             @Override
@@ -413,6 +431,7 @@ public class TagFragment extends BaseFragment implements MainContentAdapter.OnIt
                 new ShareAction(getActivity()).withMedia(web).withText(bean.getContextText())
                         .setPlatform(SHARE_MEDIA.WEIXIN.toSnsPlatform().mPlatform)
                         .setCallback(shareListener).share();
+                shareDialog.dismiss();
             }
 
             @Override
@@ -420,17 +439,19 @@ public class TagFragment extends BaseFragment implements MainContentAdapter.OnIt
                 new ShareAction(getActivity()).withMedia(web).withText(bean.getContextText())
                         .setPlatform(SHARE_MEDIA.QZONE.toSnsPlatform().mPlatform)
                         .setCallback(shareListener).share();
+                shareDialog.dismiss();
             }
 
             @Override
             public void copyClick() {
-//                ToastUtils.showShort("已复制");
-
+                ClipboardManager cm = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+                cm.setText(bean.getShareUrl());
+                ToastUtils.showShort("已复制");
+                shareDialog.dismiss();
             }
 
             @Override
             public void collectionClick() {
-//                ToastUtils.showShort("已收藏");
                 userOperation("1", "6", "", bean, new GetContentResult() {
                     @Override
                     public void success(String json) {
@@ -442,17 +463,34 @@ public class TagFragment extends BaseFragment implements MainContentAdapter.OnIt
 
                     }
                 });
-
+                shareDialog.dismiss();
             }
 
             @Override
             public void reportClick() {
-//                ToastUtils.showShort("已举报");
+                userOperation("1", "3", "", bean, new GetContentResult() {
+                    @Override
+                    public void success(String json) {
+                        ToastUtils.showShort("已举报");
+                    }
+
+                    @Override
+                    public void error(Exception ex) {
+
+                    }
+                });
+                shareDialog.dismiss();
             }
 
             @Override
             public void saveClick() {
-//                ToastUtils.showShort("已保存");
+                dyContextsBean = bean;
+                if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, Constants.MY_PERMISSIOS_REQUEST_SAVE_FILE);
+                } else {
+                    saveFile();
+                }
+                shareDialog.dismiss();
             }
 
             @Override
@@ -464,6 +502,39 @@ public class TagFragment extends BaseFragment implements MainContentAdapter.OnIt
         // ;
         shareDialog.show();
 
+    }
+
+    public void saveFile() {
+        String savePath = "";
+        if ("3".equals(dyContextsBean.getContextType())) {
+            savePath = FileUtils.galleryPath + File.separator + System.currentTimeMillis() + "dyouphoto.png";
+        } else if ("4".equals(dyContextsBean.getContextType())) {
+            savePath = FileUtils.galleryPath + File.separator + System.currentTimeMillis() + "dyouphoto.mp4";
+        }
+        NetUtil.downloadFile(dyContextsBean.getContextUrl(), savePath, new ResultCallback() {
+            @Override
+            public void onResult(String jsonResult) {
+                ToastUtils.showShort("已保存");
+            }
+
+            @Override
+            public void onError(Exception ex) {
+                ToastUtils.showShort("保存失败");
+            }
+        });
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case Constants.MY_PERMISSIOS_REQUEST_SAVE_FILE:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    saveFile();
+                } else {
+                    ToastUtils.showShort("you denied the permission");
+                }
+                break;
+        }
     }
 
 

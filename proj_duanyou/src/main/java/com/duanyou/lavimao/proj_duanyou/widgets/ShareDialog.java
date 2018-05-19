@@ -39,6 +39,7 @@ public class ShareDialog implements View.OnClickListener {
     private TextView saveTv;
     private TextView mTvCancel;
     private onClickListener listener;
+    private boolean save = true;
 
     public ShareDialog(Context context, onClickListener listener) {
         this.context = context;
@@ -47,6 +48,16 @@ public class ShareDialog implements View.OnClickListener {
         display = windowManager.getDefaultDisplay();
         dialog = new Dialog(context, R.style.Custom_Dialog_Style);
         dialogWindow = dialog.getWindow();
+    }
+
+    public ShareDialog(Context context, boolean save, onClickListener listener) {
+        this.context = context;
+        this.listener = listener;
+        final WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        display = windowManager.getDefaultDisplay();
+        dialog = new Dialog(context, R.style.Custom_Dialog_Style);
+        dialogWindow = dialog.getWindow();
+        this.save = save;
 
     }
 
@@ -79,6 +90,11 @@ public class ShareDialog implements View.OnClickListener {
         view.findViewById(R.id.collection_tv).setOnClickListener(this);
         view.findViewById(R.id.report_tv).setOnClickListener(this);
         view.findViewById(R.id.save_tv).setOnClickListener(this);
+        if (save) {
+            view.findViewById(R.id.save_tv).setVisibility(View.VISIBLE);
+        } else {
+            view.findViewById(R.id.save_tv).setVisibility(View.GONE);
+        }
         view.findViewById(R.id.cancel_tv).setOnClickListener(this);
 //        qqTv = ((TextView) view.findViewById(R.id.tentcent_tv));
 //        circleTv = ((TextView) view.findViewById(R.id.friend_circle_tv));

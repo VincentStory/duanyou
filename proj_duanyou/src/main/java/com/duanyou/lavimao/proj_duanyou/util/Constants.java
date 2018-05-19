@@ -21,7 +21,7 @@ public class Constants {
 
     public static final String POSITION = "position";
 
-    public static final String FILE_PATH="file_path";
+    public static final String FILE_PATH = "file_path";
 
     public static final int REQUEST_CODE_TAKE_VIDEO = 1;
 
@@ -34,5 +34,7 @@ public class Constants {
     public static final int MY_PERMISSIONS_REQUEST_CALL_VIDEO = 1000;
 
     public static final int MY_PERMISSIONS_REQUEST_CALL_PHOTO = 1001;
+
+    public static final int MY_PERMISSIOS_REQUEST_SAVE_FILE = 1002;
 
 }

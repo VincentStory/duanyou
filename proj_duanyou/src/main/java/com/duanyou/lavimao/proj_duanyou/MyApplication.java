@@ -89,7 +89,7 @@ public class MyApplication extends MultiDexApplication {
         }
 
         //此实现不一定要放在Application onCreate中
-        final String userid = "testpro1";
+        final String userid = "7748480";
 //此对象获取到后，保存为全局对象，供APP使用
 //此对象跟用户相关，如果切换了用户，需要重新获取
         mIMKit = YWAPI.getIMKitInstance(userid, APP_KEY);

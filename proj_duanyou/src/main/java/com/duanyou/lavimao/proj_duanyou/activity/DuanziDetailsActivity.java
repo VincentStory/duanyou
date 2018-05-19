@@ -1,6 +1,12 @@
 package com.duanyou.lavimao.proj_duanyou.activity;
 
+import android.Manifest;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -30,6 +36,7 @@ import com.duanyou.lavimao.proj_duanyou.net.response.DyContextsBean;
 import com.duanyou.lavimao.proj_duanyou.net.response.GetCommentResponse;
 import com.duanyou.lavimao.proj_duanyou.net.response.GetContentResponse;
 import com.duanyou.lavimao.proj_duanyou.util.Constants;
+import com.duanyou.lavimao.proj_duanyou.util.FileUtils;
 import com.duanyou.lavimao.proj_duanyou.util.ImageUtils;
 import com.duanyou.lavimao.proj_duanyou.util.KeyboardControlMnanager;
 import com.duanyou.lavimao.proj_duanyou.util.KeyboardUtils;
@@ -46,6 +53,7 @@ import com.umeng.socialize.media.UMImage;
 import com.umeng.socialize.media.UMWeb;
 import com.xiben.ebs.esbsdk.callback.ResultCallback;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -100,6 +108,7 @@ public class DuanziDetailsActivity extends BaseActivity {
     private boolean refreshTag = true;//下拉刷新  true  加载更多  false
     private GetCommentResponse.CommentsNewBean clickItem;  //点击的回复item类
     private ShareDialog shareDialog;
+    public DyContextsBean dyContextsBean;
 
     @Override
     public void setView() {
@@ -357,6 +366,7 @@ public class DuanziDetailsActivity extends BaseActivity {
                         new ShareAction(DuanziDetailsActivity.this).withMedia(web).withText(bean.getContextText())
                                 .setPlatform(SHARE_MEDIA.SINA.toSnsPlatform().mPlatform)
                                 .setCallback(shareListener).share();
+                        shareDialog.dismiss();
                     }
 
                     @Override
@@ -364,6 +374,7 @@ public class DuanziDetailsActivity extends BaseActivity {
                         new ShareAction(DuanziDetailsActivity.this).withMedia(web).withText(bean.getContextText())
                                 .setPlatform(SHARE_MEDIA.QQ.toSnsPlatform().mPlatform)
                                 .setCallback(shareListener).share();
+                        shareDialog.dismiss();
                     }
 
                     @Override
@@ -371,6 +382,7 @@ public class DuanziDetailsActivity extends BaseActivity {
                         new ShareAction(DuanziDetailsActivity.this).withMedia(web).withText(bean.getContextText())
                                 .setPlatform(SHARE_MEDIA.WEIXIN_CIRCLE.toSnsPlatform().mPlatform)
                                 .setCallback(shareListener).share();
+                        shareDialog.dismiss();
                     }
 
                     @Override
@@ -378,6 +390,7 @@ public class DuanziDetailsActivity extends BaseActivity {
                         new ShareAction(DuanziDetailsActivity.this).withMedia(web).withText(bean.getContextText())
                                 .setPlatform(SHARE_MEDIA.WEIXIN.toSnsPlatform().mPlatform)
                                 .setCallback(shareListener).share();
+                        shareDialog.dismiss();
                     }
 
                     @Override
@@ -385,17 +398,20 @@ public class DuanziDetailsActivity extends BaseActivity {
                         new ShareAction(DuanziDetailsActivity.this).withMedia(web).withText(bean.getContextText())
                                 .setPlatform(SHARE_MEDIA.QZONE.toSnsPlatform().mPlatform)
                                 .setCallback(shareListener).share();
+                        shareDialog.dismiss();
                     }
 
                     @Override
                     public void copyClick() {
-//                ToastUtils.showShort("已复制");
+                        ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                        cm.setText(bean.getShareUrl());
+                        ToastUtils.showShort("已复制");
+                        shareDialog.dismiss();
 
                     }
 
                     @Override
                     public void collectionClick() {
-//                ToastUtils.showShort("已收藏");
                         userOperation("1", "6", "", new GetContentResult() {
                             @Override
                             public void success(String json) {
@@ -407,17 +423,34 @@ public class DuanziDetailsActivity extends BaseActivity {
 
                             }
                         });
-
+                        shareDialog.dismiss();
                     }
 
                     @Override
                     public void reportClick() {
-//                ToastUtils.showShort("已举报");
+                       userOperation("1", "3", "", new GetContentResult() {
+                           @Override
+                           public void success(String json) {
+                               ToastUtils.showShort("已举报");
+                           }
+
+                           @Override
+                           public void error(Exception ex) {
+
+                           }
+                       });
+                        shareDialog.dismiss();
                     }
 
                     @Override
                     public void saveClick() {
-//                ToastUtils.showShort("已保存");
+                        dyContextsBean = bean;
+                        if (ContextCompat.checkSelfPermission(DuanziDetailsActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                            ActivityCompat.requestPermissions(DuanziDetailsActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, Constants.MY_PERMISSIOS_REQUEST_SAVE_FILE);
+                        } else {
+                            saveFile();
+                        }
+                        shareDialog.dismiss();
                     }
 
                     @Override
@@ -434,6 +467,26 @@ public class DuanziDetailsActivity extends BaseActivity {
                 break;
 
         }
+    }
+
+    public void saveFile() {
+        String savePath = "";
+        if ("3".equals(dyContextsBean.getContextType())) {
+            savePath = FileUtils.galleryPath + File.separator + System.currentTimeMillis() + "dyouphoto.png";
+        } else if ("4".equals(dyContextsBean.getContextType())) {
+            savePath = FileUtils.galleryPath + File.separator + System.currentTimeMillis() + "dyouphoto.mp4";
+        }
+        NetUtil.downloadFile(dyContextsBean.getContextUrl(), savePath, new ResultCallback() {
+            @Override
+            public void onResult(String jsonResult) {
+                ToastUtils.showShort("已保存");
+            }
+
+            @Override
+            public void onError(Exception ex) {
+                ToastUtils.showShort("保存失败");
+            }
+        });
     }
 
 

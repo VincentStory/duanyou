@@ -15,9 +15,9 @@ import java.io.File;
 
 public class NetUtil {
     private static BaseClientProxy esbPoxy = new BaseClientProxy();
-//    public static String SERVICES_URL = "http://www.dyouclub.com/restful/request/";
+    //    public static String SERVICES_URL = "http://www.dyouclub.com/restful/request/";
 //        public static String SERVICES_URL = "http://123.56.8.153/restful/request/";
-        public static String SERVICES_URL = "http://39.104.121.233/restful/request/";
+    public static String SERVICES_URL = "http://39.104.121.233/restful/request/";
     private static final String TAG = "NetUtil";
 
     public static void getData(final String serviceId, final Activity context,
@@ -133,5 +133,26 @@ public class NetUtil {
             }
         });
     }
+
+    public static void downloadFile(final String url, final String saveDir, final ResultCallback resultCallback) {
+
+        esbPoxy.download(url, saveDir, new BaseClientProxy.OnDownloadListener() {
+            @Override
+            public void onDownloadSuccess(String path) {
+                resultCallback.onResult("");
+            }
+
+            @Override
+            public void onDownloading(int progress) {
+
+            }
+
+            @Override
+            public void onDownloadFailed() {
+                resultCallback.onError(null);
+            }
+        });
+    }
+
 
 }
