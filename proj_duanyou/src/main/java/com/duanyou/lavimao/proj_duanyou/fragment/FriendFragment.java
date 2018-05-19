@@ -100,6 +100,7 @@ public class FriendFragment extends BaseFragment {
 
             @Override
             public void onSuccess(Object... arg0) {
+                Log.i(TAG, "onSuccess: "+arg0);
                 Intent intent = MyApplication.getImKit().getConversationActivityIntent();
                 startActivity(intent);
             }

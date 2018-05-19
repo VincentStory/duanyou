@@ -1,6 +1,7 @@
 package com.duanyou.lavimao.proj_duanyou.net;
 
 import android.app.Activity;
+import android.util.Log;
 
 import com.alibaba.fastjson.JSON;
 
@@ -14,8 +15,10 @@ import java.io.File;
 
 public class NetUtil {
     private static BaseClientProxy esbPoxy = new BaseClientProxy();
-//        public static String SERVICES_URL = "http://www.dyouclub.com/restful/request/";
-    public static String SERVICES_URL = "http://123.56.8.153/restful/request/";
+//    public static String SERVICES_URL = "http://www.dyouclub.com/restful/request/";
+//        public static String SERVICES_URL = "http://123.56.8.153/restful/request/";
+        public static String SERVICES_URL = "http://39.104.121.233/restful/request/";
+    private static final String TAG = "NetUtil";
 
     public static void getData(final String serviceId, final Activity context,
                                final BaseRequest request,
@@ -23,12 +26,12 @@ public class NetUtil {
 
 
         esbPoxy.invoke(SERVICES_URL, serviceId, JSON.toJSONString(request), new InvokeCallback<String>() {
-
             @Override
             public void onComplete(String headerResult, final String body) {
                 context.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        Log.i(TAG, "result---->: " + body);
                         resultCallback.onResult(body);
                     }
                 });

@@ -18,6 +18,7 @@ import com.duanyou.lavimao.proj_duanyou.net.BaseResponse;
 import com.duanyou.lavimao.proj_duanyou.net.GetContentResult;
 import com.duanyou.lavimao.proj_duanyou.net.NetUtil;
 import com.duanyou.lavimao.proj_duanyou.net.request.PeopleNearbyRequest;
+import com.duanyou.lavimao.proj_duanyou.net.response.DyContextsBean;
 import com.duanyou.lavimao.proj_duanyou.net.response.GetFollowsBean;
 import com.duanyou.lavimao.proj_duanyou.util.Constants;
 import com.duanyou.lavimao.proj_duanyou.util.Contents;
@@ -39,6 +40,8 @@ public class CollectionActivity extends BaseActivity {
     private int operateType = 1;
     private TagFragment tagFragment;
 
+    @BindView(R.id.tv_delete)
+    TextView tv_delete;
 
     @Override
     public void setView() {
@@ -71,7 +74,7 @@ public class CollectionActivity extends BaseActivity {
     }
 
 
-    @OnClick({R.id.iv_left, R.id.right_tv})
+    @OnClick({R.id.iv_left, R.id.right_tv, R.id.tv_delete})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.iv_left:
@@ -80,18 +83,23 @@ public class CollectionActivity extends BaseActivity {
             case R.id.right_tv:
                 if (operateType == 1) {//编辑
                     operateType = 2;
-                    setRightTitle("编辑");
+                    setRightTitle("取消");
                     tagFragment.setIsEdit(true);
-
+                    tv_delete.setVisibility(View.VISIBLE);
 
                 } else if (operateType == 2) {//取消
                     operateType = 1;
-                    setRightTitle("取消");
+                    setRightTitle("编辑");
                     tagFragment.setIsEdit(false);
+                    tv_delete.setVisibility(View.GONE);
 
                 }
                 break;
 
+            case R.id.tv_delete:
+                List<DyContextsBean> list = tagFragment.getSelectedList();
+
+                break;
 
         }
     }

@@ -396,17 +396,17 @@ public class DuanziDetailsActivity extends BaseActivity {
                     @Override
                     public void collectionClick() {
 //                ToastUtils.showShort("已收藏");
-                 userOperation("1", "6", "", new GetContentResult() {
-                     @Override
-                     public void success(String json) {
-                         ToastUtils.showShort("已收藏");
-                     }
+                        userOperation("1", "6", "", new GetContentResult() {
+                            @Override
+                            public void success(String json) {
+                                ToastUtils.showShort("已收藏");
+                            }
 
-                     @Override
-                     public void error(Exception ex) {
+                            @Override
+                            public void error(Exception ex) {
 
-                     }
-                 });
+                            }
+                        });
 
                     }
 
@@ -529,11 +529,14 @@ public class DuanziDetailsActivity extends BaseActivity {
                         } else {
                             refreshLayout.finishLoadmore();
                         }
-                        if (response.getCommentsNew().size() > 0) {
-                            mlist.addAll(response.getCommentsNew());
-                            commentAdapter.notifyDataSetChanged();
-                        } else if (!refreshTag) {
-                            ToastUtils.showShort(getResources().getString(R.string.no_more));
+                        if (response.getCommentsNew() != null) {
+
+                            if (response.getCommentsNew().size() > 0) {
+                                mlist.addAll(response.getCommentsNew());
+                                commentAdapter.notifyDataSetChanged();
+                            } else if (!refreshTag) {
+                                ToastUtils.showShort(getResources().getString(R.string.no_more));
+                            }
                         }
                         if (mlist.size() == 0) {
                             emptyIv.setVisibility(View.VISIBLE);

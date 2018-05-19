@@ -63,10 +63,10 @@ public class TagFragment extends BaseFragment implements MainContentAdapter.OnIt
     private String type; //内容类型。0-精选，1-热吧，2-段子，3-图片，4-视频 5-段友段子 ,6-段友圈,7-收藏的段子
     private boolean refreshTag = true;  //下拉刷新  true   加载更多  false
     private List<DyContextsBean> mList;
-   
+
 
     private MainContentAdapter mAdapter;
-//    private MainContentAdapter mAdapter;
+    //    private MainContentAdapter mAdapter;
     //    private UMImage imageurl;
     private ShareDialog shareDialog;
     private String targetId;
@@ -125,7 +125,17 @@ public class TagFragment extends BaseFragment implements MainContentAdapter.OnIt
             mAdapter.notifyDataSetChanged();
         }
 
-       
+
+    }
+
+    public List<DyContextsBean> getSelectedList() {
+        List<DyContextsBean> list = new ArrayList<>();
+        for (DyContextsBean bean : mList) {
+            if (bean.isChecked()) {
+                list.add(bean);
+            }
+        }
+        return list;
     }
 
     @Override
