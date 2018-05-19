@@ -12,7 +12,6 @@
             <option value="$PROJECT_DIR$/android-pickers" />
             <option value="$PROJECT_DIR$/esbsdk" />
             <option value="$PROJECT_DIR$/proj_duanyou" />
-            <option value="$PROJECT_DIR$/wx" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

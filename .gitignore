@@ -10,7 +10,6 @@
 /captures
 .externalNativeBuild
 
-.idea/
 *.apk
 
 /local.properties
