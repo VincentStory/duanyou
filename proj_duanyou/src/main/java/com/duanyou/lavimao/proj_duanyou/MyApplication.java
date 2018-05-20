@@ -49,7 +49,6 @@ public class MyApplication extends MultiDexApplication {
 
         // 初始化utils
         Utils.init(this);
-        initChat();
 
         /*
         拍照权限
@@ -75,25 +74,25 @@ public class MyApplication extends MultiDexApplication {
 
     public static YWIMKit mIMKit;
 
-    private void initChat() {
-        final String APP_KEY = "24537963";
-//必须首先执行这部分代码, 如果在":TCMSSevice"进程中，无需进行云旺（OpenIM）和app业务的初始化，以节省内存;
-        SysUtil.setApplication(this);
-        if (SysUtil.isTCMSServiceProcess(this)) {
-            return;
-        }
-//第一个参数是Application Context
-//这里的APP_KEY即应用创建时申请的APP_KEY，同时初始化必须是在主进程中
-        if (SysUtil.isMainProcess()) {
-            YWAPI.init(this, APP_KEY);
-        }
-
-        //此实现不一定要放在Application onCreate中
-        final String userid = "7748480";
-//此对象获取到后，保存为全局对象，供APP使用
-//此对象跟用户相关，如果切换了用户，需要重新获取
-        mIMKit = YWAPI.getIMKitInstance(userid, APP_KEY);
-    }
+//    private void initChat() {
+//        final String APP_KEY = "24537963";
+////必须首先执行这部分代码, 如果在":TCMSSevice"进程中，无需进行云旺（OpenIM）和app业务的初始化，以节省内存;
+//        SysUtil.setApplication(this);
+//        if (SysUtil.isTCMSServiceProcess(this)) {
+//            return;
+//        }
+////第一个参数是Application Context
+////这里的APP_KEY即应用创建时申请的APP_KEY，同时初始化必须是在主进程中
+//        if (SysUtil.isMainProcess()) {
+//            YWAPI.init(this, APP_KEY);
+//        }
+//
+//        //此实现不一定要放在Application onCreate中
+//        final String userid = "7748480";
+////此对象获取到后，保存为全局对象，供APP使用
+////此对象跟用户相关，如果切换了用户，需要重新获取
+//        mIMKit = YWAPI.getIMKitInstance(userid, APP_KEY);
+//    }
 
     public static YWIMKit getImKit() {
         return mIMKit;

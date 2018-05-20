@@ -199,7 +199,6 @@
             android:name=".activity.DyFriendCircleAcitvity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".activity.UploadDuanziActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
@@ -215,7 +214,24 @@
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateHidden" />
-
+        <activity
+            android:name=".activity.FriendsRequestActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.AddDyActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.GroupListActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.CreateGroupActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.SearchGroupActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.GroupMessageActivity"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

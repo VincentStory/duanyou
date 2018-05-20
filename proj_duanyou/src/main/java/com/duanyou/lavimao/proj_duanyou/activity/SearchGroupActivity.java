@@ -1,27 +1,34 @@
 package com.duanyou.lavimao.proj_duanyou.activity;
 
 import android.view.View;
+import android.widget.TextView;
 
 import com.duanyou.lavimao.proj_duanyou.R;
 import com.duanyou.lavimao.proj_duanyou.base.BaseActivity;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-/**
- * Created by vincent on 2018/5/12.
- */
+public class SearchGroupActivity extends BaseActivity {
 
-public class SearchDyActivity extends BaseActivity {
+    @BindView(R.id.nav_title)
+    TextView titleTv;
+
     @Override
     public void setView() {
-        setContentView(R.layout.activity_search_dy);
+        setContentView(R.layout.activity_search_group);
         ButterKnife.bind(this);
+        initTitle();
+    }
+
+    private void initTitle() {
+        titleTv.setText("搜索群");
     }
 
     @Override
     public void initData() {
-        setTitle("搜索");
+
     }
 
     @Override
@@ -29,7 +36,7 @@ public class SearchDyActivity extends BaseActivity {
 
     }
 
-    @OnClick({R.id.iv_left})
+    @OnClick(R.id.iv_left)
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.iv_left:
@@ -37,4 +44,6 @@ public class SearchDyActivity extends BaseActivity {
                 break;
         }
     }
+
+
 }
