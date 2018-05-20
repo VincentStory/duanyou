@@ -245,4 +245,34 @@ public  class DyContextsBean implements Serializable {
         public void setVideoPlayCount(int videoPlayCount) {
             this.videoPlayCount = videoPlayCount;
         }
+
+    @Override
+    public String toString() {
+        return "DyContextsBean{" +
+                "commentNum=" + commentNum +
+                ", isEdit=" + isEdit +
+                ", isChecked=" + isChecked +
+                ", contextText='" + contextText + '\'' +
+                ", contextType='" + contextType + '\'' +
+                ", contextUrl='" + contextUrl + '\'' +
+                ", duration='" + duration + '\'' +
+                ", dyContextID=" + dyContextID +
+                ", fileSize='" + fileSize + '\'' +
+                ", headPortraitUrl='" + headPortraitUrl + '\'' +
+                ", isLike='" + isLike + '\'' +
+                ", isSelected='" + isSelected + '\'' +
+                ", nickName='" + nickName + '\'' +
+                ", pixelHeight=" + pixelHeight +
+                ", pixelWidth=" + pixelWidth +
+                ", praiseNum=" + praiseNum +
+                ", publisherDyID='" + publisherDyID + '\'' +
+                ", sex='" + sex + '\'' +
+                ", shareNum=" + shareNum +
+                ", shareUrl='" + shareUrl + '\'' +
+                ", trampleNum=" + trampleNum +
+                ", uploadDate='" + uploadDate + '\'' +
+                ", videoDisplay='" + videoDisplay + '\'' +
+                ", videoPlayCount=" + videoPlayCount +
+                '}';
     }
+}
