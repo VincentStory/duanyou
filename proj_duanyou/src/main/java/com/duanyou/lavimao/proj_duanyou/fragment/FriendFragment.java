@@ -8,18 +8,30 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.alibaba.mobileim.IYWLoginService;
 import com.alibaba.mobileim.YWLoginParam;
 import com.alibaba.mobileim.channel.event.IWxCallback;
+import com.duanyou.lavimao.proj_duanyou.Event.LoginEvent;
 import com.duanyou.lavimao.proj_duanyou.MyApplication;
 import com.duanyou.lavimao.proj_duanyou.R;
+import com.duanyou.lavimao.proj_duanyou.activity.LoginActivity;
+import com.duanyou.lavimao.proj_duanyou.activity.MainActivity;
+import com.duanyou.lavimao.proj_duanyou.activity.RegisterActivity;
 import com.duanyou.lavimao.proj_duanyou.activity.SearchDyActivity;
 import com.duanyou.lavimao.proj_duanyou.adapter.MainPagerAdapter;
 import com.duanyou.lavimao.proj_duanyou.base.BaseFragment;
+import com.duanyou.lavimao.proj_duanyou.fragment.duanyou.DuanyouFragment;
+import com.duanyou.lavimao.proj_duanyou.fragment.duanyou.MessageFragment;
 import com.duanyou.lavimao.proj_duanyou.fragment.main.TagFragment;
 import com.duanyou.lavimao.proj_duanyou.util.Md5Utils;
+import com.duanyou.lavimao.proj_duanyou.util.UserInfo;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,15 +41,18 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class FriendFragment extends BaseFragment {
+
     @BindView(R.id.message_tv)
     TextView message_tv;
     @BindView(R.id.friend_tv)
     TextView friend_tv;
     @BindView(R.id.view_pager)
     ViewPager viewPager;
-    private MainPagerAdapter pagerAdapter;
-    private List<Fragment> fragments;
+    @BindView(R.id.no_login_rl)
+    RelativeLayout noLoginRl;
 
+    private MainPagerAdapter pagerAdapter;
+    private List<Fragment> fragments = new ArrayList<>();
 
     @Override
     public View onCreate(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -48,25 +63,34 @@ public class FriendFragment extends BaseFragment {
 
     @Override
     public void initWidget(View view) {
-        initPagers();
+        EventBus.getDefault().register(this);
+        if (UserInfo.getLoginState()) {
+            noLoginRl.setVisibility(View.GONE);
+            viewPager.setVisibility(View.VISIBLE);
+            initPagers();
+        } else {
+            noLoginRl.setVisibility(View.VISIBLE);
+            viewPager.setVisibility(View.GONE);
+        }
     }
+
 
     @Override
     public void startInvoke(View view) {
         message_tv.setTextColor(getResources().getColor(R.color.white));
         message_tv.setSelected(true);
+
     }
 
 
     private void recoverDefaultState() {
-
         message_tv.setSelected(false);
         friend_tv.setSelected(false);
         message_tv.setTextColor(getResources().getColor(R.color.black2));
         friend_tv.setTextColor(getResources().getColor(R.color.black2));
     }
 
-    @OnClick({R.id.message_tv, R.id.friend_tv, R.id.search_rl, R.id.iv_right})
+    @OnClick({R.id.message_tv, R.id.friend_tv, R.id.search_rl, R.id.iv_right, R.id.regist_tv, R.id.login_tv})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.message_tv:
@@ -85,6 +109,12 @@ public class FriendFragment extends BaseFragment {
             case R.id.iv_right:
                 initChat();
                 break;
+            case R.id.regist_tv:
+                ((MainActivity) getActivity()).jumpTo(RegisterActivity.class);
+                break;
+            case R.id.login_tv:
+                ((MainActivity) getActivity()).jumpTo(LoginActivity.class);
+                break;
         }
     }
 
@@ -92,7 +122,7 @@ public class FriendFragment extends BaseFragment {
         //开始登录
         String userid = "7748480";
         String password = "zhanglei";
-        String md5Str=Md5Utils.getMD5(password);
+        String md5Str = Md5Utils.getMD5(password);
         IYWLoginService loginService = MyApplication.getImKit().getLoginService();
         YWLoginParam loginParam = YWLoginParam.createLoginParam(userid, Md5Utils.getMD5(password));
 
@@ -100,7 +130,7 @@ public class FriendFragment extends BaseFragment {
 
             @Override
             public void onSuccess(Object... arg0) {
-                Log.i(TAG, "onSuccess: "+arg0);
+                Log.i(TAG, "onSuccess: " + arg0);
                 Intent intent = MyApplication.getImKit().getConversationActivityIntent();
                 startActivity(intent);
             }
@@ -116,6 +146,8 @@ public class FriendFragment extends BaseFragment {
                 Log.i("TAG", "chat error-->" + errCode + " " + description);
             }
         });
+
+
     }
 
 
@@ -123,14 +155,13 @@ public class FriendFragment extends BaseFragment {
      * 初始化ViewPager
      */
     private void initPagers() {
-        fragments = new ArrayList<>();
-        fragments.add(TagFragment.newInstance("4"));//关注
-        fragments.add(TagFragment.newInstance("1"));//推荐
+        fragments.add(new MessageFragment());//消息
+        fragments.add(new DuanyouFragment());//段友
 
-        pagerAdapter = new MainPagerAdapter(getActivity().getSupportFragmentManager(), fragments, getActivity());
+        pagerAdapter = new MainPagerAdapter(getChildFragmentManager(), fragments, getActivity());
         viewPager.setAdapter(pagerAdapter);
-        viewPager.setOffscreenPageLimit(2);
-        viewPager.setCurrentItem(1);
+//        viewPager.setOffscreenPageLimit(2);
+        viewPager.setCurrentItem(0);
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -155,5 +186,23 @@ public class FriendFragment extends BaseFragment {
 
             }
         });
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void loginStateChange(LoginEvent event) {
+        if (UserInfo.getLoginState()) {
+            noLoginRl.setVisibility(View.GONE);
+            viewPager.setVisibility(View.VISIBLE);
+            initPagers();
+        } else {
+            noLoginRl.setVisibility(View.VISIBLE);
+            viewPager.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 }

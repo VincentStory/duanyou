@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.blankj.utilcode.util.ToastUtils;
+import com.duanyou.lavimao.proj_duanyou.Event.LoginEvent;
 import com.duanyou.lavimao.proj_duanyou.MyApplication;
 import com.duanyou.lavimao.proj_duanyou.R;
 import com.duanyou.lavimao.proj_duanyou.base.BaseActivity;
@@ -30,6 +31,8 @@ import com.umeng.socialize.UMShareAPI;
 import com.umeng.socialize.UMShareConfig;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.xiben.ebs.esbsdk.callback.ResultCallback;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -227,6 +230,7 @@ public class LoginActivity extends BaseActivity {
         SpUtil.saveStringSP(SpUtil.getRegion, response.getRegion());
         UserInfo.setBgUrl(response.getBackgroundWall());
         UserInfo.setHeadUrl(response.getHeadPortraitUrl());
+        EventBus.getDefault().post(new LoginEvent());
         finish();
     }
 
