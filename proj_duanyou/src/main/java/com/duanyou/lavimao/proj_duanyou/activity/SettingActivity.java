@@ -45,12 +45,14 @@ public class SettingActivity extends BaseActivity {
 
     }
 
-    @OnClick({R.id.login_out_tv})
+    @OnClick({R.id.login_out_tv, R.id.iv_left})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.login_out_tv:
                 showEnsureDialogOne();
-
+                break;
+            case R.id.iv_left:
+                finish();
                 break;
         }
     }

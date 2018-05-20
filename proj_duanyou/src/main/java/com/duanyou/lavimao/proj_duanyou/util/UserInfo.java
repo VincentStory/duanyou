@@ -2,6 +2,10 @@ package com.duanyou.lavimao.proj_duanyou.util;
 
 import android.text.TextUtils;
 
+import com.duanyou.lavimao.proj_duanyou.Event.LoginEvent;
+
+import org.greenrobot.eventbus.EventBus;
+
 /**
  * Created by luojialun on 2018/4/21.
  */
@@ -31,11 +35,13 @@ public class UserInfo {
     public static String getHeadUrl() {
         return SpUtil.getStringSp(SpUtil.headUrl);
     }
-    public static void setHeadUrl(String url){
-        SpUtil.saveStringSP(SpUtil.headUrl,url);
+
+    public static void setHeadUrl(String url) {
+        SpUtil.saveStringSP(SpUtil.headUrl, url);
     }
-    public static void setBgUrl(String url){
-        SpUtil.saveStringSP(SpUtil.backgroundUrl,url);
+
+    public static void setBgUrl(String url) {
+        SpUtil.saveStringSP(SpUtil.backgroundUrl, url);
     }
 
     public static boolean getLoginState() {
@@ -47,7 +53,8 @@ public class UserInfo {
     }
 
     public static void clearUserInfo() {
-        SpUtil.saveStringSP(SpUtil.TOKEN,"");
+        SpUtil.saveStringSP(SpUtil.TOKEN, "");
+        EventBus.getDefault().post(new LoginEvent());
     }
 
 }
