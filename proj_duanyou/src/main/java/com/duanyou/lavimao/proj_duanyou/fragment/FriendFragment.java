@@ -90,11 +90,13 @@ public class FriendFragment extends BaseFragment {
                 recoverDefaultState();
                 message_tv.setTextColor(getResources().getColor(R.color.white));
                 message_tv.setSelected(true);
+                viewPager.setCurrentItem(0);
                 break;
             case R.id.friend_tv:
                 recoverDefaultState();
                 friend_tv.setTextColor(getResources().getColor(R.color.white));
                 friend_tv.setSelected(true);
+                viewPager.setCurrentItem(1);
                 break;
             case R.id.search_rl:
                 gotoActivity(SearchDyActivity.class);
