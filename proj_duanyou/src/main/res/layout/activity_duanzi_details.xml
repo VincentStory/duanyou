@@ -170,7 +170,7 @@
                         android:paddingLeft="5dp"
                         android:paddingRight="5dp"
                         android:scaleType="centerInside"
-                        android:src="@drawable/icon_share" />
+                        android:background="@drawable/icon_share" />
 
                 </LinearLayout>
 

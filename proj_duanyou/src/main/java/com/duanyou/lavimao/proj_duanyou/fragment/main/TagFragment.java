@@ -1,6 +1,7 @@
 package com.duanyou.lavimao.proj_duanyou.fragment.main;
 
 import android.Manifest;
+import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
@@ -24,6 +25,7 @@ import com.blankj.utilcode.util.ToastUtils;
 import com.duanyou.lavimao.proj_duanyou.R;
 import com.duanyou.lavimao.proj_duanyou.activity.DuanziDetailsActivity;
 import com.duanyou.lavimao.proj_duanyou.activity.LoginActivity;
+import com.duanyou.lavimao.proj_duanyou.activity.ReportActivity;
 import com.duanyou.lavimao.proj_duanyou.adapter.MainContentAdapter;
 import com.duanyou.lavimao.proj_duanyou.base.BaseFragment;
 import com.duanyou.lavimao.proj_duanyou.net.Api;
@@ -166,6 +168,12 @@ public class TagFragment extends BaseFragment implements MainContentAdapter.OnIt
         initList();
         getContent();
     }
+
+    public void refreshData(){
+        refreshTag=true;
+        getContent();
+    }
+
 
     private void initView() {
         refreshLayout.setHeaderView(new SinaRefreshView(getActivity()));
@@ -444,8 +452,14 @@ public class TagFragment extends BaseFragment implements MainContentAdapter.OnIt
 
             @Override
             public void copyClick() {
+
+                //获取剪贴板管理器：
                 ClipboardManager cm = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
-                cm.setText(bean.getShareUrl());
+// 创建普通字符型ClipData
+                ClipData mClipData = ClipData.newPlainText("Label", bean.getShareUrl());
+// 将ClipData内容放到系统剪贴板里。
+                cm.setPrimaryClip(mClipData);
+
                 ToastUtils.showShort("已复制");
                 shareDialog.dismiss();
             }
@@ -468,17 +482,20 @@ public class TagFragment extends BaseFragment implements MainContentAdapter.OnIt
 
             @Override
             public void reportClick() {
-                userOperation("1", "3", "", bean, new GetContentResult() {
-                    @Override
-                    public void success(String json) {
-                        ToastUtils.showShort("已举报");
-                    }
-
-                    @Override
-                    public void error(Exception ex) {
-
-                    }
-                });
+                Intent intent = new Intent(getActivity(), ReportActivity.class);
+                intent.putExtra(Constants.dyContextID, bean.getDyContextID());
+                startActivity(intent);
+//                userOperation("1", "3", "", bean, new GetContentResult() {
+//                    @Override
+//                    public void success(String json) {
+//                        ToastUtils.showShort("已举报");
+//                    }
+//
+//                    @Override
+//                    public void error(Exception ex) {
+//
+//                    }
+//                });
                 shareDialog.dismiss();
             }
 

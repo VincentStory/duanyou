@@ -68,6 +68,7 @@ public class MainContentAdapter extends CommonAdapter<DyContextsBean> {
             @Override
             public void onClick(View view) {
                 checked_tv.setSelected(!checked_tv.isSelected());
+                item.setChecked(checked_tv.isSelected());
             }
         });
 
