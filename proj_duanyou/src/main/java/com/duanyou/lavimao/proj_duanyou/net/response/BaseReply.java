@@ -1,10 +1,12 @@
 package com.duanyou.lavimao.proj_duanyou.net.response;
 
+import java.io.Serializable;
+
 /**
  * Created by luojialun on 2018/4/21.
  */
 
-public class BaseReply {
+public class BaseReply implements Serializable{
     private String nickName;
     private String headPortraitUrl;
     private int commentID;

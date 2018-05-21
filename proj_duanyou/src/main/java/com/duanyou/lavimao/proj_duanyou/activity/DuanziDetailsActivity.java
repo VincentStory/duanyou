@@ -224,32 +224,7 @@ public class DuanziDetailsActivity extends BaseActivity {
         } else if ("2".equals(bean.getIsLike())) {
             caiIv.setImageResource(R.drawable.fuck1);
         }
-
-
     }
-
-   /* private void getDuanziDetails() {
-        GetUserUploadContentRequest request = new GetUserUploadContentRequest();
-        request.setDyID(SpUtil.getStringSp(SpUtil.dyID));
-        request.setDeviceID(DeviceUtils.getAndroidID());
-        request.setToken(SpUtil.getStringSp(SpUtil.TOKEN));
-        request.setTargetDyID(targetDyID);
-        request.setBeginContentID(beginContentID + "");
-        NetUtil.getData(Api.getUserUploadContent, this, request, new ResultCallback() {
-            @Override
-            public void onResult(String jsonResult) {
-                GetUserUploadContentResponse response = JSON.parseObject(jsonResult, GetUserUploadContentResponse.class);
-                if (null != response && "0".equals(response.getRespCode())) {
-
-                }
-            }
-
-            @Override
-            public void onError(Exception ex) {
-
-            }
-        });
-    }*/
 
     @Override
     public void startInvoke() {

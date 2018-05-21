@@ -93,6 +93,10 @@ public class Api {
      * 1.4.23	 互动
      */
     public static final String getInteraction="getInteraction";
+    /**
+     *1.4.1	获取更多回复
+     */
+    public static final String getReply="getReply";
 
 
 }

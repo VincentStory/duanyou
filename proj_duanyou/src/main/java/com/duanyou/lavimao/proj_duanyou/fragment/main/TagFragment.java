@@ -63,7 +63,7 @@ import cn.jzvd.JZVideoPlayer;
  * Created by luojialun on 2018/4/21.
  */
 
-public class TagFragment extends BaseFragment implements MainContentAdapter.OnItemClickListener {
+public class  TagFragment extends BaseFragment implements MainContentAdapter.OnItemClickListener {
 
     @BindView(R.id.refresh)
     TwinklingRefreshLayout refreshLayout;

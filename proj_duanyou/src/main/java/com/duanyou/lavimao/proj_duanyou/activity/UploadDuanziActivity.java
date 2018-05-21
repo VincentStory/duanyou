@@ -17,7 +17,9 @@ import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -63,6 +65,8 @@ public class UploadDuanziActivity extends BaseActivity {
     RelativeLayout preShowRl;
     @BindView(R.id.content_et)
     EditText contentEt;
+    @BindView(R.id.num_tv)
+    TextView numTv;
     @BindView(R.id.pb)
     ProgressBar pb;
 
@@ -110,7 +114,23 @@ public class UploadDuanziActivity extends BaseActivity {
 
     @Override
     public void startInvoke() {
+        contentEt.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                int nums = 500 - s.length();
+                numTv.setText("还可以输入" + nums + "字哟！");
+            }
+        });
     }
 
     @OnClick({R.id.iv_left, R.id.anonymous_iv, R.id.right_tv, R.id.photo_iv, R.id.delete_iv, R.id.video_iv})

@@ -100,14 +100,15 @@
 
                         <ImageView
                             android:id="@+id/zan_iv"
-                            android:layout_width="23dp"
-                            android:layout_height="23dp"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
                             android:src="@drawable/icon_liked" />
 
                         <TextView
                             android:id="@+id/zan_tv"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_gravity="center"
                             android:layout_marginLeft="5dp"
                             android:textColor="#4D4D4D"
                             android:textSize="10sp"
@@ -123,14 +124,15 @@
 
                         <ImageView
                             android:id="@+id/cai_iv"
-                            android:layout_width="23dp"
-                            android:layout_height="23dp"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
                             android:src="@drawable/icon_unliked" />
 
                         <TextView
                             android:id="@+id/cai_tv"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_gravity="center"
                             android:layout_marginLeft="5dp"
                             android:textColor="#4D4D4D"
                             android:textSize="10sp"
@@ -147,14 +149,15 @@
 
                         <ImageView
                             android:id="@+id/comment_iv"
-                            android:layout_width="23dp"
-                            android:layout_height="23dp"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
                             android:src="@drawable/icon_comments" />
 
                         <TextView
                             android:id="@+id/comment_tv"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_gravity="center"
                             android:layout_marginLeft="5dp"
                             android:textColor="#4D4D4D"
                             android:textSize="10sp"
@@ -163,14 +166,14 @@
 
                     <ImageView
                         android:id="@+id/share_iv"
-                        android:layout_width="23dp"
-                        android:layout_height="23dp"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
                         android:layout_gravity="center_vertical"
                         android:layout_marginRight="14dp"
+                        android:background="@drawable/icon_share"
                         android:paddingLeft="5dp"
                         android:paddingRight="5dp"
-                        android:scaleType="centerInside"
-                        android:background="@drawable/icon_share" />
+                        android:scaleType="centerInside" />
 
                 </LinearLayout>
 

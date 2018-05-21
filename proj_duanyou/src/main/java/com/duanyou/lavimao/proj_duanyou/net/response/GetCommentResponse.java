@@ -2,6 +2,7 @@ package com.duanyou.lavimao.proj_duanyou.net.response;
 
 import com.duanyou.lavimao.proj_duanyou.net.BaseResponse;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -37,7 +38,7 @@ public class GetCommentResponse extends BaseResponse {
         this.commentsHot = commentsHot;
     }
 
-    public static class CommentsNewBean {
+    public static class CommentsNewBean implements Serializable {
         private String nickName;
         private String headPortraitUrl;
         private int commentID;

@@ -89,12 +89,16 @@
             android:background="@color/gray2" />
 
         <!--二级回复-->
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/reply_rv"
+        <LinearLayout
+            android:id="@+id/reply_ll"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/yellow_5dp_bg"
-            android:padding="5dp" />
+            android:orientation="vertical"
+            android:padding="10dp"
+            tools:layout_height="100dp">
+
+        </LinearLayout>
 
         <View
             android:id="@+id/reply_view"

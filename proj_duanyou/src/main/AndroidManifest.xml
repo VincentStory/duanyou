@@ -232,6 +232,7 @@
         <activity
             android:name=".activity.GroupMessageActivity"
             android:screenOrientation="portrait" />
+        <activity android:name=".activity.ReplyActivity"></activity>
     </application>
 
 </manifest>

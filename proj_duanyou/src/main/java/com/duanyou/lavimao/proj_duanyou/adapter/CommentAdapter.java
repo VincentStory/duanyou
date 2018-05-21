@@ -5,8 +5,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
@@ -14,23 +16,24 @@ import com.blankj.utilcode.util.ToastUtils;
 import com.duanyou.lavimao.proj_duanyou.GlideApp;
 import com.duanyou.lavimao.proj_duanyou.R;
 import com.duanyou.lavimao.proj_duanyou.activity.LoginActivity;
+import com.duanyou.lavimao.proj_duanyou.activity.ReplyActivity;
 import com.duanyou.lavimao.proj_duanyou.net.Api;
 import com.duanyou.lavimao.proj_duanyou.net.BaseResponse;
 import com.duanyou.lavimao.proj_duanyou.net.GetContentResult;
 import com.duanyou.lavimao.proj_duanyou.net.NetUtil;
 import com.duanyou.lavimao.proj_duanyou.net.request.UserOperationRequest;
 import com.duanyou.lavimao.proj_duanyou.net.response.GetCommentResponse;
+import com.duanyou.lavimao.proj_duanyou.util.Constants;
 import com.duanyou.lavimao.proj_duanyou.util.KeyboardUtils;
+import com.duanyou.lavimao.proj_duanyou.util.TimeConstants;
+import com.duanyou.lavimao.proj_duanyou.util.TimeUtils;
 import com.duanyou.lavimao.proj_duanyou.util.UserInfo;
+import com.duanyou.lavimao.proj_duanyou.widgets.MyRecyclerView;
 import com.xiben.ebs.esbsdk.callback.ResultCallback;
 import com.zhy.adapter.recyclerview.CommonAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
-
-/**
- * Created by luojialun on 2018/4/21.
- */
 
 public class CommentAdapter extends CommonAdapter<GetCommentResponse.CommentsNewBean> {
 
@@ -46,7 +49,11 @@ public class CommentAdapter extends CommonAdapter<GetCommentResponse.CommentsNew
                 .error(R.drawable.default_pic)
                 .into((ImageView) helper.getView(R.id.head_iv));
         helper.setText(R.id.name_tv, item.getNickName());
-        helper.setText(R.id.time_tv, item.getUploadDate());
+        try {
+            helper.setText(R.id.time_tv, TimeUtils.getCommentTime(item.getUploadDate(), TimeConstants.SEC));
+        } catch (Exception e) {
+
+        }
         helper.setText(R.id.comment_tv, item.getContextText());
         helper.setText(R.id.zan_tv, item.getPraiseNum() + "");
         helper.setOnClickListener(R.id.zan_ll, new View.OnClickListener() {
@@ -62,6 +69,7 @@ public class CommentAdapter extends CommonAdapter<GetCommentResponse.CommentsNew
                                 try {
                                     int zanNum = Integer.parseInt(tv.getText().toString().trim());
                                     tv.setText((++zanNum) + "");
+                                    helper.setImageResource(R.id.zan_iv, R.drawable.good1);
                                 } catch (Exception e) {
                                 }
                             } else {
@@ -89,14 +97,38 @@ public class CommentAdapter extends CommonAdapter<GetCommentResponse.CommentsNew
         });
 
         if (item.getReply().size() > 0) {
-            RecyclerView replyRv = helper.getView(R.id.reply_rv);
-            replyRv.setLayoutManager(new LinearLayoutManager(mContext));
-            ReplyAdapter replyAdapter = new ReplyAdapter(mContext, R.layout.item_reply, item.getReply());
-            replyRv.setAdapter(replyAdapter);
-            helper.setVisible(R.id.reply_rv, true);
+            helper.setVisible(R.id.reply_ll, true);
             helper.setVisible(R.id.reply_view, true);
-        } else {
-            helper.setVisible(R.id.reply_rv, false);
+            LinearLayout replyLl = helper.getView(R.id.reply_ll);
+            for (int i = 0; i < item.getReply().size(); i++) {
+                View view = LayoutInflater.from(mContext).inflate(R.layout.item_reply, null);
+                TextView name = view.findViewById(R.id.name_tv);
+                name.setText(item.getReply().get(i).getNickName());
+                TextView replyTv = view.findViewById(R.id.reply_tv);
+                replyTv.setText("：" + item.getReply().get(i).getContextText());
+
+                replyLl.addView(view);
+            }
+
+            if (item.getReply().size() >= 3) {
+                View view = LayoutInflater.from(mContext).inflate(R.layout.item_reply, null);
+                TextView name = view.findViewById(R.id.name_tv);
+                name.setText("更多回复>>");
+                replyLl.addView(view);
+
+                helper.setOnClickListener(R.id.comment_ll, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(mContext, ReplyActivity.class);
+                        intent.putExtra(Constants.CommentsNewBean, item);
+                        mContext.startActivity(intent);
+                    }
+                });
+            }
+        } else
+
+        {
+            helper.setVisible(R.id.reply_ll, false);
             helper.setVisible(R.id.reply_view, false);
         }
 
@@ -142,6 +174,7 @@ public class CommentAdapter extends CommonAdapter<GetCommentResponse.CommentsNew
 
     public interface ReplyClickListener {
         void replyClick(GetCommentResponse.CommentsNewBean item);
+
     }
 
     public ReplyClickListener replyClickListener;
