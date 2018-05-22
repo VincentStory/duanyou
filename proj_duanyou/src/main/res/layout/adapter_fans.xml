@@ -13,8 +13,8 @@
         android:layout_width="45dp"
         android:layout_height="45dp"
         android:layout_centerVertical="true"
-        android:scaleType="centerCrop"
         android:background="@drawable/head42x"
+        android:scaleType="centerCrop"
         app:riv_corner_radius="6dp" />
 
     <TextView
@@ -27,10 +27,21 @@
 
         tools:text="aaaaaaaa" />
 
+    <TextView
+        android:id="@+id/tv_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:background="@drawable/gray_5dp_bg"
+        android:paddingHorizontal="10dp"
+        android:paddingVertical="3dp"
+        android:textColor="@color/white"
+        android:text="已关注" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
         android:layout_alignParentBottom="true"
-        android:background="@color/gray"/>
+        android:background="@color/gray" />
 </RelativeLayout>

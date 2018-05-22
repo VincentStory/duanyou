@@ -97,6 +97,9 @@ public class SettingPwdActivity extends BaseActivity {
                                         , password2, new GetContentResult() {
                                             @Override
                                             public void success(String json) {
+
+
+
                                                 Intent intent = new Intent(SettingPwdActivity.this, RegisterSuccessActivity.class);
                                                 intent.putExtra("pageType",pageType);
                                                 startActivity(intent);

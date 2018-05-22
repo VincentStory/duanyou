@@ -113,13 +113,14 @@ public class FollowActivity extends BaseActivity {
     }
 
     private void getData(int type, final int page) {
+        mAdapter.setType(type);
         if (type == 1) {
             getFollowList(FollowActivity.this, page, new GetContentResult() {
                 @Override
                 public void success(String json) {
                     GetFollowsBean response = JSON.parseObject(json, GetFollowsBean.class);
 
-                    if (page==1) {
+                    if (page == 1) {
                         mList.clear();
                         refreshLayout.finishRefreshing();
                     } else {
@@ -144,7 +145,7 @@ public class FollowActivity extends BaseActivity {
                 @Override
                 public void success(String json) {
                     GetFollowsBean response = JSON.parseObject(json, GetFollowsBean.class);
-                    if (page==1) {
+                    if (page == 1) {
                         mList.clear();
                         refreshLayout.finishRefreshing();
                     } else {
@@ -185,7 +186,7 @@ public class FollowActivity extends BaseActivity {
     }
 
 
-    @OnClick({R.id.iv_left,R.id.follow_tv, R.id.fans_tv})
+    @OnClick({R.id.iv_left, R.id.follow_tv, R.id.fans_tv})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.iv_left:
@@ -196,7 +197,7 @@ public class FollowActivity extends BaseActivity {
                 follow_tv.setTextColor(getResources().getColor(R.color.white));
                 follow_tv.setSelected(true);
                 type = 1;
-                page=1;
+                page = 1;
                 mList.clear();
                 mAdapter.notifyDataSetChanged();
                 getData(type, page);
@@ -207,7 +208,7 @@ public class FollowActivity extends BaseActivity {
                 fans_tv.setTextColor(getResources().getColor(R.color.white));
                 fans_tv.setSelected(true);
                 type = 2;
-                page=1;
+                page = 1;
                 mList.clear();
                 mAdapter.notifyDataSetChanged();
                 getData(type, page);
