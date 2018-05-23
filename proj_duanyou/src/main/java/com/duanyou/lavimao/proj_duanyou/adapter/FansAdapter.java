@@ -1,6 +1,7 @@
 package com.duanyou.lavimao.proj_duanyou.adapter;
 
 import android.content.Context;
+import android.view.View;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -31,7 +32,7 @@ public class FansAdapter extends CommonAdapter<GetFollowsBean.Fans> {
     }
 
     @Override
-    public void convert(ViewHolder helper, GetFollowsBean.Fans item) {
+    public void convert(ViewHolder helper, final GetFollowsBean.Fans item) {
         RoundedImageView headIv = helper.getView(R.id.head_iv);
         TextView nameTv = helper.getView(R.id.name_tv);
         TextView statusTv = helper.getView(R.id.tv_status);
@@ -48,11 +49,27 @@ public class FansAdapter extends CommonAdapter<GetFollowsBean.Fans> {
 
         }
 
+        statusTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mLintener.followClick(item);
+            }
+        });
+
 
         Glide.with(mContext).load(item.getHeadPortraitUrl()).into(headIv);
         nameTv.setText(item.getNickName());
 
     }
 
+    private OnItemClickLintener mLintener;
+
+    public void setLintener(OnItemClickLintener lintener) {
+        mLintener = lintener;
+    }
+
+    public interface OnItemClickLintener {
+        void followClick(GetFollowsBean.Fans item);
+    }
 
 }

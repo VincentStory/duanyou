@@ -19,6 +19,7 @@ import com.duanyou.lavimao.proj_duanyou.net.BaseResponse;
 import com.duanyou.lavimao.proj_duanyou.net.GetContentResult;
 import com.duanyou.lavimao.proj_duanyou.net.NetUtil;
 import com.duanyou.lavimao.proj_duanyou.net.request.PeopleNearbyRequest;
+import com.duanyou.lavimao.proj_duanyou.net.request.UserOperationRequest;
 import com.duanyou.lavimao.proj_duanyou.net.response.GetFollowsBean;
 import com.duanyou.lavimao.proj_duanyou.net.response.NearbyPeopleResponse;
 import com.duanyou.lavimao.proj_duanyou.util.Constants;
@@ -35,7 +36,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class FollowActivity extends BaseActivity {
+public class FollowActivity extends BaseActivity implements FansAdapter.OnItemClickLintener {
 
     @BindView(R.id.follow_tv)
     TextView follow_tv;
@@ -46,7 +47,7 @@ public class FollowActivity extends BaseActivity {
 
     @BindView(R.id.listview)
     ListView listView;
-    private int type = 1;
+    private int type = 1;//1是关注，2是粉丝
     private int page = 1;
     List<GetFollowsBean.Fans> mList = new ArrayList<>();
     private FansAdapter mAdapter;
@@ -95,7 +96,7 @@ public class FollowActivity extends BaseActivity {
         if (mAdapter == null) {
 
             mAdapter = new FansAdapter(FollowActivity.this, mList, R.layout.adapter_fans);
-
+            mAdapter.setLintener(this);
             listView.setAdapter(mAdapter);
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
@@ -129,10 +130,11 @@ public class FollowActivity extends BaseActivity {
 
                     if (response.getFans().size() > 0) {
                         mList.addAll(response.getFans());
-                        mAdapter.notifyDataSetChanged();
+
                     } else {
                         ToastUtils.showShort(getResources().getString(R.string.no_more));
                     }
+                    mAdapter.notifyDataSetChanged();
                 }
 
                 @Override
@@ -154,10 +156,10 @@ public class FollowActivity extends BaseActivity {
 
                     if (response.getFans().size() > 0) {
                         mList.addAll(response.getFans());
-                        mAdapter.notifyDataSetChanged();
                     } else {
                         ToastUtils.showShort(getResources().getString(R.string.no_more));
                     }
+                    mAdapter.notifyDataSetChanged();
                 }
 
                 @Override
@@ -168,6 +170,40 @@ public class FollowActivity extends BaseActivity {
         }
 
 
+    }
+
+    /**
+     * 用户操作
+     *
+     * @param type     1-段子 2-评论 3-回复 4-审核 5-用户
+     * @param operator 1-点赞 2-点踩 3-举报 4-视频播放 5-转发 6-收藏/关注 7-取消收藏/取消关注 8-删除（只能删除自己的） 9-用户反馈（type为9）
+     */
+    public void userOperation(String type, String operator, int dyId, final GetContentResult result) {
+        if (UserInfo.getLoginState()) {
+            UserOperationRequest request = new UserOperationRequest();
+            request.setDyID(UserInfo.getDyId());
+            request.setDeviceID(UserInfo.getDeviceId());
+            request.setToken(UserInfo.getToken());
+            List<Integer> mList = new ArrayList<>();
+            mList.add(dyId);
+            request.setDyDataID(mList);
+            request.setType(type);
+            request.setOperator(operator);
+//            request.setRemark(remark);
+            NetUtil.getData(Api.userOperation, this, request, new ResultCallback() {
+                @Override
+                public void onResult(String jsonResult) {
+                    result.success(jsonResult);
+                }
+
+                @Override
+                public void onError(Exception ex) {
+                    result.error(ex);
+                }
+            });
+        } else {
+            jumpTo(LoginActivity.class);
+        }
     }
 
     @Override
@@ -284,4 +320,34 @@ public class FollowActivity extends BaseActivity {
     }
 
 
+    @Override
+    public void followClick(GetFollowsBean.Fans item) {
+        if (type == 1) {
+            userOperation("5", "7", Integer.parseInt(item.getDyID()), new GetContentResult() {
+                @Override
+                public void success(String json) {
+                    getData(type, page);
+                }
+
+                @Override
+                public void error(Exception ex) {
+                    ToastUtils.showShort(ex.toString());
+
+                }
+            });
+        } else {
+            userOperation("5", "6", Integer.parseInt(item.getDyID()), new GetContentResult() {
+                @Override
+                public void success(String json) {
+                    getData(type, page);
+                }
+
+                @Override
+                public void error(Exception ex) {
+                    ToastUtils.showShort(ex.toString());
+
+                }
+            });
+        }
+    }
 }

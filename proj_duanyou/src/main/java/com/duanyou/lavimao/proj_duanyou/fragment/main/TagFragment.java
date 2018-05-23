@@ -63,7 +63,7 @@ import cn.jzvd.JZVideoPlayer;
  * Created by luojialun on 2018/4/21.
  */
 
-public class  TagFragment extends BaseFragment implements MainContentAdapter.OnItemClickListener {
+public class TagFragment extends BaseFragment implements MainContentAdapter.OnItemClickListener {
 
     @BindView(R.id.refresh)
     TwinklingRefreshLayout refreshLayout;
@@ -169,8 +169,8 @@ public class  TagFragment extends BaseFragment implements MainContentAdapter.OnI
         getContent();
     }
 
-    public void refreshData(){
-        refreshTag=true;
+    public void refreshData() {
+        refreshTag = true;
         getContent();
     }
 
@@ -265,7 +265,7 @@ public class  TagFragment extends BaseFragment implements MainContentAdapter.OnI
                                 ToastUtils.showShort(getActivity().getResources().getString(R.string.no_more));
                             }
                         } else {
-                            ToastUtils.showShort(response.getRespMessage());
+//                            ToastUtils.showShort(response.getRespMessage());
                         }
                     }
                 }
@@ -288,7 +288,7 @@ public class  TagFragment extends BaseFragment implements MainContentAdapter.OnI
                     }
 
                     if (null != response) {
-                        if ("0".equals(response.getRespCode())) {
+                        if ("0".equals(response.getRespCode()) && !response.getHaveMore().equals("0")) {
                             if (response.getDyContents().size() > 0) {
                                 mList.addAll(response.getDyContents());
                                 beginContentId = mList.get(mList.size() - 1).getDyContextID() + "";
@@ -297,7 +297,7 @@ public class  TagFragment extends BaseFragment implements MainContentAdapter.OnI
                                 ToastUtils.showShort(getActivity().getResources().getString(R.string.no_more));
                             }
                         } else {
-                            ToastUtils.showShort(response.getRespMessage());
+//                            ToastUtils.showShort(response.getRespMessage());
                         }
                     }
                 }

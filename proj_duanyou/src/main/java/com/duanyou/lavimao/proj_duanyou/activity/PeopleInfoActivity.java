@@ -42,6 +42,7 @@ import butterknife.OnClick;
 public class PeopleInfoActivity extends BaseActivity {
     private String targetId;
     private String beginContentId;
+    private String followSts;
 
     @BindView(R.id.nickname_tv)
     TextView nicknameTv;
@@ -99,8 +100,9 @@ public class PeopleInfoActivity extends BaseActivity {
                     locationTv.setText(userInfo.getCurrentLocation());
                     integralTv.setText("积分：" + userInfo.getIntegral());
                     fansnumTv.setText("粉丝：" + userInfo.getFansNum());
+                    followSts = userInfo.getFollowSts();
                     setTitle(userInfo.getNickName());
-                    if (userInfo.getFollowSts().equals("1")) {
+                    if (followSts.equals("1")) {
                         followTv.setText("已关注");
                     }
 
@@ -122,18 +124,34 @@ public class PeopleInfoActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.follow_tv:
-                userOperation("5", "6", Integer.parseInt(targetId), new GetContentResult() {
-                    @Override
-                    public void success(String json) {
-                        followTv.setText("已关注");
-                    }
+                if (followSts.equals("1")) {
+                    userOperation("5", "7", Integer.parseInt(targetId), new GetContentResult() {
+                        @Override
+                        public void success(String json) {
+                            followTv.setText("关注");
+                        }
 
-                    @Override
-                    public void error(Exception ex) {
-                        ToastUtils.showShort(ex.toString());
+                        @Override
+                        public void error(Exception ex) {
+                            ToastUtils.showShort(ex.toString());
 
-                    }
-                });
+                        }
+                    });
+                } else {
+
+                    userOperation("5", "6", Integer.parseInt(targetId), new GetContentResult() {
+                        @Override
+                        public void success(String json) {
+                            followTv.setText("已关注");
+                        }
+
+                        @Override
+                        public void error(Exception ex) {
+                            ToastUtils.showShort(ex.toString());
+
+                        }
+                    });
+                }
                 break;
             case R.id.add_friend_tv:
 

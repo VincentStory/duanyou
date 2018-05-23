@@ -62,7 +62,7 @@
                 android:id="@+id/read_cb"
                 android:layout_width="15dp"
                 android:layout_height="15dp"
-                android:checked="true"
+                android:checked="false"
                 android:layout_alignBottom="@+id/read_tv"
                 android:layout_toLeftOf="@+id/read_tv"
                 android:button="@drawable/checkbox_bg"

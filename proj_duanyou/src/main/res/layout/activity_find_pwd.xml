@@ -59,15 +59,15 @@
                 android:textColor="@color/white" />
 
             <CheckBox
-                android:checked="true"
                 android:id="@+id/read_cb"
                 android:layout_width="15dp"
                 android:layout_height="15dp"
                 android:layout_alignBottom="@+id/read_tv"
-                android:layout_toLeftOf="@+id/read_tv"
-                android:button="@drawable/checkbox_bg"
-                android:background="@color/transparent"
                 android:layout_marginRight="3dp"
+                android:layout_toLeftOf="@+id/read_tv"
+                android:background="@color/transparent"
+                android:button="@drawable/checkbox_bg"
+                android:checked="false"
                 android:visibility="visible" />
 
             <TextView

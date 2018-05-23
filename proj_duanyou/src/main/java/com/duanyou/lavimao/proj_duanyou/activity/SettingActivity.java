@@ -45,7 +45,7 @@ public class SettingActivity extends BaseActivity {
 
     }
 
-    @OnClick({R.id.login_out_tv, R.id.iv_left})
+    @OnClick({R.id.login_out_tv, R.id.iv_left, R.id.change_pwd_rl, R.id.opinion_rl, R.id.about_duanyou_rl})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.login_out_tv:
@@ -53,6 +53,15 @@ public class SettingActivity extends BaseActivity {
                 break;
             case R.id.iv_left:
                 finish();
+                break;
+            case R.id.change_pwd_rl:
+                jumpTo(FindPwdActivity.class);
+                break;
+            case R.id.opinion_rl:
+                jumpTo(UserFeedBackActivity.class);
+                break;
+                case R.id.about_duanyou_rl:
+                jumpTo(UserProtocolActivity.class);
                 break;
         }
     }

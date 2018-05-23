@@ -3,6 +3,7 @@ package com.duanyou.lavimao.proj_duanyou.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
@@ -32,6 +33,8 @@ public class FindPwdActivity extends BaseActivity {
 
     @BindView(R.id.phone_et)
     TextView phoneEt;
+    @BindView(R.id.read_cb)
+    CheckBox read_cb;
 
     @Override
     public void setView() {
@@ -51,11 +54,15 @@ public class FindPwdActivity extends BaseActivity {
     }
 
 
-    @OnClick({R.id.next_tv, R.id.back_tv, R.id.goto_main_tv})
+    @OnClick({R.id.next_tv, R.id.back_tv, R.id.goto_main_tv, R.id.read_tv})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.back_tv:
                 finish();
+                break;
+            case R.id.read_tv:
+                read_cb.setChecked(!read_cb.isChecked());
+                jumpTo(UserProtocolActivity.class);
                 break;
             case R.id.next_tv:
 //                Intent intent = new Intent(FindPwdActivity.this, CodeActivity.class);
@@ -64,6 +71,10 @@ public class FindPwdActivity extends BaseActivity {
 //                startActivity(intent);
                 if (phoneEt.getText().toString().trim().isEmpty()) {
                     ToastUtils.showShort("请输入正确的手机号");
+                    break;
+                }
+                if (!read_cb.isChecked()) {
+                    ToastUtils.showShort("请阅读使用条款");
                     break;
                 }
 
