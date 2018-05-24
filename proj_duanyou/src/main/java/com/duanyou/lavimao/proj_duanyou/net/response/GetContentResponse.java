@@ -8,6 +8,15 @@ import java.util.List;
 public class GetContentResponse extends BaseResponse implements Serializable {
 
     private List<DyContextsBean> dyContexts;
+    private String haveMore;
+
+    public String getHaveMore() {
+        return haveMore;
+    }
+
+    public void setHaveMore(String haveMore) {
+        this.haveMore = haveMore;
+    }
 
     public List<DyContextsBean> getDyContexts() {
         return dyContexts;

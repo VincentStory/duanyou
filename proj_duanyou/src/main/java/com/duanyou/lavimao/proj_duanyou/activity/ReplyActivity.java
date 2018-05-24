@@ -180,7 +180,8 @@ public class ReplyActivity extends BaseActivity {
                         int zan = Integer.parseInt(zanTv.getText().toString().trim()) + 1;
                         zanTv.setText(zan + "");
                         ToastUtils.showShort("已zan");
-                        zanIv.setImageResource(R.drawable.good1);
+//                        zanIv.setImageResource(R.drawable.good1);
+                        zanIv.setSelected(true);
                     }
 
                     @Override

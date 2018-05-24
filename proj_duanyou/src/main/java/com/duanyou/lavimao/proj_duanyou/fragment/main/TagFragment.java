@@ -225,19 +225,19 @@ public class TagFragment extends BaseFragment implements MainContentAdapter.OnIt
                 listView.setAdapter(mAdapter);
             }
 
-            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    Intent intent = new Intent(getActivity(), DuanziDetailsActivity.class);
-                    if (!TextUtils.isEmpty(type) && type.equals("6") || type.equals("7")) {
-                        intent.putExtra(Constants.CLICK_BEAN, mList.get(position));
-                    } else {
-                        intent.putExtra(Constants.CLICK_BEAN, mList.get(position));
-                    }
-
-                    startActivity(intent);
-                }
-            });
+//            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//                @Override
+//                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                    Intent intent = new Intent(getActivity(), DuanziDetailsActivity.class);
+//                    if (!TextUtils.isEmpty(type) && type.equals("6") || type.equals("7")) {
+//                        intent.putExtra(Constants.CLICK_BEAN, mList.get(position));
+//                    } else {
+//                        intent.putExtra(Constants.CLICK_BEAN, mList.get(position));
+//                    }
+//
+//                    startActivity(intent);
+//                }
+//            });
         }
 
     }
@@ -256,7 +256,7 @@ public class TagFragment extends BaseFragment implements MainContentAdapter.OnIt
                     }
 
                     if (null != response) {
-                        if ("0".equals(response.getRespCode())) {
+                        if ("0".equals(response.getRespCode())&&response.getDyContexts()!=null) {
                             if (response.getDyContexts().size() > 0) {
                                 mList.addAll(response.getDyContexts());
                                 beginContentId = mList.get(mList.size() - 1).getDyContextID() + "";
@@ -288,7 +288,7 @@ public class TagFragment extends BaseFragment implements MainContentAdapter.OnIt
                     }
 
                     if (null != response) {
-                        if ("0".equals(response.getRespCode()) && !response.getHaveMore().equals("0")) {
+                        if ("0".equals(response.getRespCode())&&response.getDyContents()!=null) {
                             if (response.getDyContents().size() > 0) {
                                 mList.addAll(response.getDyContents());
                                 beginContentId = mList.get(mList.size() - 1).getDyContextID() + "";
@@ -320,7 +320,7 @@ public class TagFragment extends BaseFragment implements MainContentAdapter.OnIt
                     }
 
                     if (null != response) {
-                        if ("0".equals(response.getRespCode())) {
+                        if ("0".equals(response.getRespCode())&&response.getDyContents()!=null) {
                             if (response.getDyContents().size() > 0) {
 
                                 for (int i = 0; i < response.getDyContents().size(); i++) {
@@ -358,7 +358,7 @@ public class TagFragment extends BaseFragment implements MainContentAdapter.OnIt
                     }
 
                     if (null != response) {
-                        if ("0".equals(response.getRespCode())) {
+                        if ("0".equals(response.getRespCode())&&response.getDyContexts()!=null) {
                             if (response.getDyContexts().size() > 0) {
                                 mList.addAll(response.getDyContexts());
                                 mAdapter.notifyDataSetChanged();
@@ -388,6 +388,13 @@ public class TagFragment extends BaseFragment implements MainContentAdapter.OnIt
 
     @Override
     public void comment(DyContextsBean bean) {
+        Intent intent = new Intent(getActivity(), DuanziDetailsActivity.class);
+        intent.putExtra(Constants.CLICK_BEAN, bean);
+        startActivity(intent);
+    }
+
+    @Override
+    public void onItemClick(DyContextsBean bean) {
         Intent intent = new Intent(getActivity(), DuanziDetailsActivity.class);
         intent.putExtra(Constants.CLICK_BEAN, bean);
         startActivity(intent);

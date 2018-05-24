@@ -102,7 +102,7 @@
                             android:id="@+id/zan_iv"
                             android:layout_width="20dp"
                             android:layout_height="20dp"
-                            android:src="@drawable/icon_liked" />
+                            android:src="@drawable/good_selector" />
 
                         <TextView
                             android:id="@+id/zan_tv"
@@ -126,7 +126,7 @@
                             android:id="@+id/cai_iv"
                             android:layout_width="20dp"
                             android:layout_height="20dp"
-                            android:src="@drawable/icon_unliked" />
+                            android:src="@drawable/bad_selector" />
 
                         <TextView
                             android:id="@+id/cai_tv"

@@ -220,9 +220,9 @@ public class DuanziDetailsActivity extends BaseActivity {
             }
         }
         if ("1".equals(bean.getIsLike())) {
-            zanIv.setImageResource(R.drawable.good1);
+            zanIv.setSelected(true);
         } else if ("2".equals(bean.getIsLike())) {
-            caiIv.setImageResource(R.drawable.fuck1);
+            caiIv.setSelected(true);
         }
     }
 
@@ -260,7 +260,8 @@ public class DuanziDetailsActivity extends BaseActivity {
                                 try {
                                     int zanNum = Integer.parseInt(zanTv.getText().toString().trim());
                                     zanTv.setText((++zanNum) + "");
-                                    zanIv.setImageResource(R.drawable.good1);
+                                    zanIv.setSelected(true);
+//                                    zanIv.setImageResource(R.drawable.good1);
                                     ToastUtils.showShort("点赞成功");
                                 } catch (Exception e) {
                                 }
@@ -287,7 +288,8 @@ public class DuanziDetailsActivity extends BaseActivity {
                                 try {
                                     int caiNum = Integer.parseInt(caiTv.getText().toString().trim());
                                     caiTv.setText((++caiNum) + "");
-                                    caiIv.setImageResource(R.drawable.fuck1);
+                                    caiIv.setSelected(true);
+//                                    caiIv.setImageResource(R.drawable.fuck1);
                                     ToastUtils.showShort("点踩成功");
                                 } catch (Exception e) {
                                 }

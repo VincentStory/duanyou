@@ -132,13 +132,17 @@ public class MainContentAdapter extends CommonAdapter<DyContextsBean> {
         zanTv.setText(item.getPraiseNum() + "");
         caiTv.setText(item.getTrampleNum() + "");
         commentTv.setText(item.getCommentNum() + "");
+        zanTv.setSelected("1".equals(item.getIsLike()));
+        caiTv.setSelected("2".equals(item.getIsLike()));
         if ("1".equals(item.getIsLike())) {
-            helper.setImageResource(R.id.zan_iv, R.drawable.good1);
+            helper.getView(R.id.zan_iv).setSelected(true);
+//            helper.setImageResource(R.id.zan_iv, R.drawable.good1);
         } else if ("2".equals(item.getIsLike())) {
-            helper.setImageResource(R.id.cai_iv, R.drawable.fuck1);
+            helper.getView(R.id.cai_iv).setSelected(true);
+//            helper.setImageResource(R.id.cai_iv, R.drawable.fuck1);
         } else {
-            helper.setImageResource(R.id.zan_iv, R.drawable.good2);
-            helper.setImageResource(R.id.cai_iv, R.drawable.fuck2);
+//            helper.setImageResource(R.id.zan_iv, R.drawable.good2);
+//            helper.setImageResource(R.id.cai_iv, R.drawable.fuck2);
         }
         //赞
         helper.setOnClickListener(R.id.zan_ll, new View.OnClickListener() {
@@ -153,7 +157,9 @@ public class MainContentAdapter extends CommonAdapter<DyContextsBean> {
                                 try {
                                     int zanNum = Integer.parseInt(zanTv.getText().toString().trim());
                                     zanTv.setText((++zanNum) + "");
-                                    helper.setImageResource(R.id.zan_iv, R.drawable.good1);
+                                    helper.getView(R.id.zan_iv).setSelected(true);
+                                    item.setIsLike("1");
+//                                    helper.setImageResource(R.id.zan_iv, R.drawable.good1);
                                     ToastUtils.showShort("点赞成功");
                                 } catch (Exception e) {
                                 }
@@ -183,7 +189,9 @@ public class MainContentAdapter extends CommonAdapter<DyContextsBean> {
                                 try {
                                     int caiNum = Integer.parseInt(caiTv.getText().toString().trim());
                                     caiTv.setText((++caiNum) + "");
-                                    helper.setImageResource(R.id.cai_iv, R.drawable.fuck1);
+                                    helper.getView(R.id.cai_iv).setSelected(true);
+                                    item.setIsLike("2");
+//                                    helper.setImageResource(R.id.cai_iv, R.drawable.fuck1);
                                     ToastUtils.showShort("点踩成功");
                                 } catch (Exception e) {
                                 }
@@ -205,6 +213,12 @@ public class MainContentAdapter extends CommonAdapter<DyContextsBean> {
             @Override
             public void onClick(View v) {
                 listener.comment(item);
+            }
+        });
+        helper.setOnClickListener(R.id.rl_item, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.onItemClick(item);
             }
         });
         //分享
@@ -255,6 +269,7 @@ public class MainContentAdapter extends CommonAdapter<DyContextsBean> {
     public interface OnItemClickListener {
 
         void comment(DyContextsBean bean);
+        void onItemClick(DyContextsBean bean);
 
         void share(DyContextsBean bean);
     }

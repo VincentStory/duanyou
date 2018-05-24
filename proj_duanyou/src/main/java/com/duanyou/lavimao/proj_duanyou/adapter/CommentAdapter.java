@@ -69,7 +69,8 @@ public class CommentAdapter extends CommonAdapter<GetCommentResponse.CommentsNew
                                 try {
                                     int zanNum = Integer.parseInt(tv.getText().toString().trim());
                                     tv.setText((++zanNum) + "");
-                                    helper.setImageResource(R.id.zan_iv, R.drawable.good1);
+                                    helper.getView(R.id.zan_iv).setSelected(true);
+//                                    helper.setImageResource(R.id.zan_iv, R.drawable.good1);
                                 } catch (Exception e) {
                                 }
                             } else {

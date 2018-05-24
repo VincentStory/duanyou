@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:id="@+id/rl_item"
     android:background="@color/white"
     android:orientation="vertical">
 
@@ -100,7 +101,7 @@
                     android:id="@+id/zan_iv"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
-                    android:src="@drawable/icon_liked" />
+                    android:src="@drawable/good_selector" />
 
                 <TextView
                     android:id="@+id/zan_tv"
@@ -125,7 +126,7 @@
                     android:id="@+id/cai_iv"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
-                    android:src="@drawable/icon_unliked" />
+                    android:src="@drawable/bad_selector" />
 
                 <TextView
                     android:id="@+id/tv_unliked"
