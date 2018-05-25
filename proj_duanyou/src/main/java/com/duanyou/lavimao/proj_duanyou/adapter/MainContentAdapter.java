@@ -22,6 +22,7 @@ import com.duanyou.lavimao.proj_duanyou.net.NetUtil;
 import com.duanyou.lavimao.proj_duanyou.net.request.UserOperationRequest;
 import com.duanyou.lavimao.proj_duanyou.net.response.DyContextsBean;
 import com.duanyou.lavimao.proj_duanyou.util.CommonAdapter;
+import com.duanyou.lavimao.proj_duanyou.util.Contents;
 import com.duanyou.lavimao.proj_duanyou.util.ImageUtils;
 import com.duanyou.lavimao.proj_duanyou.util.UserInfo;
 import com.makeramen.roundedimageview.RoundedImageView;
@@ -38,6 +39,7 @@ import cn.jzvd.JZVideoPlayerStandard;
  */
 public class MainContentAdapter extends CommonAdapter<DyContextsBean> {
     private OnItemClickListener listener;
+    private String mType;
 
     public void setListener(OnItemClickListener listener) {
         this.listener = listener;
@@ -47,11 +49,17 @@ public class MainContentAdapter extends CommonAdapter<DyContextsBean> {
         super(context, mDatas, itemLayoutId);
     }
 
+    public void setType(String type) {
+        mType = type;
+    }
+
     @Override
     public void convert(final ViewHolder helper, final DyContextsBean item) {
 
         RoundedImageView iv_avatar = helper.getView(R.id.iv_avatar);
         TextView tv_name = helper.getView(R.id.tv_name);
+        TextView tv_duanzi_status = helper.getView(R.id.tv_duanzi_status);
+        TextView tv_create_time = helper.getView(R.id.tv_create_time);
         TextView contentTv = helper.getView(R.id.tv_content);
         final TextView checked_tv = helper.getView(R.id.checked_tv);
         ImageView contentIv = helper.getView(R.id.content_iv);
@@ -68,6 +76,20 @@ public class MainContentAdapter extends CommonAdapter<DyContextsBean> {
                 item.setChecked(checked_tv.isSelected());
             }
         });
+
+        if (mType != null)
+            if (mType.equals(Contents.TOUGAO_TYPE)) {
+                tv_duanzi_status.setVisibility(View.VISIBLE);
+                tv_create_time.setVisibility(View.VISIBLE);
+                if (item.getAdopt().equals("0")) {
+                    tv_duanzi_status.setText("审核中，请耐心等待");
+                }else  if (item.getAdopt().equals("1")) {
+                    tv_duanzi_status.setText("恭喜你，已通过");
+                }else  if (item.getAdopt().equals("2")) {
+                    tv_duanzi_status.setText("未通过，可能哪里有问题需要改改");
+                }
+                tv_create_time.setText(item.getUploadDate());
+            }
 
 
         String type = item.getContextType();
@@ -134,16 +156,14 @@ public class MainContentAdapter extends CommonAdapter<DyContextsBean> {
         commentTv.setText(item.getCommentNum() + "");
         zanTv.setSelected("1".equals(item.getIsLike()));
         caiTv.setSelected("2".equals(item.getIsLike()));
-        if ("1".equals(item.getIsLike())) {
-            helper.getView(R.id.zan_iv).setSelected(true);
+//        if ("1".equals(item.getIsLike())) {
 //            helper.setImageResource(R.id.zan_iv, R.drawable.good1);
-        } else if ("2".equals(item.getIsLike())) {
-            helper.getView(R.id.cai_iv).setSelected(true);
+//        } else if ("2".equals(item.getIsLike())) {
 //            helper.setImageResource(R.id.cai_iv, R.drawable.fuck1);
-        } else {
+//        } else {
 //            helper.setImageResource(R.id.zan_iv, R.drawable.good2);
 //            helper.setImageResource(R.id.cai_iv, R.drawable.fuck2);
-        }
+//        }
         //赞
         helper.setOnClickListener(R.id.zan_ll, new View.OnClickListener() {
             @Override
@@ -269,6 +289,7 @@ public class MainContentAdapter extends CommonAdapter<DyContextsBean> {
     public interface OnItemClickListener {
 
         void comment(DyContextsBean bean);
+
         void onItemClick(DyContextsBean bean);
 
         void share(DyContextsBean bean);

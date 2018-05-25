@@ -38,7 +38,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class CollectionActivity extends BaseActivity {
-    private int type;
+    private String type;
     private int operateType = 1;
     private TagFragment tagFragment;
 
@@ -53,8 +53,8 @@ public class CollectionActivity extends BaseActivity {
 
     @Override
     public void initData() {
-        type = getIntent().getIntExtra("type", 0);
-        if (type == Contents.COLLECTION_TYPE) {
+        type = getIntent().getStringExtra("type");
+        if (type.equals(Contents.COLLECTION_TYPE)) {
             setTitle("收藏");
 
         } else {
@@ -106,8 +106,6 @@ public class CollectionActivity extends BaseActivity {
                     public void success(String json) {
 
                         tagFragment.refreshData();
-
-
                         operateType = 1;
                         setRightTitle("编辑");
                         tagFragment.setIsEdit(false);

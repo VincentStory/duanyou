@@ -10,6 +10,8 @@ public class Contents {
     public static final String PWD_CODE_TYPE = "1";//找回密码类型
     public static boolean IS_REFRESH = false;//是否刷新个人信息
 
-    public static int COLLECTION_TYPE = 7;//收藏
-    public static int TOUGAO_TYPE = 5;//投稿
+    public static String COLLECTION_TYPE = "7";//收藏
+    public static String TOUGAO_TYPE = "10";//投稿
+    public static String FRIEND_TYPE = "5";//段友段子
+    public static String CIRCLE_TYPE = "6";//段友圈
 }

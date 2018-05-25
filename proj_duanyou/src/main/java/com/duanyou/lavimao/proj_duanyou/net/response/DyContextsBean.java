@@ -52,7 +52,16 @@ public  class DyContextsBean implements Serializable {
         private int trampleNum;
         private String uploadDate;
         private String videoDisplay;
+        private String adopt;
         private int videoPlayCount;
+
+    public String getAdopt() {
+        return adopt;
+    }
+
+    public void setAdopt(String adopt) {
+        this.adopt = adopt;
+    }
 
     public boolean isEdit() {
         return isEdit;

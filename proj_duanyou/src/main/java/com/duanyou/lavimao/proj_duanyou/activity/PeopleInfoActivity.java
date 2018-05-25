@@ -78,7 +78,7 @@ public class PeopleInfoActivity extends BaseActivity {
     public void startInvoke() {
 
         //必需继承FragmentActivity,嵌套fragment只需要这行代码
-        getSupportFragmentManager().beginTransaction().replace(R.id.framelayout, TagFragment.newInstance("5", targetId, beginContentId)).commitAllowingStateLoss();
+        getSupportFragmentManager().beginTransaction().replace(R.id.framelayout, TagFragment.newInstance(Contents.FRIEND_TYPE, targetId, beginContentId)).commitAllowingStateLoss();
 
         getUserInfo(PeopleInfoActivity.this, targetId, new GetContentResult() {
             @Override
@@ -124,34 +124,35 @@ public class PeopleInfoActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.follow_tv:
-                if (followSts.equals("1")) {
-                    userOperation("5", "7", Integer.parseInt(targetId), new GetContentResult() {
-                        @Override
-                        public void success(String json) {
-                            followTv.setText("关注");
-                        }
+                if (followSts != null)
+                    if (followSts.equals("1")) {
+                        userOperation("5", "7", Integer.parseInt(targetId), new GetContentResult() {
+                            @Override
+                            public void success(String json) {
+                                followTv.setText("关注");
+                            }
 
-                        @Override
-                        public void error(Exception ex) {
-                            ToastUtils.showShort(ex.toString());
+                            @Override
+                            public void error(Exception ex) {
+                                ToastUtils.showShort(ex.toString());
 
-                        }
-                    });
-                } else {
+                            }
+                        });
+                    } else {
 
-                    userOperation("5", "6", Integer.parseInt(targetId), new GetContentResult() {
-                        @Override
-                        public void success(String json) {
-                            followTv.setText("已关注");
-                        }
+                        userOperation("5", "6", Integer.parseInt(targetId), new GetContentResult() {
+                            @Override
+                            public void success(String json) {
+                                followTv.setText("已关注");
+                            }
 
-                        @Override
-                        public void error(Exception ex) {
-                            ToastUtils.showShort(ex.toString());
+                            @Override
+                            public void error(Exception ex) {
+                                ToastUtils.showShort(ex.toString());
 
-                        }
-                    });
-                }
+                            }
+                        });
+                    }
                 break;
             case R.id.add_friend_tv:
 

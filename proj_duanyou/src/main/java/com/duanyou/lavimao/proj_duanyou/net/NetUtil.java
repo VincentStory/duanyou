@@ -1,10 +1,13 @@
 package com.duanyou.lavimao.proj_duanyou.net;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.util.Log;
 
 import com.alibaba.fastjson.JSON;
 
+import com.blankj.utilcode.util.ToastUtils;
+import com.duanyou.lavimao.proj_duanyou.activity.LoginActivity;
 import com.duanyou.lavimao.proj_duanyou.net.request.GetContentRequest;
 
 import com.xiben.ebs.esbsdk.callback.InvokeCallback;
@@ -16,8 +19,8 @@ import java.io.File;
 public class NetUtil {
     private static BaseClientProxy esbPoxy = new BaseClientProxy();
     //    public static String SERVICES_URL = "http://www.dyouclub.com/restful/request/";
-        public static String SERVICES_URL = "http://123.56.8.153/restful/request/";
-//    public static String SERVICES_URL = "http://39.104.121.233/restful/request/";
+//        public static String SERVICES_URL = "http://123.56.8.153/restful/request/";
+    public static String SERVICES_URL = "http://39.104.121.233/restful/request/";
     private static final String TAG = "NetUtil";
 
     public static void getData(final String serviceId, final Activity context,
@@ -32,6 +35,14 @@ public class NetUtil {
                     @Override
                     public void run() {
                         Log.i(TAG, "result---->: " + body);
+                        BaseResponse response = JSON.parseObject(body, BaseResponse.class);
+                        if (!response.getRespCode().equals("0")) {
+                            if (response.getRespCode().equals("6")) {
+                                Intent intent = new Intent(context, LoginActivity.class);
+                                context.startActivity(intent);
+                            }
+                            ToastUtils.showShort(response.getRespMessage());
+                        }
                         resultCallback.onResult(body);
                     }
                 });
@@ -56,9 +67,18 @@ public class NetUtil {
         esbPoxy.upImage(SERVICES_URL, serviceId, path, JSON.toJSONString(request), new InvokeCallback<String>() {
             @Override
             public void onComplete(String headerResult, final String body) {
+                Log.i(TAG, "result---->: " + body);
                 context.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        BaseResponse response = JSON.parseObject(body, BaseResponse.class);
+                        if (!response.getRespCode().equals("0")) {
+                            if (response.getRespCode().equals("6")) {
+                                Intent intent = new Intent(context, LoginActivity.class);
+                                context.startActivity(intent);
+                            }
+                            ToastUtils.showShort(response.getRespMessage());
+                        }
                         resultCallback.onResult(body);
                     }
                 });
@@ -87,9 +107,18 @@ public class NetUtil {
         esbPoxy.upVideo(SERVICES_URL, serviceId, path, JSON.toJSONString(request), new InvokeCallback<String>() {
             @Override
             public void onComplete(String headerResult, final String body) {
+                Log.i(TAG, "result---->: " + body);
                 context.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        BaseResponse response = JSON.parseObject(body, BaseResponse.class);
+                        if (!response.getRespCode().equals("0")) {
+                            if (response.getRespCode().equals("6")) {
+                                Intent intent = new Intent(context, LoginActivity.class);
+                                context.startActivity(intent);
+                            }
+                            ToastUtils.showShort(response.getRespMessage());
+                        }
                         resultCallback.onResult(body);
                     }
                 });
@@ -119,9 +148,18 @@ public class NetUtil {
         esbPoxy.upVideo(SERVICES_URL, serviceId, path1, path2, JSON.toJSONString(request), new InvokeCallback<String>() {
             @Override
             public void onComplete(String headerResult, final String body) {
+                Log.i(TAG, "result---->: " + body);
                 context.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        BaseResponse response = JSON.parseObject(body, BaseResponse.class);
+                        if (!response.getRespCode().equals("0")) {
+                            if (response.getRespCode().equals("6")) {
+                                Intent intent = new Intent(context, LoginActivity.class);
+                                context.startActivity(intent);
+                            }
+                            ToastUtils.showShort(response.getRespMessage());
+                        }
                         resultCallback.onResult(body);
                     }
                 });

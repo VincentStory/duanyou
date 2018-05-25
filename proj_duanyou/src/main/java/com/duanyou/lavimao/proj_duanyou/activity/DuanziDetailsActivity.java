@@ -405,17 +405,20 @@ public class DuanziDetailsActivity extends BaseActivity {
 
                     @Override
                     public void reportClick() {
-                       userOperation("1", "3", "", new GetContentResult() {
-                           @Override
-                           public void success(String json) {
-                               ToastUtils.showShort("已举报");
-                           }
-
-                           @Override
-                           public void error(Exception ex) {
-
-                           }
-                       });
+                        Intent intent = new Intent(DuanziDetailsActivity.this, ReportActivity.class);
+                        intent.putExtra(Constants.dyContextID, bean.getDyContextID());
+                        startActivity(intent);
+//                       userOperation("1", "3", "", new GetContentResult() {
+//                           @Override
+//                           public void success(String json) {
+//                               ToastUtils.showShort("已举报");
+//                           }
+//
+//                           @Override
+//                           public void error(Exception ex) {
+//
+//                           }
+//                       });
                         shareDialog.dismiss();
                     }
 

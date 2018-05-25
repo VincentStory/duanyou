@@ -14,6 +14,7 @@ import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -36,8 +37,11 @@ import com.duanyou.lavimao.proj_duanyou.net.response.DyContextsBean;
 import com.duanyou.lavimao.proj_duanyou.net.response.GetContentResponse;
 import com.duanyou.lavimao.proj_duanyou.net.response.GetContentResponse2;
 import com.duanyou.lavimao.proj_duanyou.util.Constants;
+import com.duanyou.lavimao.proj_duanyou.util.Contents;
 import com.duanyou.lavimao.proj_duanyou.util.FileUtils;
 import com.duanyou.lavimao.proj_duanyou.util.UserInfo;
+import com.duanyou.lavimao.proj_duanyou.widgets.ListViewForScrollView;
+import com.duanyou.lavimao.proj_duanyou.widgets.MyListView;
 import com.duanyou.lavimao.proj_duanyou.widgets.ShareDialog;
 import com.lcodecore.tkrefreshlayout.RefreshListenerAdapter;
 import com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout;
@@ -176,6 +180,7 @@ public class TagFragment extends BaseFragment implements MainContentAdapter.OnIt
 
 
     private void initView() {
+
         refreshLayout.setHeaderView(new SinaRefreshView(getActivity()));
         refreshLayout.setOnRefreshListener(new RefreshListenerAdapter() {
             @Override
@@ -213,9 +218,10 @@ public class TagFragment extends BaseFragment implements MainContentAdapter.OnIt
      */
     private void initList() {
         if (mAdapter == null) {
-            if (!TextUtils.isEmpty(type) && type.equals("6") || type.equals("7")) {
+            if (!TextUtils.isEmpty(type) && type.equals(Contents.CIRCLE_TYPE) || type.equals(Contents.COLLECTION_TYPE)) {
                 mList = new ArrayList<>();
                 mAdapter = new MainContentAdapter(getActivity(), mList, R.layout.item_duanyouxiu);
+
                 mAdapter.setListener(this);
                 listView.setAdapter(mAdapter);
             } else {
@@ -224,7 +230,7 @@ public class TagFragment extends BaseFragment implements MainContentAdapter.OnIt
                 mAdapter.setListener(this);
                 listView.setAdapter(mAdapter);
             }
-
+            mAdapter.setType(type);
 //            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 //                @Override
 //                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -243,7 +249,11 @@ public class TagFragment extends BaseFragment implements MainContentAdapter.OnIt
     }
 
     private void getContent() {
-        if (!TextUtils.isEmpty(type) && type.equals("5")) {
+        if (!TextUtils.isEmpty(type) && type.equals(Contents.TOUGAO_TYPE) || type.equals(Contents.FRIEND_TYPE))
+        {
+            if (refreshTag) {
+                beginContentId = "";
+            }
             getUserUploadContent(getActivity(), targetId, beginContentId, new GetContentResult() {
                 @Override
                 public void success(String json) {
@@ -256,14 +266,14 @@ public class TagFragment extends BaseFragment implements MainContentAdapter.OnIt
                     }
 
                     if (null != response) {
-                        if ("0".equals(response.getRespCode())&&response.getDyContexts()!=null) {
+                        if ("0".equals(response.getRespCode()) && response.getDyContexts() != null) {
                             if (response.getDyContexts().size() > 0) {
                                 mList.addAll(response.getDyContexts());
                                 beginContentId = mList.get(mList.size() - 1).getDyContextID() + "";
-                                mAdapter.notifyDataSetChanged();
                             } else {
                                 ToastUtils.showShort(getActivity().getResources().getString(R.string.no_more));
                             }
+                            mAdapter.notifyDataSetChanged();
                         } else {
 //                            ToastUtils.showShort(response.getRespMessage());
                         }
@@ -275,7 +285,7 @@ public class TagFragment extends BaseFragment implements MainContentAdapter.OnIt
 
                 }
             });
-        } else if (!TextUtils.isEmpty(type) && type.equals("6")) {
+        } else if (!TextUtils.isEmpty(type) && type.equals(Contents.CIRCLE_TYPE)) {
             getDyCoterie(getActivity(), beginContentId, new GetContentResult() {
                 @Override
                 public void success(String json) {
@@ -288,14 +298,15 @@ public class TagFragment extends BaseFragment implements MainContentAdapter.OnIt
                     }
 
                     if (null != response) {
-                        if ("0".equals(response.getRespCode())&&response.getDyContents()!=null) {
+                        if ("0".equals(response.getRespCode()) && response.getDyContents() != null) {
                             if (response.getDyContents().size() > 0) {
                                 mList.addAll(response.getDyContents());
                                 beginContentId = mList.get(mList.size() - 1).getDyContextID() + "";
-                                mAdapter.notifyDataSetChanged();
+
                             } else {
                                 ToastUtils.showShort(getActivity().getResources().getString(R.string.no_more));
                             }
+                            mAdapter.notifyDataSetChanged();
                         } else {
 //                            ToastUtils.showShort(response.getRespMessage());
                         }
@@ -307,7 +318,7 @@ public class TagFragment extends BaseFragment implements MainContentAdapter.OnIt
 
                 }
             });
-        } else if (!TextUtils.isEmpty(type) && type.equals("7")) {
+        } else if (!TextUtils.isEmpty(type) && type.equals(Contents.COLLECTION_TYPE)) {
             getCollection(getActivity(), page, new GetContentResult() {
                 @Override
                 public void success(String json) {
@@ -320,7 +331,7 @@ public class TagFragment extends BaseFragment implements MainContentAdapter.OnIt
                     }
 
                     if (null != response) {
-                        if ("0".equals(response.getRespCode())&&response.getDyContents()!=null) {
+                        if ("0".equals(response.getRespCode()) && response.getDyContents() != null) {
                             if (response.getDyContents().size() > 0) {
 
                                 for (int i = 0; i < response.getDyContents().size(); i++) {
@@ -358,7 +369,7 @@ public class TagFragment extends BaseFragment implements MainContentAdapter.OnIt
                     }
 
                     if (null != response) {
-                        if ("0".equals(response.getRespCode())&&response.getDyContexts()!=null) {
+                        if ("0".equals(response.getRespCode()) && response.getDyContexts() != null) {
                             if (response.getDyContexts().size() > 0) {
                                 mList.addAll(response.getDyContexts());
                                 mAdapter.notifyDataSetChanged();

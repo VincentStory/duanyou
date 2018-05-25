@@ -103,8 +103,8 @@
 
                     <ImageView
                         android:id="@+id/nav_right_iv"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
+                        android:layout_width="35dp"
+                        android:layout_height="30dp"
                         android:layout_centerVertical="true"
                         android:layout_marginRight="5dp"
                         android:padding="5dp"

@@ -34,6 +34,7 @@ import com.duanyou.lavimao.proj_duanyou.fragment.main.TagFragment;
 import com.duanyou.lavimao.proj_duanyou.util.Constants;
 import com.duanyou.lavimao.proj_duanyou.util.FileUtils;
 import com.duanyou.lavimao.proj_duanyou.util.UserInfo;
+import com.duanyou.lavimao.proj_duanyou.widgets.AutoScrollViewPager;
 import com.duanyou.lavimao.proj_duanyou.widgets.BottomPopupWindow;
 
 import java.io.File;

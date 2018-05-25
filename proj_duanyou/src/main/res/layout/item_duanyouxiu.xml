@@ -2,9 +2,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rl_item"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:id="@+id/rl_item"
     android:background="@color/white"
     android:orientation="vertical">
 
@@ -12,6 +12,28 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_duanzi_status"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="15dp"
+            android:paddingVertical="5dp"
+            android:textColor="@color/login_color2"
+            android:textSize="13sp"
+            android:visibility="gone"
+            tools:text="审核中" />
+
+        <TextView
+            android:id="@+id/tv_create_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="15dp"
+            android:paddingVertical="5dp"
+            android:textColor="@color/sd_color_gray"
+            android:textSize="11sp"
+            android:visibility="gone"
+            tools:text="201805" />
         <!--头部-->
         <LinearLayout
             android:layout_width="match_parent"
