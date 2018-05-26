@@ -41,27 +41,25 @@ import cn.jzvd.JZVideoPlayerStandard;
 public class NearbyPeopleAdapter extends CommonAdapter<NearbyPeopleResponse.UserInfo> {
 
 
-
     public NearbyPeopleAdapter(Context context, List<NearbyPeopleResponse.UserInfo> mDatas, int itemLayoutId) {
         super(context, mDatas, itemLayoutId);
     }
 
     @Override
     public void convert(ViewHolder helper, NearbyPeopleResponse.UserInfo item) {
-        RoundedImageView  headIv = helper.getView(R.id.head_iv);
+        RoundedImageView headIv = helper.getView(R.id.head_iv);
         TextView nameTv = helper.getView(R.id.name_tv);
-        TextView  distanceTv = helper.getView(R.id.distance_tv);
-
+        TextView distanceTv = helper.getView(R.id.distance_tv);
+        TextView signature_tv = helper.getView(R.id.signature_tv);
 
 
         Glide.with(mContext).load(item.getHeadPortraitUrl()).into(headIv);
         nameTv.setText(item.getNickName());
         int dis = (Integer.parseInt(item.getDistance())) / 1000;
         distanceTv.setText(dis + "km | " + item.getLatelyTime());
+        signature_tv.setText(item.getSignature());
 
     }
-
-
 
 
 }

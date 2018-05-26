@@ -30,8 +30,17 @@ public class NearbyPeopleResponse extends BaseResponse {
         private String latelyTime;
 
         private String nickName;
+        private String signature;
 
         private String sex;
+
+        public String getSignature() {
+            return signature;
+        }
+
+        public void setSignature(String signature) {
+            this.signature = signature;
+        }
 
         public void setDistance(String distance){
             this.distance = distance;

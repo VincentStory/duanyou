@@ -76,6 +76,7 @@ public class TagFragment extends BaseFragment implements MainContentAdapter.OnIt
 
     private String type; //内容类型。0-精选，1-热吧，2-段子，3-图片，4-视频 5-段友段子 ,6-段友圈,7-收藏的段子
     private boolean refreshTag = true;  //下拉刷新  true   加载更多  false
+
     private List<DyContextsBean> mList;
 
 
@@ -174,6 +175,7 @@ public class TagFragment extends BaseFragment implements MainContentAdapter.OnIt
     }
 
     public void refreshData() {
+
         refreshTag = true;
         getContent();
     }
@@ -187,6 +189,7 @@ public class TagFragment extends BaseFragment implements MainContentAdapter.OnIt
             public void onRefresh(TwinklingRefreshLayout refreshLayout) {
                 super.onRefresh(refreshLayout);
                 refreshTag = true;
+                Contents.FIRST_REFRESH = true;
                 page = 1;
                 getContent();
             }
@@ -249,8 +252,7 @@ public class TagFragment extends BaseFragment implements MainContentAdapter.OnIt
     }
 
     private void getContent() {
-        if (!TextUtils.isEmpty(type) && type.equals(Contents.TOUGAO_TYPE) || type.equals(Contents.FRIEND_TYPE))
-        {
+        if (!TextUtils.isEmpty(type) && type.equals(Contents.TOUGAO_TYPE) || type.equals(Contents.FRIEND_TYPE)) {
             if (refreshTag) {
                 beginContentId = "";
             }
@@ -286,38 +288,44 @@ public class TagFragment extends BaseFragment implements MainContentAdapter.OnIt
                 }
             });
         } else if (!TextUtils.isEmpty(type) && type.equals(Contents.CIRCLE_TYPE)) {
-            getDyCoterie(getActivity(), beginContentId, new GetContentResult() {
-                @Override
-                public void success(String json) {
-                    GetContentResponse2 response = JSON.parseObject(json, GetContentResponse2.class);
-                    if (refreshTag) {
-                        mList.clear();
-                        refreshLayout.finishRefreshing();
-                    } else {
-                        refreshLayout.finishLoadmore();
-                    }
+            if (refreshTag) {
+                beginContentId = "";
+            }
+            if (Contents.FIRST_REFRESH) {
 
-                    if (null != response) {
-                        if ("0".equals(response.getRespCode()) && response.getDyContents() != null) {
-                            if (response.getDyContents().size() > 0) {
-                                mList.addAll(response.getDyContents());
-                                beginContentId = mList.get(mList.size() - 1).getDyContextID() + "";
-
-                            } else {
-                                ToastUtils.showShort(getActivity().getResources().getString(R.string.no_more));
-                            }
-                            mAdapter.notifyDataSetChanged();
+                getDyCoterie(getActivity(), beginContentId, new GetContentResult() {
+                    @Override
+                    public void success(String json) {
+                        GetContentResponse2 response = JSON.parseObject(json, GetContentResponse2.class);
+                        if (refreshTag) {
+                            mList.clear();
+                            refreshLayout.finishRefreshing();
                         } else {
+                            refreshLayout.finishLoadmore();
+                        }
+
+                        if (null != response) {
+                            if ("0".equals(response.getRespCode()) && response.getDyContents() != null) {
+                                if (response.getDyContents().size() > 0) {
+                                    mList.addAll(response.getDyContents());
+                                    beginContentId = mList.get(mList.size() - 1).getDyContextID() + "";
+
+                                } else {
+                                    ToastUtils.showShort(getActivity().getResources().getString(R.string.no_more));
+                                }
+                                mAdapter.notifyDataSetChanged();
+                            } else {
 //                            ToastUtils.showShort(response.getRespMessage());
+                            }
                         }
                     }
-                }
 
-                @Override
-                public void error(Exception ex) {
+                    @Override
+                    public void error(Exception ex) {
 
-                }
-            });
+                    }
+                });
+            }
         } else if (!TextUtils.isEmpty(type) && type.equals(Contents.COLLECTION_TYPE)) {
             getCollection(getActivity(), page, new GetContentResult() {
                 @Override
@@ -346,7 +354,7 @@ public class TagFragment extends BaseFragment implements MainContentAdapter.OnIt
                                 ToastUtils.showShort(getActivity().getResources().getString(R.string.no_more));
                             }
                         } else {
-                            ToastUtils.showShort(response.getRespMessage());
+//                            ToastUtils.showShort(response.getRespMessage());
                         }
                     }
                 }
@@ -377,7 +385,7 @@ public class TagFragment extends BaseFragment implements MainContentAdapter.OnIt
                                 ToastUtils.showShort(getActivity().getResources().getString(R.string.no_more));
                             }
                         } else {
-                            ToastUtils.showShort(response.getRespMessage());
+//                            ToastUtils.showShort(response.getRespMessage());
                         }
                     }
                 }

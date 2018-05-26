@@ -40,10 +40,14 @@ public class NetUtil {
                             if (response.getRespCode().equals("6")) {
                                 Intent intent = new Intent(context, LoginActivity.class);
                                 context.startActivity(intent);
+                            }else{
+
+                                ToastUtils.showShort(response.getRespMessage());
                             }
-                            ToastUtils.showShort(response.getRespMessage());
+                        }else{
+
+                            resultCallback.onResult(body);
                         }
-                        resultCallback.onResult(body);
                     }
                 });
             }
@@ -76,10 +80,14 @@ public class NetUtil {
                             if (response.getRespCode().equals("6")) {
                                 Intent intent = new Intent(context, LoginActivity.class);
                                 context.startActivity(intent);
+                            }else{
+
+                                ToastUtils.showShort(response.getRespMessage());
                             }
-                            ToastUtils.showShort(response.getRespMessage());
+                        }else{
+
+                            resultCallback.onResult(body);
                         }
-                        resultCallback.onResult(body);
                     }
                 });
             }
@@ -116,10 +124,14 @@ public class NetUtil {
                             if (response.getRespCode().equals("6")) {
                                 Intent intent = new Intent(context, LoginActivity.class);
                                 context.startActivity(intent);
+                            }else{
+
+                                ToastUtils.showShort(response.getRespMessage());
                             }
-                            ToastUtils.showShort(response.getRespMessage());
+                        }else{
+
+                            resultCallback.onResult(body);
                         }
-                        resultCallback.onResult(body);
                     }
                 });
             }
@@ -157,10 +169,14 @@ public class NetUtil {
                             if (response.getRespCode().equals("6")) {
                                 Intent intent = new Intent(context, LoginActivity.class);
                                 context.startActivity(intent);
+                            }else{
+
+                                ToastUtils.showShort(response.getRespMessage());
                             }
-                            ToastUtils.showShort(response.getRespMessage());
+                        }else{
+
+                            resultCallback.onResult(body);
                         }
-                        resultCallback.onResult(body);
                     }
                 });
             }

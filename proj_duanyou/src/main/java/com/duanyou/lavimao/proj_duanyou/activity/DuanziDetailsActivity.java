@@ -73,6 +73,8 @@ public class DuanziDetailsActivity extends BaseActivity {
     ImageView leftIv;
     @BindView(R.id.nav_right_iv)
     ImageView navRightIv;
+    @BindView(R.id.right_tv)
+    TextView right_tv;
     @BindView(R.id.videoplayer)
     JZVideoPlayerStandard videoplayer;
     @BindView(R.id.content_tv)
@@ -121,6 +123,7 @@ public class DuanziDetailsActivity extends BaseActivity {
     private void initTitle() {
         leftIv.setImageResource(R.drawable.black_back);
         navRightIv.setImageResource(R.drawable.jubao);
+        right_tv.setVisibility(View.GONE);
     }
 
     @Override

@@ -85,7 +85,7 @@ public class DyFriendCircleAcitvity extends BaseActivity {
     @Override
     public void initData() {
         initTitle();
-
+        Contents.FIRST_REFRESH=true;
         //必需继承FragmentActivity,嵌套fragment只需要这行代码
         getSupportFragmentManager().beginTransaction().replace(R.id.framelayout, TagFragment.newInstance("6", "")).commitAllowingStateLoss();
 
@@ -135,8 +135,10 @@ public class DyFriendCircleAcitvity extends BaseActivity {
                 break;
         }
     }
+
     private String galleryPath;  //相册路径
     private Uri imageUri;
+
     public void showBottomDialog() {
         galleryPath = Environment.getExternalStorageDirectory()
                 + File.separator + Environment.DIRECTORY_DCIM

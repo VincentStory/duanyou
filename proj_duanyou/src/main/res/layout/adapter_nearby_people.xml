@@ -13,8 +13,8 @@
         android:layout_width="45dp"
         android:layout_height="45dp"
         android:layout_centerVertical="true"
-        android:scaleType="centerCrop"
         android:background="@drawable/head42x"
+        android:scaleType="centerCrop"
         app:riv_corner_radius="6dp" />
 
     <TextView
@@ -22,9 +22,23 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="5dp"
+        android:layout_marginRight="10dp"
         android:layout_marginTop="5dp"
+        android:layout_toLeftOf="@+id/distance_tv"
         android:layout_toRightOf="@+id/head_iv"
+        android:maxLines="1"
+        tools:text="aaaazzzzaaaaaaaaaaaaaaaaaaaaaazzzzzzzzaaa" />
 
+    <TextView
+        android:id="@+id/signature_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/name_tv"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="5dp"
+
+
+        android:layout_toRightOf="@+id/head_iv"
         tools:text="aaaaaaaa" />
 
     <TextView
@@ -33,11 +47,12 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_marginTop="5dp"
+
         tools:text="aaaaaaaa" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
         android:layout_alignParentBottom="true"
-        android:background="@color/gray"/>
+        android:background="@color/gray" />
 </RelativeLayout>
