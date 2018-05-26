@@ -127,7 +127,6 @@ public class DuanziDetailsActivity extends BaseActivity {
     public void initData() {
         initParams();
         initViews();
-        //getDuanziDetails();
         commentRv.setLayoutManager(new LinearLayoutManager(this));
         commentAdapter = new CommentAdapter(this, R.layout.item_comment, mlist);
         commentRv.setAdapter(commentAdapter);
@@ -139,8 +138,6 @@ public class DuanziDetailsActivity extends BaseActivity {
                 clickItem = item;
             }
         });
-
-
     }
 
     private void initViews() {

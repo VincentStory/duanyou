@@ -70,7 +70,7 @@ public class CommentAdapter extends CommonAdapter<GetCommentResponse.CommentsNew
                                     int zanNum = Integer.parseInt(tv.getText().toString().trim());
                                     tv.setText((++zanNum) + "");
                                     helper.getView(R.id.zan_iv).setSelected(true);
-//                                    helper.setImageResource(R.id.zan_iv, R.drawable.good1);
+                                    helper.setImageResource(R.id.zan_iv, R.drawable.gooded);
                                 } catch (Exception e) {
                                 }
                             } else {
@@ -101,6 +101,7 @@ public class CommentAdapter extends CommonAdapter<GetCommentResponse.CommentsNew
             helper.setVisible(R.id.reply_ll, true);
             helper.setVisible(R.id.reply_view, true);
             LinearLayout replyLl = helper.getView(R.id.reply_ll);
+            replyLl.removeAllViews();
             for (int i = 0; i < item.getReply().size(); i++) {
                 View view = LayoutInflater.from(mContext).inflate(R.layout.item_reply, null);
                 TextView name = view.findViewById(R.id.name_tv);

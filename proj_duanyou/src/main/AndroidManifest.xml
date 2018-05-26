@@ -240,7 +240,8 @@
         <activity
             android:name=".activity.GroupMessageActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".activity.ReplyActivity"></activity>
+        <activity android:name=".activity.ReplyActivity" />
+        <activity android:name=".activity.PreviewActivity"></activity>
     </application>
 
 </manifest>

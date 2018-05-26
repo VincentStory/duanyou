@@ -25,6 +25,8 @@ public class Constants {
 
     public static final String CommentsNewBean = "CommentsNewBean";
 
+    public static final String bitmap = "bitmap";
+
     public static final int REQUEST_CODE_TAKE_VIDEO = 1;
 
     public static final int REQUEST_CODE_TAKE_PHOTO = 2;

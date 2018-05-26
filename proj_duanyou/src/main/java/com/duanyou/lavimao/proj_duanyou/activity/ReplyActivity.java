@@ -1,27 +1,26 @@
 package com.duanyou.lavimao.proj_duanyou.activity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.blankj.utilcode.util.ToastUtils;
 import com.duanyou.lavimao.proj_duanyou.GlideApp;
 import com.duanyou.lavimao.proj_duanyou.R;
 import com.duanyou.lavimao.proj_duanyou.adapter.ReplyAdapter;
 import com.duanyou.lavimao.proj_duanyou.base.BaseActivity;
 import com.duanyou.lavimao.proj_duanyou.net.Api;
+import com.duanyou.lavimao.proj_duanyou.net.BaseResponse;
 import com.duanyou.lavimao.proj_duanyou.net.GetContentResult;
 import com.duanyou.lavimao.proj_duanyou.net.NetUtil;
 import com.duanyou.lavimao.proj_duanyou.net.request.GetReplyRequest;
 import com.duanyou.lavimao.proj_duanyou.net.request.UserOperationRequest;
 import com.duanyou.lavimao.proj_duanyou.net.response.BaseReply;
-import com.duanyou.lavimao.proj_duanyou.net.response.DyContextsBean;
 import com.duanyou.lavimao.proj_duanyou.net.response.GetCommentResponse;
 import com.duanyou.lavimao.proj_duanyou.net.response.GetReplyResponse;
 import com.duanyou.lavimao.proj_duanyou.util.Constants;
@@ -32,7 +31,9 @@ import com.lcodecore.tkrefreshlayout.RefreshListenerAdapter;
 import com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout;
 import com.lcodecore.tkrefreshlayout.header.SinaRefreshView;
 import com.makeramen.roundedimageview.RoundedImageView;
+import com.qiniu.android.utils.Json;
 import com.xiben.ebs.esbsdk.callback.ResultCallback;
+import com.zhy.adapter.recyclerview.MultiItemTypeAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,7 +62,6 @@ public class ReplyActivity extends BaseActivity {
     TextView zanTv;
     @BindView(R.id.zan_iv)
     ImageView zanIv;
-
 
     private GetCommentResponse.CommentsNewBean bean;
     private ReplyAdapter adapter;
@@ -106,7 +106,7 @@ public class ReplyActivity extends BaseActivity {
 
     private void initParams() {
         bean = (GetCommentResponse.CommentsNewBean) getIntent().getSerializableExtra(Constants.CommentsNewBean);
-        GlideApp.with(this).load(bean.getHeadPortraitUrl()).into(headRiv);
+        GlideApp.with(this).load(bean.getHeadPortraitUrl()).placeholder(R.drawable.default_pic).into(headRiv);
         nameTv.setText(bean.getNickName());
         try {
             timeTv.setText(TimeUtils.getCommentTime(bean.getUploadDate(), TimeConstants.SEC));
@@ -174,14 +174,22 @@ public class ReplyActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.zan_ll:
-                userOperation("3", "1", "", bean, new GetContentResult() {
+                userOperation("2", "1", "", bean, new GetContentResult() {
                     @Override
                     public void success(String json) {
-                        int zan = Integer.parseInt(zanTv.getText().toString().trim()) + 1;
-                        zanTv.setText(zan + "");
-                        ToastUtils.showShort("已zan");
-//                        zanIv.setImageResource(R.drawable.good1);
-                        zanIv.setSelected(true);
+                        BaseResponse response = JSON.parseObject(json, BaseResponse.class);
+                        if (null != response) {
+                            if ("0".equals(response.getRespCode())) {
+                                int zan = Integer.parseInt(zanTv.getText().toString().trim()) + 1;
+                                zanTv.setText(zan + "");
+                                ToastUtils.showShort("已赞");
+                                zanIv.setImageResource(R.drawable.gooded);
+                                zanIv.setSelected(true);
+                            } else {
+                                ToastUtils.showShort(response.getRespMessage());
+                            }
+                        }
+
                     }
 
                     @Override

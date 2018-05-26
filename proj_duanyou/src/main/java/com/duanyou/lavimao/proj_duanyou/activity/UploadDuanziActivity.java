@@ -13,6 +13,7 @@ import android.media.MediaMetadataRetriever;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
@@ -42,9 +43,11 @@ import com.duanyou.lavimao.proj_duanyou.util.Constants;
 import com.duanyou.lavimao.proj_duanyou.util.DeviceUtils;
 import com.duanyou.lavimao.proj_duanyou.util.FileSizeUtil;
 import com.duanyou.lavimao.proj_duanyou.util.FileUtils;
+import com.duanyou.lavimao.proj_duanyou.util.MCache;
 import com.duanyou.lavimao.proj_duanyou.util.UserInfo;
 import com.xiben.ebs.esbsdk.callback.ResultCallback;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 
 import butterknife.BindView;
@@ -80,6 +83,7 @@ public class UploadDuanziActivity extends BaseActivity {
     private long videoSize;
     private Bitmap videoThumbnail;
     private String videoThumbnailPath;
+    private Bitmap preBitmap;
 
     @Override
     public void setView() {
@@ -102,6 +106,7 @@ public class UploadDuanziActivity extends BaseActivity {
             } else {
                 Bitmap bitmap = getVideoThumbnail(uploadPath);
                 FileUtils.saveBmp2Gallery(bitmap, "videoThumbnail");
+                preBitmap = bitmap;
                 preShowIv.setImageBitmap(bitmap);
                 preShowRl.setVisibility(View.VISIBLE);
             }
@@ -134,7 +139,7 @@ public class UploadDuanziActivity extends BaseActivity {
         });
     }
 
-    @OnClick({R.id.iv_left, R.id.anonymous_iv, R.id.right_tv, R.id.photo_iv, R.id.delete_iv, R.id.video_iv})
+    @OnClick({R.id.iv_left, R.id.anonymous_iv, R.id.right_tv, R.id.photo_iv, R.id.delete_iv, R.id.video_iv, R.id.pre_show_iv})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.iv_left:
@@ -171,6 +176,10 @@ public class UploadDuanziActivity extends BaseActivity {
                     chooseVideo();
                 }
                 break;
+            case R.id.pre_show_iv:
+                MCache.previewBitmap = preBitmap;
+                jumpTo(PreviewActivity.class);
+                break;
         }
     }
 
@@ -198,6 +207,9 @@ public class UploadDuanziActivity extends BaseActivity {
         startActivityForResult(intent, Constants.REQUEST_CODE_PICK_IMAGE);
     }
 
+    /**
+     * 从相册选取视频
+     */
     private void chooseVideo() {
         Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(intent, Constants.REQUEST_CODE_PICK_VIDEO);
@@ -270,8 +282,8 @@ public class UploadDuanziActivity extends BaseActivity {
                 //setText(tv_VideoDuration, R.string.duration, String.valueOf(duration));
                 //setText(tv_VideoSize, R.string.size, String.valueOf(size));
                 //setText(tv_VideoTitle, R.string.title, title);
-                //FileUtils.saveBmp2Gallery(videoThumbnail, "videoThumbnail");
-
+                FileUtils.saveBmp2Gallery(videoThumbnail, "videoThumbnail");
+                preBitmap = videoThumbnail;
                 preShowIv.setImageBitmap(videoThumbnail);
                 preShowRl.setVisibility(View.VISIBLE);
                 type = "4";
@@ -280,6 +292,12 @@ public class UploadDuanziActivity extends BaseActivity {
         }
     }
 
+    /**
+     * 获取视频文件的缩略图
+     *
+     * @param filePath
+     * @return
+     */
     public Bitmap getVideoThumbnail(String filePath) {
         Bitmap b = null;
         MediaMetadataRetriever retriever = new MediaMetadataRetriever();
@@ -367,6 +385,7 @@ public class UploadDuanziActivity extends BaseActivity {
             opts.inSampleSize = 1;
             opts.inJustDecodeBounds = false;
             Bitmap bitmap = BitmapFactory.decodeFile(imagePath, opts);
+            preBitmap = bitmap;
             preShowIv.setImageBitmap(bitmap);
             preShowRl.setVisibility(View.VISIBLE);
             type = "3";
@@ -418,10 +437,15 @@ public class UploadDuanziActivity extends BaseActivity {
         pb.setVisibility(View.VISIBLE);
 
         if ("4".equals(type)) {  //视频
-            NetUtil.postVideo(Api.uploadContent, this, uploadPath, FileUtils.galleryPath + "videoThumbnail", request, new ResultCallback() {
+            NetUtil.postVideo(Api.uploadContent, this, uploadPath, FileUtils.galleryPath + "videoThumbnail.jpg", request, new ResultCallback() {
                 @Override
                 public void onResult(String jsonResult) {
-                    pb.setVisibility(View.GONE);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            pb.setVisibility(View.GONE);
+                        }
+                    });
                     BaseResponse response = JSON.parseObject(jsonResult, BaseResponse.class);
                     if ("0".equals(response.getRespCode())) {
                         ToastUtils.showShort("上传成功");
@@ -431,7 +455,12 @@ public class UploadDuanziActivity extends BaseActivity {
 
                 @Override
                 public void onError(Exception ex) {
-                    pb.setVisibility(View.GONE);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            pb.setVisibility(View.GONE);
+                        }
+                    });
                     ToastUtils.showShort("上传失败，请重试");
                 }
             });
