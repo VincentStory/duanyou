@@ -3,9 +3,11 @@ package com.duanyou.lavimao.proj_duanyou.util;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.os.Environment;
 import android.text.TextUtils;
 import android.util.Log;
 
+import java.io.File;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -42,6 +44,12 @@ public class StringUtil {
             e.printStackTrace();
         }
         return "";
+    }
+
+    public static String getPath(){
+
+
+        return Environment.getExternalStorageDirectory() + File.separator +"拍照";
     }
 
 

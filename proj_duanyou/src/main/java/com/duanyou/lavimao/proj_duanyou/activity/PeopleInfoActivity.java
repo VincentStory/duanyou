@@ -44,22 +44,23 @@ public class PeopleInfoActivity extends BaseActivity {
     private String beginContentId;
     private String followSts;
 
-    @BindView(R.id.nickname_tv)
+    //    @BindView(R.id.nickname_tv)
     TextView nicknameTv;
-    @BindView(R.id.location_tv)
+    //    @BindView(R.id.location_tv)
     TextView locationTv;
-    @BindView(R.id.fansnum_tv)
+    //    @BindView(R.id.fansnum_tv)
     TextView fansnumTv;
-    @BindView(R.id.integral_tv)
+    //    @BindView(R.id.integral_tv)
     TextView integralTv;
     @BindView(R.id.follow_tv)
     TextView followTv;
     @BindView(R.id.add_friend_tv)
     TextView friendTv;
-    @BindView(R.id.headimage_iv)
+    //    @BindView(R.id.headimage_iv)
     RoundedImageView headIv;
-    @BindView(R.id.bg_iv)
+    //    @BindView(R.id.bg_iv)
     ImageView bgIv;
+    TagFragment tagFragment;
 
     @Override
     public void setView() {
@@ -77,8 +78,9 @@ public class PeopleInfoActivity extends BaseActivity {
     @Override
     public void startInvoke() {
 
+        tagFragment = TagFragment.newInstance(Contents.FRIEND_TYPE, targetId, beginContentId);
         //必需继承FragmentActivity,嵌套fragment只需要这行代码
-        getSupportFragmentManager().beginTransaction().replace(R.id.framelayout, TagFragment.newInstance(Contents.FRIEND_TYPE, targetId, beginContentId)).commitAllowingStateLoss();
+        getSupportFragmentManager().beginTransaction().replace(R.id.framelayout, tagFragment).commitAllowingStateLoss();
 
         getUserInfo(PeopleInfoActivity.this, targetId, new GetContentResult() {
             @Override
@@ -87,20 +89,35 @@ public class PeopleInfoActivity extends BaseActivity {
                 if (response.getUserInfo().size() > 0) {
                     UserInfoResponse.UserInfo userInfo = response.getUserInfo().get(0);
                     String picurl = userInfo.getHeadPortraitUrl();
-                    if (picurl != null) {
-                        if (!picurl.isEmpty())
-                            Glide.with(PeopleInfoActivity.this).load(picurl).into(headIv);
-                    }
-                    if (userInfo.getBackgroundWall() != null) {
-                        if (!userInfo.getBackgroundWall().isEmpty())
-                            Glide.with(PeopleInfoActivity.this).load(userInfo.getBackgroundWall()).into(bgIv);
+                    if (tagFragment != null) {
+                        View view = View.inflate(PeopleInfoActivity.this, R.layout.view_head, null);
+                        nicknameTv = view.findViewById(R.id.nickname_tv);
+                        locationTv = view.findViewById(R.id.location_tv);
+                        integralTv = view.findViewById(R.id.integral_tv);
+                        fansnumTv = view.findViewById(R.id.fansnum_tv);
+                        headIv = view.findViewById(R.id.headimage_iv);
+                        bgIv = view.findViewById(R.id.bg_iv);
+
+
+                        nicknameTv.setText(userInfo.getNickName());
+                        locationTv.setText(userInfo.getCurrentLocation());
+                        integralTv.setText("积分：" + userInfo.getIntegral());
+                        fansnumTv.setText("粉丝：" + userInfo.getFansNum());
+                        followSts = userInfo.getFollowSts();
+                        if (picurl != null) {
+                            if (!picurl.isEmpty())
+                                Glide.with(PeopleInfoActivity.this).load(picurl).into(headIv);
+                        }
+                        if (userInfo.getBackgroundWall() != null) {
+                            if (!userInfo.getBackgroundWall().isEmpty())
+                                Glide.with(PeopleInfoActivity.this).load(userInfo.getBackgroundWall()).into(bgIv);
+
+                        }
+                        tagFragment.getListView().addHeaderView(view);
 
                     }
-                    nicknameTv.setText(userInfo.getNickName());
-                    locationTv.setText(userInfo.getCurrentLocation());
-                    integralTv.setText("积分：" + userInfo.getIntegral());
-                    fansnumTv.setText("粉丝：" + userInfo.getFansNum());
-                    followSts = userInfo.getFollowSts();
+
+
                     setTitle(userInfo.getNickName());
                     if (followSts.equals("1")) {
                         followTv.setText("已关注");

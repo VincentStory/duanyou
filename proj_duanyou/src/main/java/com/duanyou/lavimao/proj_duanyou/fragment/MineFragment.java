@@ -11,6 +11,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,10 +39,12 @@ import com.duanyou.lavimao.proj_duanyou.net.NetUtil;
 import com.duanyou.lavimao.proj_duanyou.net.request.ModifyHeadImageRequest;
 import com.duanyou.lavimao.proj_duanyou.net.request.UserInfoRequest;
 import com.duanyou.lavimao.proj_duanyou.net.response.UserInfoResponse;
+import com.duanyou.lavimao.proj_duanyou.util.Constants;
 import com.duanyou.lavimao.proj_duanyou.util.Contents;
 import com.duanyou.lavimao.proj_duanyou.util.DeviceUtils;
 import com.duanyou.lavimao.proj_duanyou.util.FileSizeUtil;
 import com.duanyou.lavimao.proj_duanyou.util.SpUtil;
+import com.duanyou.lavimao.proj_duanyou.util.StringUtil;
 import com.duanyou.lavimao.proj_duanyou.util.UserInfo;
 import com.duanyou.lavimao.proj_duanyou.widgets.BottomPopupWindow;
 import com.makeramen.roundedimageview.RoundedImageView;
@@ -51,10 +54,14 @@ import com.xiben.ebs.esbsdk.util.LogUtil;
 import net.bither.util.CompressTools;
 
 import java.io.File;
+import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import top.zibin.luban.CompressionPredicate;
+import top.zibin.luban.Luban;
+import top.zibin.luban.OnCompressListener;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -72,12 +79,13 @@ public class MineFragment extends BaseFragment {
 
 
     private String picturePath;
+
     private static final int CROP_PHOTO = 2;
     public static final int REQUEST_CODE_PICK_IMAGE = 3;
     private static final int MY_PERMISSIONS_REQUEST_CALL_PHONE = 6;
     public static final int MY_PERMISSIONS_REQUEST_CALL_PHONE2 = 7;
     private static final int BAIDU_READ_PHONE_STATE = 100;
-    private File output;
+    //    private File output;
     private Uri imageUri;
 
     @Override
@@ -95,17 +103,18 @@ public class MineFragment extends BaseFragment {
 
     @Override
     public void startInvoke(View view) {
-        refreshInfo();
+//        refreshInfo();
     }
 
     @Override
     public void onResume() {
         super.onResume();
         if (UserInfo.getLoginState()) {
+            refreshInfo();
             nicknameTv.setText(UserInfo.getNickName());
             locationTv.setText(SpUtil.getStringSp(SpUtil.getRegion));
             loginTv.setVisibility(View.GONE);
-            Log.i(TAG, "onResume: " + UserInfo.getBgUrl());
+//            Log.i(TAG, "onResume: " + UserInfo.getBgUrl());
             if (!UserInfo.getBgUrl().isEmpty())
                 Glide.with(getActivity()).load(UserInfo.getBgUrl()).into(bgIv);
             if (!UserInfo.getHeadUrl().isEmpty())
@@ -155,7 +164,7 @@ public class MineFragment extends BaseFragment {
 
 
     @OnClick({R.id.login_register_tv, R.id.edit_tv, R.id.bg_iv, R.id.setting_tv, R.id.nearby_duanyou_tv,
-            R.id.duanyou_circle_tv, R.id.follow_tv,R.id.collection_tv,R.id.tougao_tv,R.id.hudong_tv})
+            R.id.duanyou_circle_tv, R.id.follow_tv, R.id.collection_tv, R.id.tougao_tv, R.id.hudong_tv})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.login_register_tv:
@@ -240,8 +249,8 @@ public class MineFragment extends BaseFragment {
                 break;
             case R.id.collection_tv:
                 if (UserInfo.getLoginState()) {
-                    Intent intent=new Intent(getActivity(),CollectionActivity.class);
-                    intent.putExtra("type",Contents.COLLECTION_TYPE);
+                    Intent intent = new Intent(getActivity(), CollectionActivity.class);
+                    intent.putExtra("type", Contents.COLLECTION_TYPE);
                     startActivity(intent);
 //                    gotoActivity(CollectionActivity.class);
                 } else {
@@ -250,8 +259,8 @@ public class MineFragment extends BaseFragment {
                 break;
             case R.id.tougao_tv:
                 if (UserInfo.getLoginState()) {
-                    Intent intent=new Intent(getActivity(),CollectionActivity.class);
-                    intent.putExtra("type",Contents.TOUGAO_TYPE);
+                    Intent intent = new Intent(getActivity(), CollectionActivity.class);
+                    intent.putExtra("type", Contents.TOUGAO_TYPE);
                     startActivity(intent);
                 } else {
                     gotoActivity(LoginActivity.class);
@@ -272,36 +281,48 @@ public class MineFragment extends BaseFragment {
      * 拍照
      */
     void takePhoto() {
-        /**
-         * 最后一个参数是文件夹的名称，可以随便起
-         */
-        File file = new File(Environment.getExternalStorageDirectory(), "拍照");
-        if (!file.exists()) {
-            file.mkdir();
+        String path = StringUtil.getPath(); //获取路径
+        String fileName = StringUtil.getPath() + File.separator + new Date().getTime() + ".jpg";//定义文件名
+        File file = new File(path, fileName);
+        if (!file.getParentFile().exists()) {//文件夹不存在
+            file.getParentFile().mkdirs();
         }
-        /**
-         * 这里将时间作为不同照片的名称
-         */
-        output = new File(file, System.currentTimeMillis() + ".jpg");
+        imageUri = Uri.fromFile(file);
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+        startActivityForResult(intent, CROP_PHOTO);//takePhotoRequestCode是自己定义的一个请求码
 
-        /**
-         * 如果该文件夹已经存在，则删除它，否则创建一个
-         */
-        try {
-            if (output.exists()) {
-                output.delete();
-            }
-            output.createNewFile();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
+//        /**
+//         * 最后一个参数是文件夹的名称，可以随便起
+//         */
+//        File file = new File(Environment.getExternalStorageDirectory(), "拍照");
+//        if (!file.exists()) {
+//            file.mkdir();
+//        }
+//        /**
+//         * 这里将时间作为不同照片的名称
+//         */
+//        output = new File(file, System.currentTimeMillis() + ".jpg");
+//
+//        /**
+//         * 如果该文件夹已经存在，则删除它，否则创建一个
+//         */
+//        try {
+//            if (output.exists()) {
+//                output.delete();
+//            }
+//            output.createNewFile();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
         /**
          * 隐式打开拍照的Activity，并且传入CROP_PHOTO常量作为拍照结束后回调的标志
          */
-        imageUri = Uri.fromFile(output);
-        Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-        startActivityForResult(intent, CROP_PHOTO);
+//        imageUri = Uri.fromFile(output);
+//        Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
+//        intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+//        startActivityForResult(intent, CROP_PHOTO);
 
     }
 
@@ -361,6 +382,8 @@ public class MineFragment extends BaseFragment {
              */
             case CROP_PHOTO:
                 if (res == RESULT_OK) {
+//                    choosePhoto();
+
                     try {
                         /**
                          * 该uri就是照片文件夹对应的uri
@@ -484,6 +507,7 @@ public class MineFragment extends BaseFragment {
 
     }
 
+
     /**
      * 修改个人背景
      *
@@ -492,34 +516,60 @@ public class MineFragment extends BaseFragment {
      * @param oldPath
      * @param result
      */
-    private void upImage(int type, final Activity context, String oldPath, final GetContentResult result) {
-        Double db = FileSizeUtil.getFileOrFilesSize(oldPath, FileSizeUtil.SIZETYPE_KB);
-        if (db > 300 || type == CROP_PHOTO) {
-            CompressTools.getInstance(getActivity()).compressToFile(new File(oldPath), new CompressTools.OnCompressListener() {
-                @Override
-                public void onStart() {
-                }
+    private void upImage(int type, final Activity context, final String oldPath, final GetContentResult result) {
+//        int db = (int) FileSizeUtil.getFileOrFilesSize(oldPath, FileSizeUtil.SIZETYPE_KB);
+//        Log.i(TAG, "upImage: " + db + "KB");
+//        if (db > 50 || type == CROP_PHOTO) {
+//        Log.i(TAG, "upImage: " + db);
+//        Luban.with(getActivity())
+//                .load(oldPath)
+//                .ignoreBy(100)
+//                .setTargetDir(StringUtil.getPath())
+//                .filter(new CompressionPredicate() {
+//                    @Override
+//                    public boolean apply(String path) {
+//                        return !(TextUtils.isEmpty(path) || path.toLowerCase().endsWith(".gif"));
+//                    }
+//                })
+//                .setCompressListener(new OnCompressListener() {
+//                    @Override
+//                    public void onStart() {
+//                        // TODO 压缩开始前调用，可以在方法内启动 loading UI
+//                        Log.i(TAG, "onStart: " + oldPath);
+//                    }
+//
+//                    @Override
+//                    public void onSuccess(File file) {
+//                        // TODO 压缩成功后调用，返回压缩后的图片文件
+//                        newPath = file.getPath();
+//                        int db = (int) FileSizeUtil.getFileOrFilesSize(newPath, FileSizeUtil.SIZETYPE_KB);
+//                        Log.i(TAG, "upImage-newPath: " + db + "KB");
+//                        Log.i(TAG, "onSuccess: " + newPath);
+//                        uploadImage(context, newPath, result);
+//
+//                    }
+//
+//                    @Override
+//                    public void onError(Throwable e) {
+//                        Log.e(TAG, "onError: " + e.toString());
+//                        // TODO 当压缩过程出现问题时调用
+//                    }
+//                }).launch();
+//        Log.i(TAG, "oldPath: " + oldPath);
+        uploadImage(context, oldPath, result);
 
-                @Override
-                public void onFail(String error) {
-                    LogUtil.log(error);
-                }
 
-                @Override
-                public void onSuccess(File file) {
-                    newPath = file.getPath();
+    }
 
-                }
-            });
-        } else {
-            newPath = oldPath;
-        }
+    private void uploadImage(Activity context, String path, final GetContentResult result) {
+        Log.i(TAG, "upImage: newPath" + path);
+
         ModifyHeadImageRequest request = new ModifyHeadImageRequest();
         request.setDyID(UserInfo.getDyId());
         request.setDeviceID(DeviceUtils.getAndroidID());
         request.setToken(UserInfo.getToken());
 
-        NetUtil.postFile(Api.modifyBackgroundWall, context, newPath, request, new ResultCallback() {
+        NetUtil.postFile(Api.modifyBackgroundWall, context, path, request, new ResultCallback() {
             @Override
             public void onResult(final String jsonResult) {
                 BaseResponse response = JSON.parseObject(jsonResult, BaseResponse.class);

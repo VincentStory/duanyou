@@ -144,6 +144,10 @@ public class TagFragment extends BaseFragment implements MainContentAdapter.OnIt
 
     }
 
+    public ListView getListView() {
+        return listView;
+    }
+
     public List<DyContextsBean> getSelectedList() {
         List<DyContextsBean> list = new ArrayList<>();
         for (DyContextsBean bean : mList) {
