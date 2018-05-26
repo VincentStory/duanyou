@@ -6,7 +6,6 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -28,13 +27,11 @@ import com.duanyou.lavimao.proj_duanyou.activity.MainActivity;
 import com.duanyou.lavimao.proj_duanyou.activity.UploadDuanziActivity;
 import com.duanyou.lavimao.proj_duanyou.adapter.MainPagerAdapter;
 import com.duanyou.lavimao.proj_duanyou.adapter.TitlesAdapter;
-import com.duanyou.lavimao.proj_duanyou.base.BaseActivity;
 import com.duanyou.lavimao.proj_duanyou.base.BaseFragment;
 import com.duanyou.lavimao.proj_duanyou.fragment.main.TagFragment;
 import com.duanyou.lavimao.proj_duanyou.util.Constants;
 import com.duanyou.lavimao.proj_duanyou.util.FileUtils;
 import com.duanyou.lavimao.proj_duanyou.util.UserInfo;
-import com.duanyou.lavimao.proj_duanyou.widgets.AutoScrollViewPager;
 import com.duanyou.lavimao.proj_duanyou.widgets.BottomPopupWindow;
 
 import java.io.File;
@@ -60,7 +57,8 @@ public class MainFragment extends BaseFragment {
     private List<Fragment> fragments;
     private MainPagerAdapter pagerAdapter;
     private Uri imageUri;
-    private String videoPath;
+    private String videoName;
+    private String photoName;
 
     @Override
     public View onCreate(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -131,8 +129,9 @@ public class MainFragment extends BaseFragment {
     }
 
     private void photoStart() {
-        //创建file对象，用于存储拍照后的图片；
-        File outputImage = new File(FileUtils.galleryPath, "output_image.png");
+        //创建file对象，用于存储拍照后的图片
+        photoName = System.currentTimeMillis() + "output_image.png";
+        File outputImage = new File(FileUtils.galleryPath, photoName);
 
         try {
             if (outputImage.exists()) {
@@ -157,9 +156,9 @@ public class MainFragment extends BaseFragment {
     }
 
     private void videoStart() {
-        //创建file对象，用于存储摄像后的图片；
-        videoPath = FileUtils.galleryPath + "output_video" + System.currentTimeMillis() + ".mp4";
-        File outputImage = new File(FileUtils.galleryPath, videoPath);
+        //创建file对象，用于存储摄像后的图片
+        videoName = System.currentTimeMillis() + "output_video.mp4";
+        File outputImage = new File(FileUtils.galleryPath, videoName);
         try {
             if (outputImage.exists()) {
                 outputImage.delete();
@@ -191,7 +190,7 @@ public class MainFragment extends BaseFragment {
                         //Bitmap bm = BitmapFactory.decodeStream(getActivity().getContentResolver().openInputStream(imageUri));
                         //cameraIv.setImageBitmap(bm);
                         Intent photoIntent = new Intent(getActivity(), UploadDuanziActivity.class);
-                        photoIntent.putExtra(Constants.FILE_PATH, FileUtils.galleryPath + "output_image.png");
+                        photoIntent.putExtra(Constants.FILE_PATH, FileUtils.galleryPath + photoName);
                         photoIntent.putExtra(Constants.type, "3");
                         startActivity(photoIntent);
                     } catch (Exception e) {
@@ -203,7 +202,7 @@ public class MainFragment extends BaseFragment {
                 if (resultCode == RESULT_OK) {
                     try {
                         Intent videoIntent = new Intent(getActivity(), UploadDuanziActivity.class);
-                        videoIntent.putExtra(Constants.FILE_PATH, videoPath);
+                        videoIntent.putExtra(Constants.FILE_PATH, FileUtils.galleryPath + videoName);
                         videoIntent.putExtra(Constants.type, "4");
                         startActivity(videoIntent);
                     } catch (Exception e) {

@@ -11,6 +11,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+/**
+ * 预览图片
+ */
 public class PreviewActivity extends BaseActivity {
 
     @BindView(R.id.preview_iv)

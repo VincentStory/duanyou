@@ -6,6 +6,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_above="@+id/tv_delete"
         android:orientation="vertical">
 
         <include layout="@layout/common_title" />
@@ -13,7 +14,7 @@
         <FrameLayout
             android:id="@+id/framelayout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"></FrameLayout>
+            android:layout_height="match_parent"/>
 
     </LinearLayout>
 
@@ -24,7 +25,7 @@
         android:layout_alignParentBottom="true"
         android:background="@color/white"
         android:gravity="center"
+        android:text="删除"
         android:textSize="15sp"
-        android:visibility="gone"
-        android:text="删除" />
+        android:visibility="gone" />
 </RelativeLayout>

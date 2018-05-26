@@ -17,6 +17,7 @@ import com.blankj.utilcode.util.ToastUtils;
 import com.duanyou.lavimao.proj_duanyou.R;
 import com.duanyou.lavimao.proj_duanyou.base.BaseActivity;
 import com.duanyou.lavimao.proj_duanyou.util.Constants;
+import com.duanyou.lavimao.proj_duanyou.util.FileUtils;
 import com.duanyou.lavimao.proj_duanyou.util.UserInfo;
 import com.duanyou.lavimao.proj_duanyou.widgets.BottomPopupWindow;
 
@@ -27,8 +28,9 @@ import butterknife.OnClick;
 
 public class MoreActivity extends BaseActivity {
 
-    private String galleryPath;  //相册路径
     private Uri imageUri;
+    private String videoName;
+    private String photoName;
 
     @Override
     public void setView() {
@@ -78,9 +80,7 @@ public class MoreActivity extends BaseActivity {
     }
 
     public void showBottomDialog() {
-        galleryPath = Environment.getExternalStorageDirectory()
-                + File.separator + Environment.DIRECTORY_DCIM
-                + File.separator + "Camera" + File.separator;
+
         new BottomPopupWindow(this).builder().setTitle("选择模式")
                 .addSheetItem("拍照", BottomPopupWindow.SheetItemColor.Blue, new BottomPopupWindow.OnSheetItemClickListener() {
                     @Override
@@ -111,7 +111,8 @@ public class MoreActivity extends BaseActivity {
 
     private void photoStart() {
         //创建file对象，用于存储拍照后的图片；
-        File outputImage = new File(galleryPath, "output_image.png");
+        photoName = System.currentTimeMillis() + "output_image.png";
+        File outputImage = new File(FileUtils.galleryPath, photoName);
 
         try {
             if (outputImage.exists()) {
@@ -137,7 +138,8 @@ public class MoreActivity extends BaseActivity {
 
     private void videoStart() {
         //创建file对象，用于存储摄像后的图片；
-        File outputImage = new File(galleryPath, "output_video.mp4");
+        videoName = System.currentTimeMillis() + "output_video.mp4";
+        File outputImage = new File(FileUtils.galleryPath, videoName);
         try {
             if (outputImage.exists()) {
                 outputImage.delete();
@@ -169,7 +171,7 @@ public class MoreActivity extends BaseActivity {
                         //Bitmap bm = BitmapFactory.decodeStream(getActivity().getContentResolver().openInputStream(imageUri));
                         //cameraIv.setImageBitmap(bm);
                         Intent photoIntent = new Intent(this, UploadDuanziActivity.class);
-                        photoIntent.putExtra(Constants.FILE_PATH, galleryPath + "output_image.png");
+                        photoIntent.putExtra(Constants.FILE_PATH, FileUtils.galleryPath + photoName);
                         photoIntent.putExtra(Constants.type, "3");
                         startActivity(photoIntent);
                         finish();
@@ -182,7 +184,7 @@ public class MoreActivity extends BaseActivity {
                 if (resultCode == RESULT_OK) {
                     try {
                         Intent videoIntent = new Intent(this, UploadDuanziActivity.class);
-                        videoIntent.putExtra(Constants.FILE_PATH, galleryPath + "output_video.mp4");
+                        videoIntent.putExtra(Constants.FILE_PATH, FileUtils.galleryPath + videoName);
                         videoIntent.putExtra(Constants.type, "4");
                         startActivity(videoIntent);
                         finish();

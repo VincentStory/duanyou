@@ -19,9 +19,12 @@ import com.duanyou.lavimao.proj_duanyou.net.NetUtil;
 import com.duanyou.lavimao.proj_duanyou.net.request.GetContentRequest;
 import com.duanyou.lavimao.proj_duanyou.net.request.GetVerificationCodeRequest;
 import com.duanyou.lavimao.proj_duanyou.net.response.GetContentResponse;
+import com.duanyou.lavimao.proj_duanyou.util.Constants;
 import com.duanyou.lavimao.proj_duanyou.util.Contents;
 import com.duanyou.lavimao.proj_duanyou.util.SpUtil;
 import com.xiben.ebs.esbsdk.callback.ResultCallback;
+
+import java.util.regex.Pattern;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -38,6 +41,7 @@ public class RegisterActivity extends BaseActivity {
     TextView phoneEt;
     @BindView(R.id.read_cb)
     CheckBox read_cb;
+
     @Override
     public void setView() {
         setContentView(R.layout.activity_register);
@@ -67,6 +71,10 @@ public class RegisterActivity extends BaseActivity {
                 break;
             case R.id.next_tv:
                 if (phoneEt.getText().toString().trim().isEmpty()) {
+                    ToastUtils.showShort("手机号为空");
+                    break;
+                }
+                if (!Pattern.matches(Constants.REGEX_MOBILE_EXACT, phoneEt.getText().toString())) {
                     ToastUtils.showShort("请输入正确的手机号");
                     break;
                 }

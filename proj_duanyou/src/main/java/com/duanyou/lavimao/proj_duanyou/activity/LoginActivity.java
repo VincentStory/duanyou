@@ -21,6 +21,7 @@ import com.duanyou.lavimao.proj_duanyou.net.NetUtil;
 import com.duanyou.lavimao.proj_duanyou.net.request.GetVerificationCodeRequest;
 import com.duanyou.lavimao.proj_duanyou.net.request.LoginRequest;
 import com.duanyou.lavimao.proj_duanyou.net.response.LoginResponse;
+import com.duanyou.lavimao.proj_duanyou.util.Constants;
 import com.duanyou.lavimao.proj_duanyou.util.Contents;
 import com.duanyou.lavimao.proj_duanyou.util.DeviceUtils;
 import com.duanyou.lavimao.proj_duanyou.util.SpUtil;
@@ -37,6 +38,7 @@ import org.greenrobot.eventbus.EventBus;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -147,12 +149,12 @@ public class LoginActivity extends BaseActivity {
 
     private boolean checkContent(String name, String pwd) {
         if (name.isEmpty() || pwd.isEmpty()) {
-
             ToastUtils.showShort("账号或密码为空");
             return false;
         }
         return true;
     }
+
 
     /**
      * 普通登录
@@ -223,7 +225,7 @@ public class LoginActivity extends BaseActivity {
      */
     public void loginSuccess(String json) {
         LoginResponse response = JSON.parseObject(json, LoginResponse.class);
-        Log.i(TAG, "loginSuccess: ID=="+response.getDyID());
+        Log.i(TAG, "loginSuccess: ID==" + response.getDyID());
         SpUtil.saveStringSP(SpUtil.dyID, response.getDyID());
         SpUtil.saveStringSP(SpUtil.TOKEN, response.getToken());
         SpUtil.saveStringSP(SpUtil.nickName, response.getNickName());
