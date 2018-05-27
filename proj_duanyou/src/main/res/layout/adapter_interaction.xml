@@ -104,14 +104,14 @@
             android:id="@+id/content_text_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/content_iv"
+            android:layout_below="@+id/replay_name_tv"
             android:layout_marginLeft="5dp"
-            android:textColor="@color/sd_color_gray"
             android:layout_marginTop="5dp"
             android:layout_toRightOf="@+id/content_iv"
-            android:textSize="12sp"
-            android:maxLines="2"
             android:ellipsize="end"
+            android:maxLines="2"
+            android:textColor="@color/sd_color_gray"
+            android:textSize="12sp"
             tools:text="20180707" />
 
 
@@ -120,8 +120,8 @@
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="0.5dp"
+        android:layout_height="5dp"
         android:layout_alignParentBottom="true"
         android:layout_marginTop="5dp"
-        android:background="@color/gray" />
+        android:background="@color/gray2" />
 </LinearLayout>
