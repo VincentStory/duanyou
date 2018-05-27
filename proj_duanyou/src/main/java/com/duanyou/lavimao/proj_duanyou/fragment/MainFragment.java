@@ -264,7 +264,7 @@ public class MainFragment extends BaseFragment {
         pagerAdapter = new MainPagerAdapter(getFragmentManager(), fragments, getActivity());
         viewPager.setAdapter(pagerAdapter);
         viewPager.setOffscreenPageLimit(7);
-        viewPager.setCurrentItem(2);
+        viewPager.setCurrentItem(1);
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
