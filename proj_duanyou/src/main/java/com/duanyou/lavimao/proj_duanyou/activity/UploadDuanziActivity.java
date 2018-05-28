@@ -10,6 +10,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaMetadataRetriever;
+import android.media.MediaPlayer;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Build;
@@ -49,6 +50,7 @@ import com.xiben.ebs.esbsdk.callback.ResultCallback;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -103,12 +105,14 @@ public class UploadDuanziActivity extends BaseActivity {
             uploadPath = getIntent().getStringExtra(Constants.FILE_PATH);
             if ("3".equals(type)) {
                 displayImage(uploadPath);
-            } else {
+            } else if ("4".equals(type)) {
                 Bitmap bitmap = getVideoThumbnail(uploadPath);
                 FileUtils.saveBmp2Gallery(bitmap, "videoThumbnail");
                 preBitmap = bitmap;
+                videoThumbnail = bitmap;
                 preShowIv.setImageBitmap(bitmap);
                 preShowRl.setVisibility(View.VISIBLE);
+                videoDuration = getVideoPlayer(uploadPath).getDuration() / 1000;
             }
         }
     }
@@ -393,6 +397,21 @@ public class UploadDuanziActivity extends BaseActivity {
         } else {
             Toast.makeText(this, "failed to get image", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private MediaPlayer getVideoPlayer(String path) {
+        //File file = new File("{您的视频所在的路径}")
+
+        MediaPlayer mediaPlayer = new MediaPlayer();
+        try {
+            mediaPlayer.setDataSource(path);
+            mediaPlayer.prepare();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return mediaPlayer;
+
     }
 
     /**
