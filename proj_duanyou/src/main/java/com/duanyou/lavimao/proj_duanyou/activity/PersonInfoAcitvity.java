@@ -49,6 +49,7 @@ import net.bither.util.CompressTools;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Date;
 import java.util.Locale;
 
 import butterknife.BindView;
@@ -133,7 +134,7 @@ public class PersonInfoAcitvity extends BaseActivity {
                 } else {
                     // 此处为失去焦点时的处理内容
                     setUserInfo(PersonInfoAcitvity.this,nicknameEt.getText().toString(), birthyTv.getText().toString(), areaTv.getText().toString(),
-                            sexTv.getText().toString(), hunyinTv.getText().toString(), workEt.getText().toString(), new GetContentResult() {
+                            sexTv.getText().toString(), hunyinTv.getText().toString(), workEt.getText().toString(),signatureEt.getText().toString(), new GetContentResult() {
                                 @Override
                                 public void success(String json) {
                                     SpUtil.saveStringSP(SpUtil.nickName, nicknameEt.getText().toString());
@@ -156,7 +157,7 @@ public class PersonInfoAcitvity extends BaseActivity {
                 } else {
                     // 此处为失去焦点时的处理内容
                     setUserInfo(PersonInfoAcitvity.this,nicknameEt.getText().toString(), birthyTv.getText().toString(), areaTv.getText().toString(),
-                            sexTv.getText().toString(), hunyinTv.getText().toString(), workEt.getText().toString(), new GetContentResult() {
+                            sexTv.getText().toString(), hunyinTv.getText().toString(), workEt.getText().toString(),signatureEt.getText().toString(), new GetContentResult() {
                                 @Override
                                 public void success(String json) {
                                 }
@@ -178,7 +179,7 @@ public class PersonInfoAcitvity extends BaseActivity {
                 } else {
                     // 此处为失去焦点时的处理内容
                     setUserInfo(PersonInfoAcitvity.this,nicknameEt.getText().toString(), birthyTv.getText().toString(), areaTv.getText().toString(),
-                            sexTv.getText().toString(), hunyinTv.getText().toString(), workEt.getText().toString(), new GetContentResult() {
+                            sexTv.getText().toString(), hunyinTv.getText().toString(), workEt.getText().toString(),signatureEt.getText().toString(), new GetContentResult() {
                                 @Override
                                 public void success(String json) {
                                 }
@@ -340,7 +341,7 @@ public class PersonInfoAcitvity extends BaseActivity {
 //                ToastUtils.showShort("index=" + index + ", item=" + item);
                 sexTv.setText(item);
                 setUserInfo(PersonInfoAcitvity.this,nicknameEt.getText().toString(), birthyTv.getText().toString(), areaTv.getText().toString(),
-                        sexTv.getText().toString(), hunyinTv.getText().toString(), workEt.getText().toString(), new GetContentResult() {
+                        sexTv.getText().toString(), hunyinTv.getText().toString(), workEt.getText().toString(),signatureEt.getText().toString(), new GetContentResult() {
                             @Override
                             public void success(String json) {
                             }
@@ -395,7 +396,7 @@ public class PersonInfoAcitvity extends BaseActivity {
 //                ToastUtils.showShort("index=" + index + ", item=" + item);
                 hunyinTv.setText(item);
                 setUserInfo(PersonInfoAcitvity.this,nicknameEt.getText().toString(), birthyTv.getText().toString(), areaTv.getText().toString(),
-                        sexTv.getText().toString(), hunyinTv.getText().toString(), workEt.getText().toString(), new GetContentResult() {
+                        sexTv.getText().toString(), hunyinTv.getText().toString(), workEt.getText().toString(), signatureEt.getText().toString(),new GetContentResult() {
                             @Override
                             public void success(String json) {
                             }
@@ -428,7 +429,7 @@ public class PersonInfoAcitvity extends BaseActivity {
                 ToastUtils.showShort(year + "-" + month + "-" + day);
                 birthyTv.setText(year + "-" + month + "-" + day);
                 setUserInfo(PersonInfoAcitvity.this,nicknameEt.getText().toString(), birthyTv.getText().toString(), areaTv.getText().toString(),
-                        sexTv.getText().toString(), hunyinTv.getText().toString(), workEt.getText().toString(), new GetContentResult() {
+                        sexTv.getText().toString(), hunyinTv.getText().toString(), workEt.getText().toString(),signatureEt.getText().toString(), new GetContentResult() {
                             @Override
                             public void success(String json) {
                             }
@@ -483,7 +484,7 @@ public class PersonInfoAcitvity extends BaseActivity {
 
                 areaTv.setText(province.getAreaName() +"-"+ city.getAreaName() +"-"+ county.getAreaName());
                 setUserInfo(PersonInfoAcitvity.this,nicknameEt.getText().toString(), birthyTv.getText().toString(), areaTv.getText().toString(),
-                        sexTv.getText().toString(), hunyinTv.getText().toString(), workEt.getText().toString(), new GetContentResult() {
+                        sexTv.getText().toString(), hunyinTv.getText().toString(), workEt.getText().toString(),signatureEt.getText().toString(), new GetContentResult() {
                             @Override
                             public void success(String json) {
                                 SpUtil.saveStringSP(SpUtil.getRegion, areaTv.getText().toString());
@@ -503,36 +504,48 @@ public class PersonInfoAcitvity extends BaseActivity {
      * 拍照
      */
     void takePhoto() {
-        /**
-         * 最后一个参数是文件夹的名称，可以随便起
-         */
-        File file = new File(Environment.getExternalStorageDirectory(), "拍照");
-        if (!file.exists()) {
-            file.mkdir();
+        String path = StringUtil.getPath(); //获取路径
+        String fileName = StringUtil.getPath()+File.separator+new Date().getTime()+".jpg";//定义文件名
+        File file = new File(path,fileName);
+        if(!file.getParentFile().exists()){//文件夹不存在
+            file.getParentFile().mkdirs();
         }
-        /**
-         * 这里将时间作为不同照片的名称
-         */
-        output = new File(file, System.currentTimeMillis() + ".jpg");
-
-        /**
-         * 如果该文件夹已经存在，则删除它，否则创建一个
-         */
-        try {
-            if (output.exists()) {
-                output.delete();
-            }
-            output.createNewFile();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        /**
-         * 隐式打开拍照的Activity，并且传入CROP_PHOTO常量作为拍照结束后回调的标志
-         */
-        imageUri = Uri.fromFile(output);
-        Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
+        imageUri = Uri.fromFile(file);
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-        startActivityForResult(intent, CROP_PHOTO);
+        startActivityForResult(intent, CROP_PHOTO);//takePhotoRequestCode是自己定义的一个请求码
+
+
+//        /**
+//         * 最后一个参数是文件夹的名称，可以随便起
+//         */
+//        File file = new File(Environment.getExternalStorageDirectory(), "拍照");
+//        if (!file.exists()) {
+//            file.mkdir();
+//        }
+//        /**
+//         * 这里将时间作为不同照片的名称
+//         */
+//        output = new File(file, System.currentTimeMillis() + ".jpg");
+//
+//        /**
+//         * 如果该文件夹已经存在，则删除它，否则创建一个
+//         */
+//        try {
+//            if (output.exists()) {
+//                output.delete();
+//            }
+//            output.createNewFile();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        /**
+//         * 隐式打开拍照的Activity，并且传入CROP_PHOTO常量作为拍照结束后回调的标志
+//         */
+//        imageUri = Uri.fromFile(output);
+//        Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
+//        intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+//        startActivityForResult(intent, CROP_PHOTO);
 
     }
 
@@ -671,7 +684,7 @@ public class PersonInfoAcitvity extends BaseActivity {
     }
 
 
-    private String newPath = null;
+//    private String newPath = null;
 
 
 
@@ -685,36 +698,44 @@ public class PersonInfoAcitvity extends BaseActivity {
      * @param result
      */
     private void upImage(int type, final Activity context, String oldPath, final GetContentResult result) {
-        Double db = FileSizeUtil.getFileOrFilesSize(oldPath, FileSizeUtil.SIZETYPE_KB);
-        if (db > 300 || type == CROP_PHOTO) {
-            CompressTools.getInstance(this).compressToFile(new File(oldPath), new CompressTools.OnCompressListener() {
-                @Override
-                public void onStart() {
+//        Double db = FileSizeUtil.getFileOrFilesSize(oldPath, FileSizeUtil.SIZETYPE_KB);
+//        if (db > 300 || type == CROP_PHOTO) {
+//            CompressTools.getInstance(this).compressToFile(new File(oldPath), new CompressTools.OnCompressListener() {
+//                @Override
+//                public void onStart() {
+//
+//                }
+//
+//                @Override
+//                public void onFail(String error) {
+//                    LogUtil.log(error);
+//                }
+//
+//                @Override
+//                public void onSuccess(File file) {
+//                    newPath = file.getPath();
+//
+//                }
+//            });
+//        } else {
+//            newPath = oldPath;
+//        }
 
-                }
 
-                @Override
-                public void onFail(String error) {
-                    LogUtil.log(error);
-                }
+        uploadImage(context,oldPath,result);
 
-                @Override
-                public void onSuccess(File file) {
-                    newPath = file.getPath();
+    }
 
-                }
-            });
-        } else {
-            newPath = oldPath;
-        }
 
+    private void uploadImage(Activity context, String path, final GetContentResult result) {
+        Log.i(TAG, "upImage: newPath" + path);
 
         ModifyHeadImageRequest request = new ModifyHeadImageRequest();
         request.setDyID(UserInfo.getDyId());
         request.setDeviceID(DeviceUtils.getAndroidID());
         request.setToken(UserInfo.getToken());
 
-        NetUtil.postFile(Api.modifyHeadPortrait, context, newPath, request, new ResultCallback() {
+        NetUtil.postFile(Api.modifyHeadPortrait, context, path, request, new ResultCallback() {
             @Override
             public void onResult(final String jsonResult) {
                 BaseResponse response = JSON.parseObject(jsonResult, BaseResponse.class);
@@ -738,7 +759,7 @@ public class PersonInfoAcitvity extends BaseActivity {
     /**
      * 修改个人信息
      */
-    protected void setUserInfo(final Activity context, String nickname,String birthday, String area, String sex, String hunyin, String work,
+    protected void setUserInfo(final Activity context, String nickname,String birthday, String area, String sex, String hunyin, String work,String signature,
                                final GetContentResult result) {
         SetUserInfoRequest request = new SetUserInfoRequest();
         request.setDyID(UserInfo.getDyId());
@@ -749,6 +770,7 @@ public class PersonInfoAcitvity extends BaseActivity {
         request.setGender(sex);
         request.setMaritalStatus(hunyin);
         request.setOccupation(work);
+        request.setSignature(signature);
         request.setRegion(area);
 
 

@@ -30,6 +30,7 @@ import com.duanyou.lavimao.proj_duanyou.adapter.TitlesAdapter;
 import com.duanyou.lavimao.proj_duanyou.base.BaseFragment;
 import com.duanyou.lavimao.proj_duanyou.fragment.main.TagFragment;
 import com.duanyou.lavimao.proj_duanyou.util.Constants;
+import com.duanyou.lavimao.proj_duanyou.util.Contents;
 import com.duanyou.lavimao.proj_duanyou.util.FileUtils;
 import com.duanyou.lavimao.proj_duanyou.util.UserInfo;
 import com.duanyou.lavimao.proj_duanyou.widgets.BottomPopupWindow;
@@ -253,12 +254,12 @@ public class MainFragment extends BaseFragment {
      */
     private void initPagers() {
         fragments = new ArrayList<>();
-        fragments.add(TagFragment.newInstance("4"));//关注
+        fragments.add(TagFragment.newInstance(Contents.CIRCLE_TYPE));//关注
         fragments.add(TagFragment.newInstance("1"));//推荐
         fragments.add(TagFragment.newInstance("4"));//视频
         fragments.add(TagFragment.newInstance("3"));//趣图
         fragments.add(TagFragment.newInstance("2"));//段子
-        fragments.add(TagFragment.newInstance("4"));//精选
+        fragments.add(TagFragment.newInstance("0"));//精选
         fragments.add(TagFragment.newInstance("4"));//段友秀
         pagerAdapter = new MainPagerAdapter(getFragmentManager(), fragments, getActivity());
         viewPager.setAdapter(pagerAdapter);

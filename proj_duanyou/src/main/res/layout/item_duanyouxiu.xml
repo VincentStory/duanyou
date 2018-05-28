@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:paddingLeft="15dp"
             android:paddingVertical="5dp"
-            android:textColor="@color/login_color2"
+            android:textColor="@color/color_ff6a9b"
             android:textSize="13sp"
             android:visibility="gone"
             tools:text="审核中" />

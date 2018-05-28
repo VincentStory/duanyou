@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -132,10 +133,10 @@ public abstract class BaseFragment extends Fragment {
     }
 
 
-      /**
+    /**
      * 1.4.1	 获取段友发布的段子
-       */
-    protected void getUserUploadContent(final Activity context, String targetId, String beginContentId,final GetContentResult result) {
+     */
+    protected void getUserUploadContent(final Activity context, String targetId, String beginContentId, final GetContentResult result) {
         GetUserUploadContentRequest request = new GetUserUploadContentRequest();
         request.setDeviceID(UserInfo.getDeviceId());
         request.setToken(UserInfo.getToken());
@@ -171,6 +172,7 @@ public abstract class BaseFragment extends Fragment {
      * 获取段友圈
      */
     protected void getDyCoterie(final Activity context, String beginContentId, final GetContentResult result) {
+
         FriendCircleRequest request = new FriendCircleRequest();
         request.setDyID(UserInfo.getDyId());
         request.setDeviceID(UserInfo.getDeviceId());
@@ -199,8 +201,10 @@ public abstract class BaseFragment extends Fragment {
             }
         });
 
+
     }
- /**
+
+    /**
      * 获取个人收藏
      */
     protected void getCollection(final Activity context, int page, final GetContentResult result) {
@@ -233,9 +237,6 @@ public abstract class BaseFragment extends Fragment {
         });
 
     }
-
-
-
 
 
     protected void gotoActivity(Class activity) {
