@@ -101,6 +101,10 @@ public class CollectionActivity extends BaseActivity {
             case R.id.tv_delete:
                 List<DyContextsBean> bean = tagFragment.getSelectedList();
                 Log.i(TAG, "onClick: " + bean.toString());
+                if(bean.size()==0){
+                    ToastUtils.showShort("请选择要删除的段子");
+                    break;
+                }
                 userOperation("1", "8", "", bean, new GetContentResult() {
                     @Override
                     public void success(String json) {

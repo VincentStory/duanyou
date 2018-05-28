@@ -108,7 +108,7 @@ public class MyApplication extends MultiDexApplication {
         PlatformConfig.setWeixin("wx862040dc83b4edb1", "5ee1d5cd9e9afd5509b04c44231d41ea");
 //        PlatformConfig.setWeixin("wxdc1e388c3822c80b", "3baf1193c85774b3fd9d18447d76cab0");
         //豆瓣RENREN平台目前只能在服务器端配置
-        PlatformConfig.setSinaWeibo("4234486505", "8f3d9660e41d163dcc65fc14e53eb100", "http://sns.whalecloud.com");
+        PlatformConfig.setSinaWeibo("4234486505", "8f3d9660e41d163dcc65fc14e53eb100", "https://sns.whalecloud.com/sina2/callback");
         PlatformConfig.setQQZone("1106520694", "BMAIyEzCyOU8E6fd");
     }
 

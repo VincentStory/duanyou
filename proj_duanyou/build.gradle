@@ -117,7 +117,6 @@ dependencies {
 
     //压缩图片框架
     compile 'com.jaywei:compresstool:1.2.0'
-
     implementation 'top.zibin:Luban:1.1.5'
 
     //图片加载框架
