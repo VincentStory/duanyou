@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     android:orientation="vertical">
 
     <LinearLayout
@@ -63,13 +64,13 @@
                 android:layout_width="50dp"
                 android:layout_height="25dp"
                 android:layout_alignParentRight="true"
-                android:text="编辑"
-                android:textSize="13sp"
-                android:gravity="center"
-                android:layout_marginTop="25dp"
                 android:layout_marginRight="14dp"
+                android:layout_marginTop="25dp"
                 android:background="@drawable/rectangle_edit"
-                android:textColor="@color/white" />
+                android:gravity="center"
+                android:text="编辑"
+                android:textColor="@color/white"
+                android:textSize="13sp" />
         </RelativeLayout>
 
         <TextView
@@ -88,10 +89,10 @@
             android:layout_marginTop="20dp"
             android:background="@color/white"
             android:paddingBottom="5dp"
-            android:visibility="visible"
             android:paddingEnd="30dp"
             android:paddingLeft="30dp"
-            android:paddingTop="10dp">
+            android:paddingTop="10dp"
+            android:visibility="visible">
 
             <TextView
                 android:id="@+id/nearby_duanyou_tv"
@@ -116,14 +117,13 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:drawablePadding="5dp"
-                android:drawableTop="@drawable/follow2x"
+                android:drawableTop="@drawable/follow6"
                 android:text="关注" />
 
         </RelativeLayout>
 
         <TextView
             android:id="@+id/collection_tv"
-            android:visibility="visible"
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:layout_marginTop="20dp"
@@ -134,13 +134,13 @@
             android:gravity="center_vertical"
             android:paddingEnd="10dp"
             android:paddingLeft="10dp"
-            android:text="收藏" />
+            android:text="收藏"
+            android:visibility="visible" />
 
         <TextView
             android:id="@+id/tougao_tv"
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:visibility="visible"
             android:background="@color/white"
             android:drawableLeft="@drawable/write2x"
             android:drawablePadding="10dp"
@@ -148,13 +148,13 @@
             android:gravity="center_vertical"
             android:paddingEnd="10dp"
             android:paddingLeft="10dp"
-            android:text="投稿" />
+            android:text="投稿"
+            android:visibility="visible" />
 
         <TextView
             android:id="@+id/hudong_tv"
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:visibility="visible"
             android:background="@color/white"
             android:drawableLeft="@drawable/hudong2x"
             android:drawablePadding="10dp"
@@ -162,7 +162,8 @@
             android:gravity="center_vertical"
             android:paddingEnd="10dp"
             android:paddingLeft="10dp"
-            android:text="互动" />
+            android:text="互动"
+            android:visibility="visible" />
 
         <TextView
             android:id="@+id/setting_tv"

@@ -440,7 +440,6 @@ public class TagFragment extends BaseFragment implements MainContentAdapter.OnIt
         shareDialog = new ShareDialog(getActivity(), save, new ShareDialog.onClickListener() {
             @Override
             public void sinaClick() {
-
                 new ShareAction(getActivity()).withMedia(web).withText(bean.getContextText())
                         .setPlatform(SHARE_MEDIA.SINA.toSnsPlatform().mPlatform)
                         .setCallback(shareListener).share();
