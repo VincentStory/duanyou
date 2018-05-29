@@ -1900,7 +1900,8 @@ public final class ImageUtils {
         float ratio = (float) imgWidth / picWidth;
         int rWidth = imgWidth;
         int rHeight = (int) (picHeight * ratio);
-        if (ratio < ((float) 1 / 3)) {
+        float rate = (float) picWidth / picHeight;
+        if (rate < ((float) 1 / 3)) {
             rHeight = ScreenUtils.getScreenWidth();
         }
         ViewGroup.LayoutParams ps = imageView.getLayoutParams();
@@ -1914,7 +1915,8 @@ public final class ImageUtils {
         float ratio = (float) imgWidth / videoWidth;
         int rWidth = imgWidth;
         int rHeight = (int) (videoHeight * ratio);
-        if (ratio < ((float) 10 / 13)) {
+        float rate = (float) videoWidth / videoHeight;
+        if (rate < ((float) 10 / 13)) {
             rHeight = ScreenUtils.getScreenWidth();
         }
         ViewGroup.LayoutParams ps = video.getLayoutParams();
