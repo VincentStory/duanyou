@@ -204,12 +204,12 @@ public class LoginActivity extends BaseActivity {
         NetUtil.getData(Api.LOGIN, this, request, new ResultCallback() {
             @Override
             public void onResult(final String jsonResult) {
-                BaseResponse response = JSON.parseObject(jsonResult, BaseResponse.class);
-                if (response.getRespCode().equals("0")) {
+                //BaseResponse response = JSON.parseObject(jsonResult, BaseResponse.class);
+                //if (response.getRespCode().equals("0")) {
                     loginSuccess(jsonResult);
-                } else {
-                    ToastUtils.showShort(response.getRespMessage());
-                }
+                //} else {
+                   // ToastUtils.showShort(response.getRespMessage());
+              //  }
             }
 
             @Override

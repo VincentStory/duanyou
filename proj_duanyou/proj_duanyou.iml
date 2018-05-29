@@ -110,9 +110,11 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="com.android.support:multidex-1.0.2" level="project" />
     <orderEntry type="library" scope="TEST" name="com.android.support:multidex-1.0.1" level="project" />
+    <orderEntry type="library" name="__local_aars__:/Users/luojialun/Desktop/duanyou_0427/duanyou/proj_duanyou/libs/umeng-share-wechat-simplify-6.9.2.jar:unspecified@jar" level="project" />
     <orderEntry type="library" name="com.squareup.okhttp3:okhttp:3.10.0@jar" level="project" />
     <orderEntry type="library" name="com.squareup.okio:okio:1.14.0@jar" level="project" />
     <orderEntry type="library" name="com.android.support:support-media-compat-26.1.0" level="project" />
+    <orderEntry type="library" name="__local_aars__:/Users/luojialun/Desktop/duanyou_0427/duanyou/proj_duanyou/libs/umeng-share-core-6.9.2.jar:unspecified@jar" level="project" />
     <orderEntry type="library" name="__local_aars__:/Users/luojialun/Desktop/duanyou_0427/duanyou/OneSDK/libs/alisdk-rpc-3.jar:unspecified@jar" level="project" />
     <orderEntry type="library" name="com.android.support:recyclerview-v7-26.1.0" level="project" />
     <orderEntry type="library" name="com.github.bumptech.glide:annotations:4.2.0@jar" level="project" />
@@ -128,28 +130,24 @@
     <orderEntry type="library" name="com.android.support:support-annotations:26.1.0@jar" level="project" />
     <orderEntry type="library" name="com.android.support.constraint:constraint-layout-solver:1.0.2@jar" level="project" />
     <orderEntry type="library" name="com.android.support.constraint:constraint-layout-1.0.2" level="project" />
-    <orderEntry type="library" name="__local_aars__:/Users/luojialun/Desktop/duanyou_0427/duanyou/proj_duanyou/libs/umeng-common-1.5.1.jar:unspecified@jar" level="project" />
     <orderEntry type="library" name="__local_aars__:/Users/luojialun/Desktop/duanyou_0427/duanyou/OneSDK/libs/alisdk-system-15.jar:unspecified@jar" level="project" />
     <orderEntry type="library" name="com.android.support:support-core-ui-26.1.0" level="project" />
     <orderEntry type="library" name="com.github.bumptech.glide:gifdecoder:4.2.0@jar" level="project" />
-    <orderEntry type="library" name="__local_aars__:/Users/luojialun/Desktop/duanyou_0427/duanyou/proj_duanyou/libs/umeng-analytics-7.5.1.jar:unspecified@jar" level="project" />
     <orderEntry type="library" name="io.reactivex:rxjava:1.2.1@jar" level="project" />
     <orderEntry type="library" name="com.zhy:base-rvadapter-3.0.3" level="project" />
     <orderEntry type="library" name="com.android.support:support-compat-26.1.0" level="project" />
     <orderEntry type="library" name="__local_aars__:/Users/luojialun/Desktop/duanyou_0427/duanyou/OneSDK/libs/securityguard-3.1.27.jar:unspecified@jar" level="project" />
     <orderEntry type="library" name="com.jakewharton:butterknife-annotations:8.8.1@jar" level="project" />
     <orderEntry type="library" name="com.jph.takephoto:takephoto_library-4.0.3" level="project" />
-    <orderEntry type="library" name="__local_aars__:/Users/luojialun/Desktop/duanyou_0427/duanyou/proj_duanyou/libs/SocialSDK_Sina_Simplify.jar:unspecified@jar" level="project" />
     <orderEntry type="library" name="android.arch.core:common:1.0.0@jar" level="project" />
+    <orderEntry type="library" name="__local_aars__:/Users/luojialun/Desktop/duanyou_0427/duanyou/proj_duanyou/libs/umeng-analytics-7.5.3.jar:unspecified@jar" level="project" />
     <orderEntry type="library" name="com.zhy:base-adapter-3.0.3" level="project" />
     <orderEntry type="library" name="cn.jzvd:jiaozivideoplayer-6.2.9" level="project" />
     <orderEntry type="library" name="__local_aars__:/Users/luojialun/Desktop/duanyou_0427/duanyou/OneSDK/libs/alisdk-kernel-2.1.0.jar:unspecified@jar" level="project" />
     <orderEntry type="library" name="__local_aars__:/Users/luojialun/Desktop/duanyou_0427/duanyou/OneSDK/libs/alisdk-tlog-1.jar:unspecified@jar" level="project" />
     <orderEntry type="library" scope="TEST" name="com.android.support:multidex-instrumentation-1.0.2" level="project" />
-    <orderEntry type="library" name="__local_aars__:/Users/luojialun/Desktop/duanyou_0427/duanyou/proj_duanyou/libs/SocialSDK_WeChat_Simplify.jar:unspecified@jar" level="project" />
     <orderEntry type="library" name="com.android.support:transition-26.1.0" level="project" />
     <orderEntry type="library" name="com.android.support:design-26.1.0" level="project" />
-    <orderEntry type="library" name="__local_aars__:/Users/luojialun/Desktop/duanyou_0427/duanyou/proj_duanyou/libs/umeng_social_net.jar:unspecified@jar" level="project" />
     <orderEntry type="library" name="__local_aars__:/Users/luojialun/Desktop/duanyou_0427/duanyou/OneSDK/libs/alisdk-ui-7.jar:unspecified@jar" level="project" />
     <orderEntry type="library" name="__local_aars__:/Users/luojialun/Desktop/duanyou_0427/duanyou/OneSDK/libs/alisdk-security-8.jar:unspecified@jar" level="project" />
     <orderEntry type="library" name="com.github.quentin7b:android-location-tracker-3.2" level="project" />
@@ -157,20 +155,20 @@
     <orderEntry type="library" name="com.qiniu:happy-dns:0.2.13@jar" level="project" />
     <orderEntry type="library" name="com.darsh.multipleimageselect:multipleimageselect-1.0.4" level="project" />
     <orderEntry type="library" name="com.makeramen:roundedimageview-2.3.0" level="project" />
+    <orderEntry type="library" name="__local_aars__:/Users/luojialun/Desktop/duanyou_0427/duanyou/proj_duanyou/libs/umeng-sharetool-6.9.2.jar:unspecified@jar" level="project" />
     <orderEntry type="library" name="com.android.support:support-fragment-26.1.0" level="project" />
     <orderEntry type="library" name="com.r0adkll:slidableactivity-2.0.6" level="project" />
+    <orderEntry type="library" name="__local_aars__:/Users/luojialun/Desktop/duanyou_0427/duanyou/proj_duanyou/libs/umeng-common-1.5.3.jar:unspecified@jar" level="project" />
     <orderEntry type="library" name="com.android.support:support-vector-drawable-26.1.0" level="project" />
     <orderEntry type="library" name="com.github.bumptech.glide:okhttp3-integration:4.2.0@jar" level="project" />
     <orderEntry type="library" name="__local_aars__:/Users/luojialun/Desktop/duanyou_0427/duanyou/OneSDK/libs/IMCore-2.0.2.jar:unspecified@jar" level="project" />
-    <orderEntry type="library" name="__local_aars__:/Users/luojialun/Desktop/duanyou_0427/duanyou/proj_duanyou/libs/umeng_social_tool.jar:unspecified@jar" level="project" />
     <orderEntry type="library" name="com.squareup.retrofit2:converter-gson:2.0.2@jar" level="project" />
-    <orderEntry type="library" name="__local_aars__:/Users/luojialun/Desktop/duanyou_0427/duanyou/proj_duanyou/libs/SocialSDK_QQ_Simplify.jar:unspecified@jar" level="project" />
-    <orderEntry type="library" name="__local_aars__:/Users/luojialun/Desktop/duanyou_0427/duanyou/proj_duanyou/libs/umeng-debug-1.0.0.jar:unspecified@jar" level="project" />
+    <orderEntry type="library" name="__local_aars__:/Users/luojialun/Desktop/duanyou_0427/duanyou/proj_duanyou/libs/umeng-share-sina-simplify-6.9.2.jar:unspecified@jar" level="project" />
+    <orderEntry type="library" name="top.zibin:Luban-1.1.5" level="project" />
     <orderEntry type="library" name="com.android.support:support-core-utils-26.1.0" level="project" />
     <orderEntry type="library" name="com.github.bumptech.glide:disklrucache:4.2.0@jar" level="project" />
     <orderEntry type="library" name="__local_aars__:/Users/luojialun/Desktop/duanyou_0427/duanyou/OneSDK/libs/IMKit-2.0.2.jar:unspecified@jar" level="project" />
     <orderEntry type="library" name="__local_aars__:/Users/luojialun/Desktop/duanyou_0427/duanyou/OneSDK/libs/alisdk-kernel-base-2.1.0.jar:unspecified@jar" level="project" />
-    <orderEntry type="library" name="__local_aars__:/Users/luojialun/Desktop/duanyou_0427/duanyou/proj_duanyou/libs/umeng_social_api.jar:unspecified@jar" level="project" />
     <orderEntry type="library" name="__local_aars__:/Users/luojialun/Desktop/duanyou_0427/duanyou/OneSDK/libs/mediaservice-4.1.7.jar:unspecified@jar" level="project" />
     <orderEntry type="library" name="com.github.castorflex.verticalviewpager:library-19.0.1" level="project" />
     <orderEntry type="library" name="__local_aars__:/Users/luojialun/Desktop/duanyou_0427/duanyou/OneSDK/libs/sdk-legacy-support-2.1.0.jar:unspecified@jar" level="project" />
@@ -178,11 +176,13 @@
     <orderEntry type="library" name="com.jakewharton:butterknife-8.8.1" level="project" />
     <orderEntry type="library" name="com.yanzhenjie.alertdialog:alertdialog-1.0.1" level="project" />
     <orderEntry type="library" name="__local_aars__:/Users/luojialun/Desktop/duanyou_0427/duanyou/OneSDK/libs/alisdk-ut-5.jar:unspecified@jar" level="project" />
+    <orderEntry type="library" name="__local_aars__:/Users/luojialun/Desktop/duanyou_0427/duanyou/proj_duanyou/libs/umeng-share-QQ-simplify-6.9.2.jar:unspecified@jar" level="project" />
     <orderEntry type="library" name="com.squareup.retrofit2:retrofit:2.4.0@jar" level="project" />
     <orderEntry type="library" name="com.qiniu:qiniu-android-sdk:7.3.12@jar" level="project" />
     <orderEntry type="library" name="com.yanzhenjie:permission-1.0.7" level="project" />
     <orderEntry type="library" name="me.shaohui.advancedluban:library-1.3.2" level="project" />
     <orderEntry type="library" name="com.android.support:support-v4-26.1.0" level="project" />
+    <orderEntry type="library" name="__local_aars__:/Users/luojialun/Desktop/duanyou_0427/duanyou/proj_duanyou/libs/umeng-shareboard-widget-6.9.2.jar:unspecified@jar" level="project" />
     <orderEntry type="library" name="com.blankj:utilcode-1.11.1" level="project" />
     <orderEntry type="library" name="com.android.support:animated-vector-drawable-26.1.0" level="project" />
     <orderEntry type="library" name="org.greenrobot:eventbus:3.1.1@jar" level="project" />

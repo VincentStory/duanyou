@@ -143,7 +143,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/Transparent" />
 
-        <!-- 分享 -->
+        <!-- ********************umeng start **************************-->
         <activity
             android:name="com.umeng.socialize.media.WBShareCallBackActivity"
             android:configChanges="keyboardHidden|orientation"
@@ -166,6 +166,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+
         <activity
             android:name="com.tencent.tauth.AuthActivity"
             android:launchMode="singleTask"
@@ -184,6 +185,7 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
         <activity
             android:name="com.dyouclub.jokefriends.wxapi.WXEntryActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
