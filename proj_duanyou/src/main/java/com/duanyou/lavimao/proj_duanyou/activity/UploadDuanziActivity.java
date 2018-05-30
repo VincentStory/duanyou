@@ -67,6 +67,8 @@ public class UploadDuanziActivity extends BaseActivity {
     ImageView anonymousIv;
     @BindView(R.id.pre_show_iv)
     ImageView preShowIv;
+    @BindView(R.id.iv_play)
+    ImageView iv_play;
     @BindView(R.id.pre_show_rl)
     RelativeLayout preShowRl;
     @BindView(R.id.content_et)

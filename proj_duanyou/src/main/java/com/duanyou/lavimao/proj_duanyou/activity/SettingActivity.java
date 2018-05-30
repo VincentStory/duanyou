@@ -43,6 +43,7 @@ public class SettingActivity extends BaseActivity {
     public void setView() {
         setContentView(R.layout.activity_setting);
         ButterKnife.bind(this);
+        setTitle("设置");
     }
 
     @Override

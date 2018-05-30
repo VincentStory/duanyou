@@ -99,7 +99,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:drawablePadding="5dp"
-                android:drawableTop="@drawable/add2x"
+                android:drawableTop="@drawable/near"
                 android:text="附近段友" />
 
             <TextView
@@ -108,7 +108,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:drawablePadding="5dp"
-                android:drawableTop="@drawable/friend2x"
+                android:drawableTop="@drawable/friend"
                 android:text="段友圈" />
 
             <TextView

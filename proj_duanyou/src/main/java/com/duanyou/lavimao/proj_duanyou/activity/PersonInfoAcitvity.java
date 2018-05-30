@@ -160,6 +160,7 @@ public class PersonInfoAcitvity extends BaseActivity {
                             sexTv.getText().toString(), hunyinTv.getText().toString(), workEt.getText().toString(),signatureEt.getText().toString(), new GetContentResult() {
                                 @Override
                                 public void success(String json) {
+
                                 }
 
                                 @Override
@@ -235,7 +236,21 @@ public class PersonInfoAcitvity extends BaseActivity {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.iv_left:
-                finish();
+                setUserInfo(PersonInfoAcitvity.this,nicknameEt.getText().toString(), birthyTv.getText().toString(), areaTv.getText().toString(),
+                        sexTv.getText().toString(), hunyinTv.getText().toString(), workEt.getText().toString(),signatureEt.getText().toString(), new GetContentResult() {
+                            @Override
+                            public void success(String json) {
+                                finish();
+                            }
+
+                            @Override
+                            public void error(Exception ex) {
+                                ToastUtils.showShort(ex.getMessage());
+                                finish();
+                            }
+                        });
+
+
                 break;
             case R.id.headimage_rl:
                 new BottomPopupWindow(this).builder()

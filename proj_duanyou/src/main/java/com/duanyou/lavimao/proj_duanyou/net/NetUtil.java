@@ -41,7 +41,7 @@ public class NetUtil {
                                 Intent intent = new Intent(context, LoginActivity.class);
                                 context.startActivity(intent);
                             }else{
-
+                                Log.i(TAG, "showError: "+response.getRespMessage());
                                 ToastUtils.showShort(response.getRespMessage());
                             }
                         }else{
@@ -81,7 +81,7 @@ public class NetUtil {
                                 Intent intent = new Intent(context, LoginActivity.class);
                                 context.startActivity(intent);
                             }else{
-
+                                Log.i(TAG, "showError: "+response.getRespMessage());
                                 ToastUtils.showShort(response.getRespMessage());
                             }
                         }else{
@@ -125,7 +125,7 @@ public class NetUtil {
                                 Intent intent = new Intent(context, LoginActivity.class);
                                 context.startActivity(intent);
                             }else{
-
+                                Log.i(TAG, "showError: "+response.getRespMessage());
                                 ToastUtils.showShort(response.getRespMessage());
                             }
                         }else{
@@ -170,7 +170,7 @@ public class NetUtil {
                                 Intent intent = new Intent(context, LoginActivity.class);
                                 context.startActivity(intent);
                             }else{
-
+                                Log.i(TAG, "showError: "+response.getRespMessage());
                                 ToastUtils.showShort(response.getRespMessage());
                             }
                         }else{
