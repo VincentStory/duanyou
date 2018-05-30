@@ -125,7 +125,6 @@ public class MainContentAdapter extends CommonAdapter<DyContextsBean> {
                 jz.setUp(item.getContextUrl(), JZVideoPlayerStandard.SCREEN_WINDOW_NORMAL, "");
                 GlideApp.with(mContext)
                         .load(item.getVideoDisplay())
-
                         .into(jz.thumbImageView);
                 /*.error(R.drawable.default_load)
                         .placeholder(R.drawable.default_load)

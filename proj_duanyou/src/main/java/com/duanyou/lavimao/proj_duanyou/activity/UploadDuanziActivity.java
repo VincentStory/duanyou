@@ -67,8 +67,8 @@ public class UploadDuanziActivity extends BaseActivity {
     ImageView anonymousIv;
     @BindView(R.id.pre_show_iv)
     ImageView preShowIv;
-    @BindView(R.id.iv_play)
-    ImageView iv_play;
+    @BindView(R.id.play_iv)
+    ImageView playIv;
     @BindView(R.id.pre_show_rl)
     RelativeLayout preShowRl;
     @BindView(R.id.content_et)
@@ -113,6 +113,7 @@ public class UploadDuanziActivity extends BaseActivity {
                 preBitmap = bitmap;
                 videoThumbnail = bitmap;
                 preShowIv.setImageBitmap(bitmap);
+                playIv.setVisibility(View.VISIBLE);
                 preShowRl.setVisibility(View.VISIBLE);
                 videoDuration = getVideoPlayer(uploadPath).getDuration() / 1000;
             }
@@ -183,8 +184,10 @@ public class UploadDuanziActivity extends BaseActivity {
                 }
                 break;
             case R.id.pre_show_iv:
-                MCache.previewBitmap = preBitmap;
-                jumpTo(PreviewActivity.class);
+                Intent intent = new Intent(this, PreviewActivity.class);
+                intent.putExtra(Constants.type, type);
+                intent.putExtra(Constants.FILE_PATH, uploadPath);
+                startActivity(intent);
                 break;
         }
     }
@@ -291,6 +294,7 @@ public class UploadDuanziActivity extends BaseActivity {
                 FileUtils.saveBmp2Gallery(videoThumbnail, "videoThumbnail");
                 preBitmap = videoThumbnail;
                 preShowIv.setImageBitmap(videoThumbnail);
+                playIv.setVisibility(View.VISIBLE);
                 preShowRl.setVisibility(View.VISIBLE);
                 type = "4";
             }
@@ -393,9 +397,9 @@ public class UploadDuanziActivity extends BaseActivity {
             Bitmap bitmap = BitmapFactory.decodeFile(imagePath, opts);
             preBitmap = bitmap;
             preShowIv.setImageBitmap(bitmap);
+            playIv.setVisibility(View.GONE);
             preShowRl.setVisibility(View.VISIBLE);
             type = "3";
-            Log.i("TAG", "bitmap options height-->" + opts.outHeight);
         } else {
             Toast.makeText(this, "failed to get image", Toast.LENGTH_SHORT).show();
         }
