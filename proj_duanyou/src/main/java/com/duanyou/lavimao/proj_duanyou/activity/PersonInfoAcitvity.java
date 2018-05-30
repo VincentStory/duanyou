@@ -133,8 +133,8 @@ public class PersonInfoAcitvity extends BaseActivity {
 
                 } else {
                     // 此处为失去焦点时的处理内容
-                    setUserInfo(PersonInfoAcitvity.this,nicknameEt.getText().toString(), birthyTv.getText().toString(), areaTv.getText().toString(),
-                            sexTv.getText().toString(), hunyinTv.getText().toString(), workEt.getText().toString(),signatureEt.getText().toString(), new GetContentResult() {
+                    setUserInfo(PersonInfoAcitvity.this, nicknameEt.getText().toString(), birthyTv.getText().toString(), areaTv.getText().toString(),
+                            sexTv.getText().toString(), hunyinTv.getText().toString(), workEt.getText().toString(), signatureEt.getText().toString(), new GetContentResult() {
                                 @Override
                                 public void success(String json) {
                                     SpUtil.saveStringSP(SpUtil.nickName, nicknameEt.getText().toString());
@@ -156,8 +156,8 @@ public class PersonInfoAcitvity extends BaseActivity {
 
                 } else {
                     // 此处为失去焦点时的处理内容
-                    setUserInfo(PersonInfoAcitvity.this,nicknameEt.getText().toString(), birthyTv.getText().toString(), areaTv.getText().toString(),
-                            sexTv.getText().toString(), hunyinTv.getText().toString(), workEt.getText().toString(),signatureEt.getText().toString(), new GetContentResult() {
+                    setUserInfo(PersonInfoAcitvity.this, nicknameEt.getText().toString(), birthyTv.getText().toString(), areaTv.getText().toString(),
+                            sexTv.getText().toString(), hunyinTv.getText().toString(), workEt.getText().toString(), signatureEt.getText().toString(), new GetContentResult() {
                                 @Override
                                 public void success(String json) {
 
@@ -179,8 +179,8 @@ public class PersonInfoAcitvity extends BaseActivity {
 
                 } else {
                     // 此处为失去焦点时的处理内容
-                    setUserInfo(PersonInfoAcitvity.this,nicknameEt.getText().toString(), birthyTv.getText().toString(), areaTv.getText().toString(),
-                            sexTv.getText().toString(), hunyinTv.getText().toString(), workEt.getText().toString(),signatureEt.getText().toString(), new GetContentResult() {
+                    setUserInfo(PersonInfoAcitvity.this, nicknameEt.getText().toString(), birthyTv.getText().toString(), areaTv.getText().toString(),
+                            sexTv.getText().toString(), hunyinTv.getText().toString(), workEt.getText().toString(), signatureEt.getText().toString(), new GetContentResult() {
                                 @Override
                                 public void success(String json) {
                                 }
@@ -198,7 +198,7 @@ public class PersonInfoAcitvity extends BaseActivity {
 
     @Override
     public void startInvoke() {
-        getUserInfo(PersonInfoAcitvity.this,UserInfo.getDyId(), new GetContentResult() {
+        getUserInfo(PersonInfoAcitvity.this, UserInfo.getDyId(), new GetContentResult() {
             @Override
             public void success(String json) {
                 UserInfoResponse response = JSON.parseObject(json, UserInfoResponse.class);
@@ -236,8 +236,8 @@ public class PersonInfoAcitvity extends BaseActivity {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.iv_left:
-                setUserInfo(PersonInfoAcitvity.this,nicknameEt.getText().toString(), birthyTv.getText().toString(), areaTv.getText().toString(),
-                        sexTv.getText().toString(), hunyinTv.getText().toString(), workEt.getText().toString(),signatureEt.getText().toString(), new GetContentResult() {
+                setUserInfo(PersonInfoAcitvity.this, nicknameEt.getText().toString(), birthyTv.getText().toString(), areaTv.getText().toString(),
+                        sexTv.getText().toString(), hunyinTv.getText().toString(), workEt.getText().toString(), signatureEt.getText().toString(), new GetContentResult() {
                             @Override
                             public void success(String json) {
                                 finish();
@@ -355,8 +355,8 @@ public class PersonInfoAcitvity extends BaseActivity {
             public void onItemPicked(int index, String item) {
 //                ToastUtils.showShort("index=" + index + ", item=" + item);
                 sexTv.setText(item);
-                setUserInfo(PersonInfoAcitvity.this,nicknameEt.getText().toString(), birthyTv.getText().toString(), areaTv.getText().toString(),
-                        sexTv.getText().toString(), hunyinTv.getText().toString(), workEt.getText().toString(),signatureEt.getText().toString(), new GetContentResult() {
+                setUserInfo(PersonInfoAcitvity.this, nicknameEt.getText().toString(), birthyTv.getText().toString(), areaTv.getText().toString(),
+                        sexTv.getText().toString(), hunyinTv.getText().toString(), workEt.getText().toString(), signatureEt.getText().toString(), new GetContentResult() {
                             @Override
                             public void success(String json) {
                             }
@@ -410,8 +410,8 @@ public class PersonInfoAcitvity extends BaseActivity {
             public void onItemPicked(int index, String item) {
 //                ToastUtils.showShort("index=" + index + ", item=" + item);
                 hunyinTv.setText(item);
-                setUserInfo(PersonInfoAcitvity.this,nicknameEt.getText().toString(), birthyTv.getText().toString(), areaTv.getText().toString(),
-                        sexTv.getText().toString(), hunyinTv.getText().toString(), workEt.getText().toString(), signatureEt.getText().toString(),new GetContentResult() {
+                setUserInfo(PersonInfoAcitvity.this, nicknameEt.getText().toString(), birthyTv.getText().toString(), areaTv.getText().toString(),
+                        sexTv.getText().toString(), hunyinTv.getText().toString(), workEt.getText().toString(), signatureEt.getText().toString(), new GetContentResult() {
                             @Override
                             public void success(String json) {
                             }
@@ -443,8 +443,8 @@ public class PersonInfoAcitvity extends BaseActivity {
             public void onDatePicked(String year, String month, String day) {
                 ToastUtils.showShort(year + "-" + month + "-" + day);
                 birthyTv.setText(year + "-" + month + "-" + day);
-                setUserInfo(PersonInfoAcitvity.this,nicknameEt.getText().toString(), birthyTv.getText().toString(), areaTv.getText().toString(),
-                        sexTv.getText().toString(), hunyinTv.getText().toString(), workEt.getText().toString(),signatureEt.getText().toString(), new GetContentResult() {
+                setUserInfo(PersonInfoAcitvity.this, nicknameEt.getText().toString(), birthyTv.getText().toString(), areaTv.getText().toString(),
+                        sexTv.getText().toString(), hunyinTv.getText().toString(), workEt.getText().toString(), signatureEt.getText().toString(), new GetContentResult() {
                             @Override
                             public void success(String json) {
                             }
@@ -497,9 +497,9 @@ public class PersonInfoAcitvity extends BaseActivity {
                     ToastUtils.showShort(province.getAreaName() + city.getAreaName() + county.getAreaName());
                 }
 
-                areaTv.setText(province.getAreaName() +"-"+ city.getAreaName() +"-"+ county.getAreaName());
-                setUserInfo(PersonInfoAcitvity.this,nicknameEt.getText().toString(), birthyTv.getText().toString(), areaTv.getText().toString(),
-                        sexTv.getText().toString(), hunyinTv.getText().toString(), workEt.getText().toString(),signatureEt.getText().toString(), new GetContentResult() {
+                areaTv.setText(province.getAreaName() + "-" + city.getAreaName() + "-" + county.getAreaName());
+                setUserInfo(PersonInfoAcitvity.this, nicknameEt.getText().toString(), birthyTv.getText().toString(), areaTv.getText().toString(),
+                        sexTv.getText().toString(), hunyinTv.getText().toString(), workEt.getText().toString(), signatureEt.getText().toString(), new GetContentResult() {
                             @Override
                             public void success(String json) {
                                 SpUtil.saveStringSP(SpUtil.getRegion, areaTv.getText().toString());
@@ -520,9 +520,9 @@ public class PersonInfoAcitvity extends BaseActivity {
      */
     void takePhoto() {
         String path = StringUtil.getPath(); //获取路径
-        String fileName = StringUtil.getPath()+File.separator+new Date().getTime()+".jpg";//定义文件名
-        File file = new File(path,fileName);
-        if(!file.getParentFile().exists()){//文件夹不存在
+        String fileName = StringUtil.getPath() + File.separator + new Date().getTime() + ".jpg";//定义文件名
+        File file = new File(path, fileName);
+        if (!file.getParentFile().exists()) {//文件夹不存在
             file.getParentFile().mkdirs();
         }
         imageUri = Uri.fromFile(file);
@@ -621,7 +621,7 @@ public class PersonInfoAcitvity extends BaseActivity {
                             public void success(String json) {
                                 Log.i(TAG, "success: " + json);
                                 Glide.with(PersonInfoAcitvity.this).load(imageUri.getPath()).into(headIv);
-                                Contents.IS_REFRESH=true;
+                                Contents.IS_REFRESH = true;
                             }
 
                             @Override
@@ -654,7 +654,7 @@ public class PersonInfoAcitvity extends BaseActivity {
                             public void success(String json) {
                                 Log.i(TAG, "success: " + json);
                                 Glide.with(PersonInfoAcitvity.this).load(picturePath).into(headIv);
-                                Contents.IS_REFRESH=true;
+                                Contents.IS_REFRESH = true;
                             }
 
                             @Override
@@ -702,8 +702,6 @@ public class PersonInfoAcitvity extends BaseActivity {
 //    private String newPath = null;
 
 
-
-
     /**
      * 修改个人头像
      *
@@ -737,7 +735,7 @@ public class PersonInfoAcitvity extends BaseActivity {
 //        }
 
 
-        uploadImage(context,oldPath,result);
+        uploadImage(context, oldPath, result);
 
     }
 
@@ -774,15 +772,23 @@ public class PersonInfoAcitvity extends BaseActivity {
     /**
      * 修改个人信息
      */
-    protected void setUserInfo(final Activity context, String nickname,String birthday, String area, String sex, String hunyin, String work,String signature,
+    protected void setUserInfo(final Activity context, String nickname, String birthday, String area, String sex, String hunyin, String work, String signature,
                                final GetContentResult result) {
+        String ss;
         SetUserInfoRequest request = new SetUserInfoRequest();
         request.setDyID(UserInfo.getDyId());
         request.setDeviceID(UserInfo.getDeviceId());
         request.setNickName(nickname);
         request.setToken(UserInfo.getToken());
         request.setBirthday(birthday);
-        request.setGender(sex);
+        if (sex.equals("女")) {
+            ss = "0";
+        } else if (sex.equals("男")) {
+            ss = "1";
+        } else {
+            ss = "2";
+        }
+        request.setGender(ss);
         request.setMaritalStatus(hunyin);
         request.setOccupation(work);
         request.setSignature(signature);

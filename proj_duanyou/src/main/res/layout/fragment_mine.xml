@@ -54,7 +54,7 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="5dp"
                 android:layout_toRightOf="@+id/headimage_iv"
-                android:drawableLeft="@drawable/near2x"
+                android:drawableLeft="@drawable/smallnear"
                 android:gravity="center_vertical"
                 android:text="火星上"
                 android:textColor="@color/black" />

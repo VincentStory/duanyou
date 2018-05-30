@@ -146,9 +146,13 @@ public class MainContentAdapter extends CommonAdapter<DyContextsBean> {
         }
         //0-女 1-男
         if (item.getSex().equals("0")) {
-            Glide.with(mContext).load(R.drawable.icon_female).into(iv_sex);
-        } else {
+            iv_sex.setVisibility(View.VISIBLE);
             Glide.with(mContext).load(R.drawable.icon_male).into(iv_sex);
+        } else if(item.getSex().equals("1")){
+            iv_sex.setVisibility(View.VISIBLE);
+            Glide.with(mContext).load(R.drawable.icon_female).into(iv_sex);
+        }else{
+            iv_sex.setVisibility(View.INVISIBLE);
         }
         zanTv.setText(item.getPraiseNum() + "");
         caiTv.setText(item.getTrampleNum() + "");
