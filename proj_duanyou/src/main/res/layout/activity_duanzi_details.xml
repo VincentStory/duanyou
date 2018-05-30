@@ -177,6 +177,12 @@
 
                 </LinearLayout>
 
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginVertical="5dp"
+                    android:background="#e5e5e5" />
+
                 <!--评论-->
 
                 <TextView

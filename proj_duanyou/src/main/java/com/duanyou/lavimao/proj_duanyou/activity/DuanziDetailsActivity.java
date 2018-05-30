@@ -66,7 +66,6 @@ import cn.jzvd.JZVideoPlayerStandard;
  * 段子详情
  */
 public class DuanziDetailsActivity extends BaseActivity {
-
     @BindView(R.id.refresh)
     TwinklingRefreshLayout refreshLayout;
     @BindView(R.id.iv_left)

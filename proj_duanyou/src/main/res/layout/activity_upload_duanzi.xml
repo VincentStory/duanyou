@@ -52,8 +52,8 @@
 
                     <ImageView
                         android:id="@+id/pre_show_iv"
-                        android:layout_width="80dp"
-                        android:layout_height="80dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="76dp"
                         tools:src="@drawable/default_pic" />
 
                     <ImageView

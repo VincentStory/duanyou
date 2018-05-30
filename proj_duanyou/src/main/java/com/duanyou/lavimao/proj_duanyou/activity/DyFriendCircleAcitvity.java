@@ -68,12 +68,12 @@ import cn.addapp.pickers.picker.SinglePicker;
 
 public class DyFriendCircleAcitvity extends BaseActivity {
 
-    @BindView(R.id.nickname_tv)
+    TagFragment tagFragment;
+//    @BindView(R.id.nickname_tv)
     TextView nicknameTv;
-
-    @BindView(R.id.headimage_iv)
+//    @BindView(R.id.headimage_iv)
     RoundedImageView headIv;
-    @BindView(R.id.bg_iv)
+//    @BindView(R.id.bg_iv)
     ImageView bgIv;
 
     @Override
@@ -84,30 +84,70 @@ public class DyFriendCircleAcitvity extends BaseActivity {
 
     @Override
     public void initData() {
-        initTitle();
+//        initTitle();
         Contents.FIRST_REFRESH=true;
         //必需继承FragmentActivity,嵌套fragment只需要这行代码
-        getSupportFragmentManager().beginTransaction().replace(R.id.framelayout, TagFragment.newInstance("6", "")).commitAllowingStateLoss();
+        tagFragment =TagFragment.newInstance("6", "");
+        getSupportFragmentManager().beginTransaction().replace(R.id.framelayout, tagFragment).commitAllowingStateLoss();
 
     }
 
     @Override
     public void startInvoke() {
+        getUserInfo(DyFriendCircleAcitvity.this, UserInfo.getDyId(), new GetContentResult() {
+            @Override
+            public void success(String json) {
+                UserInfoResponse response = JSON.parseObject(json, UserInfoResponse.class);
+                if (response.getUserInfo().size() > 0) {
+                    UserInfoResponse.UserInfo userInfo = response.getUserInfo().get(0);
+                    String picurl = userInfo.getHeadPortraitUrl();
+                    if (tagFragment != null) {
+                        View view = View.inflate(DyFriendCircleAcitvity.this, R.layout.head_dy_circle, null);
+                        nicknameTv = view.findViewById(R.id.nickname_tv);
+                        headIv = view.findViewById(R.id.headimage_iv);
+                        bgIv = view.findViewById(R.id.bg_iv);
 
+                        nicknameTv.setText(userInfo.getNickName());
+
+                        if (picurl != null) {
+                            if (!picurl.isEmpty())
+                                Glide.with(DyFriendCircleAcitvity.this).load(picurl).into(headIv);
+                        }
+                        if (userInfo.getBackgroundWall() != null) {
+                            if (!userInfo.getBackgroundWall().isEmpty())
+                                Glide.with(DyFriendCircleAcitvity.this).load(userInfo.getBackgroundWall()).into(bgIv);
+
+                        }
+                        setTitle("段友圈");
+                        tagFragment.getListView().addHeaderView(view);
+
+                    }
+
+
+
+
+                }
+            }
+
+            @Override
+            public void error(Exception ex) {
+
+            }
+        });
 
     }
 
 
-    private void initTitle() {
-        setTitle("段友圈");
-        if (!UserInfo.getBgUrl().isEmpty())
-            Glide.with(DyFriendCircleAcitvity.this).load(UserInfo.getBgUrl()).into(bgIv);
-        if (!UserInfo.getHeadUrl().isEmpty())
-            Glide.with(DyFriendCircleAcitvity.this).load(UserInfo.getHeadUrl()).into(headIv);
-
-        nicknameTv.setText(UserInfo.getNickName());
-
-    }
+//    private void initTitle() {
+//        setTitle("段友圈");
+//        if (!UserInfo.getBgUrl().isEmpty())
+//            Glide.with(DyFriendCircleAcitvity.this).load(UserInfo.getBgUrl()).into(bgIv);
+//        if (!UserInfo.getHeadUrl().isEmpty())
+//            Glide.with(DyFriendCircleAcitvity.this).load(UserInfo.getHeadUrl()).into(headIv);
+//
+//        nicknameTv.setText(UserInfo.getNickName());
+//
+//    }
 
 
     @OnClick({R.id.iv_left, R.id.nav_right_iv})
