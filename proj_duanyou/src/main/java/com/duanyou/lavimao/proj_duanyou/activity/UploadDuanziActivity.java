@@ -489,11 +489,12 @@ public class UploadDuanziActivity extends BaseActivity {
                     ToastUtils.showShort("上传失败，请重试");
                 }
             });
-        } else {  //文字和图片
+        } else  {  //文字和图片
             NetUtil.postFile(Api.uploadContent, this, uploadPath, request, new ResultCallback() {
                 @Override
                 public void onResult(String jsonResult) {
                     pb.setVisibility(View.GONE);
+
                     BaseResponse response = JSON.parseObject(jsonResult, BaseResponse.class);
                     if ("0".equals(response.getRespCode())) {
                         ToastUtils.showShort("上传成功");
@@ -504,6 +505,7 @@ public class UploadDuanziActivity extends BaseActivity {
                 @Override
                 public void onError(Exception ex) {
                     pb.setVisibility(View.GONE);
+
                     ToastUtils.showShort("上传失败，请重试");
                 }
             });

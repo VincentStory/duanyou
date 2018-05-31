@@ -145,7 +145,7 @@ public class MineFragment extends BaseFragment {
                             Glide.with(getActivity()).load(picurl).into(headIv);
                         nicknameTv.setText(userInfo.getNickName());
                         locationTv.setText(userInfo.getCurrentLocation());
-                        if (userInfo.getBackgroundWall() != null) {
+                        if (!TextUtils.isEmpty(userInfo.getBackgroundWall())) {
                             Glide.with(getActivity()).load(userInfo.getBackgroundWall()).into(bgIv);
                             UserInfo.setHeadUrl(userInfo.getHeadPortraitUrl());
                             UserInfo.setBgUrl(userInfo.getBackgroundWall());

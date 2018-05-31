@@ -126,32 +126,33 @@ public class BaseClientProxy {
                 LogUtil.log(
                         "\n" + "url:" + serviceAddr + serviceId+"\n" + "file:" + file.getName()
                                 + "\n" + "jsonRequest:" + jsonRequest);
-                RequestBody requestBody = builder.build();
 
-                Request request = new Request.Builder()
-                        .url(serviceAddr + serviceId)
-                        .post(requestBody)
-                        .build();
-                Call call = client.newCall(request);
-                call.enqueue(new Callback() {
-                    @Override
-                    public void onFailure(Call call, IOException e) {
-                        LogUtil.log("onFailure Exception:" + e.toString());
-                        callback.onError(e);
-                    }
-
-                    @Override
-                    public void onResponse(Call call, Response response) throws IOException {
-                        try {
-                            String result = response.body().string();
-                            LogUtil.log("" + response + "==>" + result);
-                            callback.onComplete("", result);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
             }
+            RequestBody requestBody = builder.build();
+
+            Request request = new Request.Builder()
+                    .url(serviceAddr + serviceId)
+                    .post(requestBody)
+                    .build();
+            Call call = client.newCall(request);
+            call.enqueue(new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    LogUtil.log("onFailure Exception:" + e.toString());
+                    callback.onError(e);
+                }
+
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    try {
+                        String result = response.body().string();
+                        LogUtil.log("" + response + "==>" + result);
+                        callback.onComplete("", result);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
 
         } catch (Exception e) {
             LogUtil.log("Exception:" + e.toString());

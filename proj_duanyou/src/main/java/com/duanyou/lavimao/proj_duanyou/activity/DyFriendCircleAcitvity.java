@@ -69,11 +69,11 @@ import cn.addapp.pickers.picker.SinglePicker;
 public class DyFriendCircleAcitvity extends BaseActivity {
 
     TagFragment tagFragment;
-//    @BindView(R.id.nickname_tv)
+    //    @BindView(R.id.nickname_tv)
     TextView nicknameTv;
-//    @BindView(R.id.headimage_iv)
+    //    @BindView(R.id.headimage_iv)
     RoundedImageView headIv;
-//    @BindView(R.id.bg_iv)
+    //    @BindView(R.id.bg_iv)
     ImageView bgIv;
 
     @Override
@@ -85,15 +85,16 @@ public class DyFriendCircleAcitvity extends BaseActivity {
     @Override
     public void initData() {
 //        initTitle();
-        Contents.FIRST_REFRESH=true;
+        Contents.FIRST_REFRESH = true;
         //必需继承FragmentActivity,嵌套fragment只需要这行代码
-        tagFragment =TagFragment.newInstance("6", "");
-        getSupportFragmentManager().beginTransaction().replace(R.id.framelayout, tagFragment).commitAllowingStateLoss();
 
     }
 
     @Override
     public void startInvoke() {
+        tagFragment = TagFragment.newInstance("6", "");
+        getSupportFragmentManager().beginTransaction().replace(R.id.framelayout, tagFragment).commitAllowingStateLoss();
+
         getUserInfo(DyFriendCircleAcitvity.this, UserInfo.getDyId(), new GetContentResult() {
             @Override
             public void success(String json) {
@@ -118,13 +119,12 @@ public class DyFriendCircleAcitvity extends BaseActivity {
                                 Glide.with(DyFriendCircleAcitvity.this).load(userInfo.getBackgroundWall()).into(bgIv);
 
                         }
-                        setTitle("段友圈");
-                        tagFragment.getListView().addHeaderView(view);
+
+                        if (tagFragment.getListView() != null)
+                            tagFragment.getListView().addHeaderView(view);
 
                     }
-
-
-
+                    setTitle("段友圈");
 
                 }
             }
