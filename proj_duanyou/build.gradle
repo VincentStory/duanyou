@@ -128,6 +128,6 @@ dependencies {
 
 
     implementation project(':OneSDK')
-    compile 'com.github.quentin7b:android-location-tracker:3.2'
+    implementation 'com.github.quentin7b:android-location-tracker:3.2'
 
 }

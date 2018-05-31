@@ -491,7 +491,7 @@ public class DuanziDetailsActivity extends BaseActivity {
         @Override
         public void onCancel(SHARE_MEDIA platform) {
 //            SocializeUtils.safeCloseDialog(dialog);
-            Toast.makeText(DuanziDetailsActivity.this, "取消了", Toast.LENGTH_LONG).show();
+//            Toast.makeText(DuanziDetailsActivity.this, "取消了", Toast.LENGTH_LONG).show();
 
         }
     };

@@ -21,6 +21,7 @@ import android.widget.Toast;
 import com.alibaba.fastjson.JSON;
 import com.blankj.utilcode.util.ToastUtils;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.util.Util;
 import com.duanyou.lavimao.proj_duanyou.R;
 import com.duanyou.lavimao.proj_duanyou.base.BaseActivity;
 import com.duanyou.lavimao.proj_duanyou.net.Api;
@@ -205,12 +206,25 @@ public class PersonInfoAcitvity extends BaseActivity {
                 if (response.getUserInfo().size() > 0) {
                     UserInfoResponse.UserInfo userInfo = response.getUserInfo().get(0);
                     String picurl = userInfo.getHeadPortraitUrl();
-                    if (picurl != null)
-                        Glide.with(PersonInfoAcitvity.this).load(picurl).into(headIv);
+                    if (picurl != null){
+                        if (Util.isOnMainThread()) {
+                            Glide.with(PersonInfoAcitvity.this).load(picurl).into(headIv);
+                        }
+                    }
+
+
                     duanyouidTv.setText(userInfo.getDyID());
                     nicknameEt.setText(userInfo.getNickName());
                     hunyinTv.setText(userInfo.getMaritalStatus());
-                    sexTv.setText(userInfo.getGender());
+                    //0-女 1-男
+                    if (userInfo.getGender().equals("0"))
+                        sexTv.setText("女");
+                    else if (userInfo.getGender().equals("1"))
+                        sexTv.setText("男");
+                    else if (userInfo.getGender().equals("2"))
+                        sexTv.setText("");
+                    else
+                        sexTv.setText(userInfo.getGender());
                     birthyTv.setText(userInfo.getBirthday());
                     workEt.setText(userInfo.getOccupation());
                     areaTv.setText(userInfo.getRegion());

@@ -606,7 +606,7 @@ public class TagFragment extends BaseFragment implements MainContentAdapter.OnIt
         @Override
         public void onCancel(SHARE_MEDIA platform) {
 //            SocializeUtils.safeCloseDialog(dialog);
-            Toast.makeText(getActivity(), "取消了", Toast.LENGTH_LONG).show();
+//            Toast.makeText(getActivity(), "取消了", Toast.LENGTH_LONG).show();
 
         }
     };

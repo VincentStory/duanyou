@@ -23,6 +23,7 @@ import android.widget.TextView;
 import com.alibaba.fastjson.JSON;
 import com.blankj.utilcode.util.ToastUtils;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.util.Util;
 import com.duanyou.lavimao.proj_duanyou.R;
 import com.duanyou.lavimao.proj_duanyou.base.BaseActivity;
 import com.duanyou.lavimao.proj_duanyou.fragment.main.TagFragment;
@@ -112,11 +113,15 @@ public class DyFriendCircleAcitvity extends BaseActivity {
 
                         if (picurl != null) {
                             if (!picurl.isEmpty())
-                                Glide.with(DyFriendCircleAcitvity.this).load(picurl).into(headIv);
+                                if (Util.isOnMainThread()) {
+                                    Glide.with(DyFriendCircleAcitvity.this).load(picurl).into(headIv);
+                                }
                         }
                         if (userInfo.getBackgroundWall() != null) {
                             if (!userInfo.getBackgroundWall().isEmpty())
-                                Glide.with(DyFriendCircleAcitvity.this).load(userInfo.getBackgroundWall()).into(bgIv);
+                                if (Util.isOnMainThread()) {
+                                    Glide.with(DyFriendCircleAcitvity.this).load(userInfo.getBackgroundWall()).into(bgIv);
+                                }
 
                         }
 

@@ -90,7 +90,8 @@ public class BaseClientProxy {
                     try {
                         String result = response.body().string();
                         LogUtil.log("" + response + "==>" + result);
-                        callback.onComplete("", result);
+                        if (response.code() != 502)
+                            callback.onComplete("", result);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -108,7 +109,7 @@ public class BaseClientProxy {
     public void upImage(String serviceAddr, String serviceId, String path, String jsonRequest, final InvokeCallback<String> callback) {
         try {
             LogUtil.log(
-                    "\n" + "url:" + serviceAddr + serviceId+"\n" + "path:" + path
+                    "\n" + "url:" + serviceAddr + serviceId + "\n" + "path:" + path
                             + "\n" + "jsonRequest:" + jsonRequest);
 
             MultipartBody.Builder builder;
@@ -124,7 +125,7 @@ public class BaseClientProxy {
                         .addFormDataPart("file1", file.getName(), RequestBody.create(MediaType.parse("image/png"), file))
                         .addFormDataPart("parameter", jsonRequest);
                 LogUtil.log(
-                        "\n" + "url:" + serviceAddr + serviceId+"\n" + "file:" + file.getName()
+                        "\n" + "url:" + serviceAddr + serviceId + "\n" + "file:" + file.getName()
                                 + "\n" + "jsonRequest:" + jsonRequest);
 
             }
@@ -147,7 +148,8 @@ public class BaseClientProxy {
                     try {
                         String result = response.body().string();
                         LogUtil.log("" + response + "==>" + result);
-                        callback.onComplete("", result);
+                        if (response.code() != 502)
+                            callback.onComplete("", result);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -191,7 +193,8 @@ public class BaseClientProxy {
                     try {
                         String result = response.body().string();
                         LogUtil.log("" + response + "==>" + result);
-                        callback.onComplete("", result);
+                        if (response.code() != 502)
+                            callback.onComplete("", result);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -235,7 +238,8 @@ public class BaseClientProxy {
                     try {
                         String result = response.body().string();
                         LogUtil.log("" + response + "-->" + result);
-                        callback.onComplete("", result);
+                        if (response.code() != 502)
+                            callback.onComplete("", result);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -252,7 +256,7 @@ public class BaseClientProxy {
     public static final int DOWNLOAD_PROGRESS = 1;
     public static final int DOWNLOAD_SUCCESS = 2;
 
-    public  void download(final String url, final String saveDir, final OnDownloadListener listener) {
+    public void download(final String url, final String saveDir, final OnDownloadListener listener) {
         this.listener = listener;
         Request request = new Request.Builder().url(url).build();
         client.newCall(request).enqueue(new Callback() {

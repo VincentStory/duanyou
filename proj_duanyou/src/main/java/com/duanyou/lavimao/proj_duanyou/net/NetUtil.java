@@ -8,28 +8,24 @@ import com.alibaba.fastjson.JSON;
 
 import com.blankj.utilcode.util.ToastUtils;
 import com.duanyou.lavimao.proj_duanyou.activity.LoginActivity;
-import com.duanyou.lavimao.proj_duanyou.net.request.GetContentRequest;
 
 import com.xiben.ebs.esbsdk.callback.InvokeCallback;
 import com.xiben.ebs.esbsdk.callback.ResultCallback;
 import com.xiben.ebs.esbsdk.esb.BaseClientProxy;
 
-import java.io.File;
-
 public class NetUtil {
     private static BaseClientProxy esbPoxy = new BaseClientProxy();
-//        public static String SERVICES_URL = "http://www.dyouclub.com/restful/request/";
-        public static String SERVICES_URL = "http://123.56.8.153/restful/request/";
+    //        public static String SERVICES_URL = "http://www.dyouclub.com/restful/request/";
+//        public static String SERVICES_URL = "http://123.56.8.153/restful/request/";
     private static final String TAG = "NetUtil";
 
 
-//    public static String SERVICES_URL = "http://39.104.121.233/restful/request/";
+    public static String SERVICES_URL = "http://39.104.121.233/restful/request/";
 
 
     public static void getData(final String serviceId, final Activity context,
                                final BaseRequest request,
                                final ResultCallback resultCallback) {
-
 
         esbPoxy.invoke(SERVICES_URL, serviceId, JSON.toJSONString(request), new InvokeCallback<String>() {
             @Override
@@ -43,12 +39,11 @@ public class NetUtil {
                             if (response.getRespCode().equals("6")) {
                                 Intent intent = new Intent(context, LoginActivity.class);
                                 context.startActivity(intent);
-                            }else{
-                                Log.i(TAG, "showError: "+response.getRespMessage());
+                            } else {
+                                Log.i(TAG, "showError: " + response.getRespMessage());
                                 ToastUtils.showShort(response.getRespMessage());
                             }
-                        }else{
-
+                        } else {
                             resultCallback.onResult(body);
                         }
                     }
@@ -83,11 +78,11 @@ public class NetUtil {
                             if (response.getRespCode().equals("6")) {
                                 Intent intent = new Intent(context, LoginActivity.class);
                                 context.startActivity(intent);
-                            }else{
-                                Log.i(TAG, "showError: "+response.getRespMessage());
+                            } else {
+                                Log.i(TAG, "showError: " + response.getRespMessage());
                                 ToastUtils.showShort(response.getRespMessage());
                             }
-                        }else{
+                        } else {
 
                             resultCallback.onResult(body);
                         }
@@ -127,11 +122,11 @@ public class NetUtil {
                             if (response.getRespCode().equals("6")) {
                                 Intent intent = new Intent(context, LoginActivity.class);
                                 context.startActivity(intent);
-                            }else{
-                                Log.i(TAG, "showError: "+response.getRespMessage());
+                            } else {
+                                Log.i(TAG, "showError: " + response.getRespMessage());
                                 ToastUtils.showShort(response.getRespMessage());
                             }
-                        }else{
+                        } else {
 
                             resultCallback.onResult(body);
                         }
@@ -172,11 +167,11 @@ public class NetUtil {
                             if (response.getRespCode().equals("6")) {
                                 Intent intent = new Intent(context, LoginActivity.class);
                                 context.startActivity(intent);
-                            }else{
-                                Log.i(TAG, "showError: "+response.getRespMessage());
+                            } else {
+                                Log.i(TAG, "showError: " + response.getRespMessage());
                                 ToastUtils.showShort(response.getRespMessage());
                             }
-                        }else{
+                        } else {
 
                             resultCallback.onResult(body);
                         }
@@ -210,6 +205,5 @@ public class NetUtil {
             }
         });
     }
-
 
 }
